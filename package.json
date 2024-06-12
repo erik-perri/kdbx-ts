@@ -1,0 +1,30 @@
+{
+  "name": "kdbx-ts",
+  "version": "0.0.1",
+  "description": "Parse and write KeePass KDBX files",
+  "exports": {
+    "*": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly && node ./build.mjs",
+    "check-code": "npm run check-types && npm run lint && npm run prettier",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "esbuild": "0.21.5",
+    "eslint": "^8.57.0",
+    "eslint-plugin-simple-import-sort": "^12.1.0",
+    "prettier": "3.3.2",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.13.0"
+  }
+}
