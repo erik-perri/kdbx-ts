@@ -1,0 +1,12 @@
+/* https://aka.ms/tsconfig */
+{
+  "extends": "./tsconfig.json",
+  "include": ["./src/index.ts"],
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "outDir": "./dist"
+  }
+}

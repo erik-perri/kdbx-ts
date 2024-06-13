@@ -10,7 +10,7 @@
     }
   },
   "scripts": {
-    "build": "tsc --emitDeclarationOnly && node ./build.mjs",
+    "build": "tsc --project ./tsconfig.build.json && node ./build.mjs",
     "check-code": "npm run check-types && npm run lint && npm run prettier",
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
