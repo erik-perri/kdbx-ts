@@ -32,6 +32,10 @@ export default tsEslint.config(
         'error',
         { argsIgnorePattern: '^_' },
       ],
+      '@typescript-eslint/restrict-template-expressions': [
+        'error',
+        { allowNumber: true },
+      ],
       '@typescript-eslint/strict-boolean-expressions': 'error',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       'no-console': ['error', { allow: ['warn', 'error'] }],
