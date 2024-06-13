@@ -1,10 +1,10 @@
-import determineKeePassVersion from './kdbx/determineKeePassVersion';
-import KdbxVersion from './kdbx/enums/KdbxVersion';
-import KeePassVersion from './kdbx/enums/KeePassVersion';
+import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
+import determineKeePassVersion from './determineKeePassVersion';
+import KdbxVersion from './enums/KdbxVersion';
+import KeePassVersion from './enums/KeePassVersion';
 import type KdbxKey from './keys/KdbxKey';
-import Uint8ArrayCursorReader from './utilities/Uint8ArrayCursorReader';
 
-export default async function parseKdbxFile(
+export default async function readKdbxFile(
   _key: KdbxKey,
   fileBytes: Uint8Array,
 ): Promise<unknown> {
