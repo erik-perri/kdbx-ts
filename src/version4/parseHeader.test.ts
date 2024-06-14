@@ -106,7 +106,7 @@ describe('parseHeader', () => {
       const header = parseHeader(reader);
 
       // Assert
-      expect(header.cipher).toEqual(expectedCipher);
+      expect(header.cipherId).toEqual(expectedCipher);
       expect(header.compressionAlgorithm).toEqual(expectedCompressionAlgorithm);
       expect(header.masterSeed).toHaveLength(32);
       expect(header.encryptionIV).toHaveLength(expectedIvLength);

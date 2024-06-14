@@ -55,9 +55,13 @@ export default function parseHeader(
       case HeaderFieldId.Comment:
         break;
 
-      case HeaderFieldId.CipherID:
-        header.cipher = processCipherId(field.data);
+      case HeaderFieldId.CipherID: {
+        const [cipherId, cipherMode] = processCipherId(field.data);
+
+        header.cipherId = cipherId;
+        header.cipherMode = cipherMode;
         break;
+      }
 
       case HeaderFieldId.CompressionFlags:
         header.compressionAlgorithm = processCompressionFlags(field.data);
