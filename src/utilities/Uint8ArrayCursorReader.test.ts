@@ -1,4 +1,3 @@
-import type { ArgumentsType } from 'vitest';
 import { describe, expect, it } from 'vitest';
 
 import Uint8ArrayCursorReader from './Uint8ArrayCursorReader';
@@ -9,9 +8,7 @@ describe('Uint8ArrayCursorReader', () => {
       offset: number;
       expected: number;
       method: keyof Uint8ArrayCursorReader;
-      args?: ArgumentsType<
-        Uint8ArrayCursorReader[keyof Uint8ArrayCursorReader]
-      >;
+      args?: unknown[];
     };
 
     const cases = [
