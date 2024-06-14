@@ -14,7 +14,7 @@ class PasswordKey extends KdbxKey {
   async setKey(data: Uint8Array): Promise<void> {
     if (data.byteLength !== 32) {
       throw new Error(
-        `Invalid SHA256 password key. 32 bytes expected, ${data.byteLength} found.`,
+        `Invalid SHA256 password key length. Expected 32 bytes, got ${data.byteLength}`,
       );
     }
 

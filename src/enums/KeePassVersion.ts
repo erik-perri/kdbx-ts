@@ -1,7 +1,7 @@
 const KeePassVersion = Object.freeze({
-  Unknown: 'unknown',
-  KeePass1: 'keepass1',
-  KeePass2: 'keepass2',
+  Unknown: 0,
+  KeePass1: 1,
+  KeePass2: 2,
 } as const);
 
 type KeePassVersion = (typeof KeePassVersion)[keyof typeof KeePassVersion];

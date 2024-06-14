@@ -29,7 +29,7 @@ describe('PasswordKey', () => {
 
       // Act
       await expect(key.setKey(password)).rejects.toThrow(
-        'Invalid SHA256 password key. 32 bytes expected, 0 found.',
+        'Invalid SHA256 password key length. Expected 32 bytes, got 0',
       );
 
       // Assert

@@ -1,13 +1,14 @@
-import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
-import determineKeePassVersion from './determineKeePassVersion';
 import KdbxVersion from './enums/KdbxVersion';
 import KeePassVersion from './enums/KeePassVersion';
 import type KdbxKey from './keys/KdbxKey';
+import determineKeePassVersion from './utilities/determineKeePassVersion';
+import Uint8ArrayCursorReader from './utilities/Uint8ArrayCursorReader';
+import parseDatabase, { type KdbxDatabase4 } from './version4/parseDatabase';
 
 export default async function readKdbxFile(
   _key: KdbxKey,
   fileBytes: Uint8Array,
-): Promise<unknown> {
+): Promise<KdbxDatabase4> {
   const reader = new Uint8ArrayCursorReader(fileBytes);
 
   const signatureOne = reader.readUInt32LE();
@@ -28,5 +29,5 @@ export default async function readKdbxFile(
     throw new Error('KeePass databases less than v4.0 are not supported');
   }
 
-  return Promise.resolve();
+  return parseDatabase(reader);
 }

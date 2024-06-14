@@ -1,3 +1,3 @@
-import readKdbxFile from './kdbx/readKdbxFile';
+import readKdbxFile from './readKdbxFile';
 
 export { readKdbxFile };

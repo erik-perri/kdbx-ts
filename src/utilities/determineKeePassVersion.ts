@@ -1,4 +1,4 @@
-import KeePassVersion from './enums/KeePassVersion';
+import KeePassVersion from '../enums/KeePassVersion';
 
 const signatures = [
   {
