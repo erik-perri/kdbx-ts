@@ -1,5 +1,3 @@
-/* eslint-disable no-bitwise */
-
 export default class Uint8ArrayReader {
   private readonly bytes: Uint8Array;
 
