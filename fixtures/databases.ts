@@ -7,10 +7,39 @@ import CompressionAlgorithm from '../src/enums/CompressionAlgorithm';
 import KdfUuid from '../src/enums/KdfUuid';
 import SymmetricCipherUuid from '../src/enums/SymmetricCipherUuid';
 import type { KdfParameters } from '../src/header/types';
+import createChallengeResponseKey from '../src/keys/createChallengeResponseKey';
 import createFileKey from '../src/keys/createFileKey';
 import createPasswordKey from '../src/keys/createPasswordKey';
 import { type KdbxKey } from '../src/keys/types';
 import nodeCrypto from '../src/nodeCrypto';
+import Uint8ArrayReader from '../src/utilities/Uint8ArrayReader';
+
+const mockChallengeResponseKey = createChallengeResponseKey(
+  (challenge: Uint8Array) => {
+    const mockResponses = [
+      // YubiKey Challenge-Response with secret key 0de28ecd0d35e91f6bea76d3c09f020ce79af783
+      {
+        data: Uint8Array.from([
+          0x98, 0x48, 0xeb, 0x4c, 0x3c, 0x04, 0x43, 0x61, 0xfa, 0x02, 0x89,
+          0x2b, 0x66, 0xbd, 0xf5, 0xfd, 0x72, 0x1e, 0x12, 0xe7, 0x3b, 0x37,
+          0xde, 0x8b, 0x53, 0x3a, 0x32, 0x2f, 0x14, 0xab, 0xec, 0x89,
+        ]),
+        response: Uint8Array.from([
+          0x3b, 0x16, 0x7c, 0x56, 0xf9, 0x2a, 0xc5, 0x01, 0xcd, 0xdd, 0xa3,
+          0xf1, 0x09, 0x0e, 0xdb, 0x36, 0xe7, 0x1e, 0x7d, 0x42,
+        ]),
+      },
+    ];
+
+    for (const { data, response } of mockResponses) {
+      if (Uint8ArrayReader.equals(data, challenge)) {
+        return Promise.resolve(response);
+      }
+    }
+
+    throw new Error('Unknown challenge response');
+  },
+);
 
 type DatabaseInformation = {
   file: Buffer;
@@ -63,6 +92,23 @@ export const sampleDatabases: Record<string, DatabaseInformation> = {
     keyFactory: async () => [
       await createPasswordKey(nodeCrypto, 'password'),
       await createFileKey(nodeCrypto, readFileSync('fixtures/sample.key')),
+    ],
+  },
+  AesAesWithHardwareKey: {
+    file: readFileSync(
+      'fixtures/databases/kdbx4-aes-kdf-aes-with-hardware-key.kdbx',
+    ),
+    expectedCipher: SymmetricCipherUuid.Aes256,
+    expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
+    expectedIvLength: 16,
+    expectedKdfParameters: {
+      uuid: KdfUuid.AesKdbx4,
+      rounds: BigInt(100),
+      seed: expect.any(Uint8Array) as Uint8Array,
+    },
+    keyFactory: async () => [
+      await createPasswordKey(nodeCrypto, 'password'),
+      mockChallengeResponseKey,
     ],
   },
   AesChaCha20: {
