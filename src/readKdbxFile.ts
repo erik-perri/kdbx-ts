@@ -1,33 +1,34 @@
+import type { CryptoImplementation } from './crypto/types';
 import KdbxVersion from './enums/KdbxVersion';
 import KeePassVersion from './enums/KeePassVersion';
-import type KdbxKey from './keys/KdbxKey';
-import determineKeePassVersion from './utilities/determineKeePassVersion';
+import parseFileSignature from './header/parseFileSignature';
+import { type KdbxKey } from './keys/types';
 import Uint8ArrayCursorReader from './utilities/Uint8ArrayCursorReader';
 import parseDatabase, { type KdbxDatabase4 } from './version4/parseDatabase';
 
+export type KdbxConfiguration = {
+  crypto: CryptoImplementation;
+};
+
 export default async function readKdbxFile(
-  _key: KdbxKey,
+  configuration: KdbxConfiguration,
+  keys: KdbxKey[],
   fileBytes: Uint8Array,
 ): Promise<KdbxDatabase4> {
   const reader = new Uint8ArrayCursorReader(fileBytes);
+  const signature = parseFileSignature(reader);
 
-  const signatureOne = reader.readUInt32LE();
-  const signatureTwo = reader.readUInt32LE();
-  const version = reader.readUInt32LE();
-
-  const appVersion = determineKeePassVersion(signatureOne, signatureTwo);
-
-  if (appVersion === KeePassVersion.KeePass1) {
+  if (signature.appVersion === KeePassVersion.KeePass1) {
     throw new Error('KeePass 1 databases are not supported');
   }
 
-  if (appVersion === KeePassVersion.Unknown) {
+  if (signature.appVersion === KeePassVersion.Unknown) {
     throw new Error('Unknown database format');
   }
 
-  if (version < KdbxVersion.Version40) {
+  if (signature.formatVersion < KdbxVersion.Version40) {
     throw new Error('KeePass databases less than v4.0 are not supported');
   }
 
-  return parseDatabase(reader);
+  return parseDatabase(configuration, keys, reader, signature);
 }

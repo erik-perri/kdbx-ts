@@ -3,6 +3,15 @@ import type Argon2Version from '../enums/Argon2Version';
 import type CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import type HeaderFieldId from '../enums/HeaderFieldId';
 import type KdfUuid from '../enums/KdfUuid';
+import type KeePassVersion from '../enums/KeePassVersion';
+import type SymmetricCipherMode from '../enums/SymmetricCipherMode';
+
+export type KdbxSignature = {
+  appVersion: KeePassVersion;
+  formatVersion: number;
+  signature1: number;
+  signature2: number;
+};
 
 export type KdbxHeaderField = {
   data: Uint8Array;
@@ -10,7 +19,8 @@ export type KdbxHeaderField = {
 };
 
 export type KdbxHeader = {
-  cipher: string;
+  cipherId: string;
+  cipherMode: SymmetricCipherMode;
   compressionAlgorithm: CompressionAlgorithm;
   encryptionIV: Uint8Array;
   kdfParameters: KdfParameters;
@@ -18,13 +28,13 @@ export type KdbxHeader = {
   publicCustomData?: unknown;
 };
 
-type AesKdfParameters = {
+export type AesKdfParameters = {
   rounds: bigint;
   seed: Uint8Array;
-  uuid: string;
+  uuid: typeof KdfUuid.AesKdbx3 | typeof KdfUuid.AesKdbx4;
 };
 
-type Argon2KdfParameters = {
+export type Argon2KdfParameters = {
   iterations: bigint;
   memoryInKibibytes: bigint;
   parallelism: bigint;
