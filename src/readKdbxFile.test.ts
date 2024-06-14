@@ -14,9 +14,9 @@ describe('readKdbxFile', () => {
     const bytes = Uint8Array.from([]);
 
     // Act
-    await expect(
-      readKdbxFile({ crypto: nodeCrypto }, [key], bytes),
-    ).rejects.toThrow('Unknown database format');
+    await expect(readKdbxFile(nodeCrypto, [key], bytes)).rejects.toThrow(
+      'Unknown database format',
+    );
 
     // Assert
     // No assertions.
@@ -44,9 +44,9 @@ describe('readKdbxFile', () => {
       const key: KdbxKey = await createPasswordKey(nodeCrypto, 'what');
 
       // Act
-      await expect(
-        readKdbxFile({ crypto: nodeCrypto }, [key], file),
-      ).rejects.toThrow(expected);
+      await expect(readKdbxFile(nodeCrypto, [key], file)).rejects.toThrow(
+        expected,
+      );
 
       // Assert
       // No assertions.
@@ -60,9 +60,9 @@ describe('readKdbxFile', () => {
       const key: KdbxKey = await createPasswordKey(nodeCrypto, 'what');
 
       // Act
-      await expect(
-        readKdbxFile({ crypto: nodeCrypto }, [key], file),
-      ).rejects.toThrow('HMAC mismatch');
+      await expect(readKdbxFile(nodeCrypto, [key], file)).rejects.toThrow(
+        'HMAC mismatch',
+      );
 
       // Assert
       // No assertions.
@@ -76,7 +76,7 @@ describe('readKdbxFile', () => {
       const keys: KdbxKey[] = await keyFactory();
 
       // Act
-      const database = await readKdbxFile({ crypto: nodeCrypto }, keys, file);
+      const database = await readKdbxFile(nodeCrypto, keys, file);
 
       // Assert
       expect(database).toBeDefined();

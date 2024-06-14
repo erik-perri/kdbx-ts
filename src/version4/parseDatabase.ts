@@ -4,7 +4,6 @@ import HashAlgorithm from '../enums/HashAlgorithm';
 import KdbxVersion from '../enums/KdbxVersion';
 import type { KdbxHeader, KdbxSignature } from '../header/types';
 import { type KdbxKey } from '../keys/types';
-import type { KdbxConfiguration } from '../readKdbxFile';
 import displayHash from '../utilities/displayHash';
 import type Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
 import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
@@ -48,7 +47,7 @@ async function getBlockHmacKey(
 const UINT64_MAX = BigInt('18446744073709551615'); // 0xffffffffffffffff
 
 export default async function parseDatabase(
-  { crypto }: KdbxConfiguration,
+  crypto: CryptoImplementation,
   keys: KdbxKey[],
   reader: Uint8ArrayCursorReader,
   signature: KdbxSignature,

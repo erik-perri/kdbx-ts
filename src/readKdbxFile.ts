@@ -6,12 +6,8 @@ import { type KdbxKey } from './keys/types';
 import Uint8ArrayCursorReader from './utilities/Uint8ArrayCursorReader';
 import parseDatabase, { type KdbxDatabase4 } from './version4/parseDatabase';
 
-export type KdbxConfiguration = {
-  crypto: CryptoImplementation;
-};
-
 export default async function readKdbxFile(
-  configuration: KdbxConfiguration,
+  crypto: CryptoImplementation,
   keys: KdbxKey[],
   fileBytes: Uint8Array,
 ): Promise<KdbxDatabase4> {
@@ -30,5 +26,5 @@ export default async function readKdbxFile(
     throw new Error('KeePass databases less than v4.0 are not supported');
   }
 
-  return parseDatabase(configuration, keys, reader, signature);
+  return parseDatabase(crypto, keys, reader, signature);
 }
