@@ -22,7 +22,7 @@ function validateArgonMemory(memoryBytes: bigint): bigint {
     );
   }
 
-  return memoryBytes;
+  return memoryAsKibibytes;
 }
 
 function validateArgonParallelism(threads: bigint): bigint {
@@ -113,7 +113,7 @@ export default function processKdfParameters(
         iterations: validateRounds(
           processVariantFieldBigInt(KdfParameterKey.Argon2Iterations, variants),
         ),
-        memory: validateArgonMemory(
+        memoryInKibibytes: validateArgonMemory(
           processVariantFieldBigInt(KdfParameterKey.Argon2Memory, variants),
         ),
         parallelism: validateArgonParallelism(

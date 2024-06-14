@@ -23,7 +23,7 @@ type AesKdfParameters = {
 
 type Argon2KdfParameters = {
   iterations: bigint;
-  memory: bigint;
+  memoryInKibibytes: bigint;
   parallelism: bigint;
   salt: Uint8Array;
   uuid: string;
