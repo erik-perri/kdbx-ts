@@ -25,7 +25,13 @@ export default tsEslint.config(
     rules: {
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/consistent-type-exports': 'error',
-      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+          prefer: 'type-imports',
+        },
+      ],
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-unsafe-unary-minus': 'error',
       '@typescript-eslint/no-unused-vars': [
@@ -39,6 +45,7 @@ export default tsEslint.config(
       '@typescript-eslint/strict-boolean-expressions': 'error',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       'no-console': ['error', { allow: ['warn', 'error'] }],
+      'no-duplicate-imports': 'error',
       'simple-import-sort/exports': 'error',
       'simple-import-sort/imports': 'error',
     },
