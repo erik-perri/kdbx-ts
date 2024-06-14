@@ -1,3 +1,5 @@
+import Argon2Type from '../enums/Argon2Type';
+import Argon2Version from '../enums/Argon2Version';
 import KdfParameterKey from '../enums/KdfParameterKey';
 import KdfUuid from '../enums/KdfUuid';
 import processVariantFieldBigInt from '../header/processVariantFieldBigInt';
@@ -38,17 +40,16 @@ function validateArgonParallelism(threads: bigint): bigint {
   return threads;
 }
 
-function validateArgonVersion(version: number): number {
-  const ARGON2_VERSION_V10 = 0x10;
-  const ARGON2_VERSION_V13 = 0x13;
+function validateArgonVersion(version: number): Argon2Version {
+  const supportedVersions: number[] = Object.values(Argon2Version);
 
-  if (version < ARGON2_VERSION_V10 || version > ARGON2_VERSION_V13) {
+  if (!supportedVersions.includes(version)) {
     throw new Error(
-      `Invalid Argon2 version. Expected between ${ARGON2_VERSION_V10} and ${ARGON2_VERSION_V13}, got ${version}`,
+      `Invalid Argon2 version. Expected between ${Argon2Version.V10} and ${Argon2Version.V13}, got ${version}`,
     );
   }
 
-  return version;
+  return version as Argon2Version;
 }
 
 function validateRounds(rounds: bigint): bigint {
@@ -123,9 +124,11 @@ export default function processKdfParameters(
             true,
           ),
         ),
-        salt: validateSeed(
+        seed: validateSeed(
           processVariantFieldUint8Array(KdfParameterKey.Argon2Salt, variants),
         ),
+        type:
+          uuid === KdfUuid.Argon2d ? Argon2Type.Argon2d : Argon2Type.Argon2id,
         uuid,
         version: validateArgonVersion(
           processVariantFieldNumber(KdfParameterKey.Argon2Version, variants),
