@@ -19,22 +19,6 @@ type CipherFactory = (
 ) => CryptoCipher;
 
 const nodeCrypto: CryptoImplementation = {
-  async hash(algorithm, data) {
-    const hash = crypto.createHash(algorithm);
-
-    data.forEach((datum) => hash.update(datum));
-
-    return Promise.resolve(hash.digest());
-  },
-
-  async hmac(algorithm, key, data) {
-    const hmac = crypto.createHmac(algorithm, Uint8Array.from(key));
-
-    data.forEach((datum) => hmac.update(datum));
-
-    return Promise.resolve(hmac.digest());
-  },
-
   createCipher(mode, direction, key, iv): Promise<CryptoCipher> {
     const cipherMap: Record<string, CipherFactory | undefined> = {
       [SymmetricCipherMode.Aes256_CBC]: createAes256CbcCipher,
@@ -51,7 +35,27 @@ const nodeCrypto: CryptoImplementation = {
     return Promise.resolve(cipherFactory(direction, key, iv));
   },
 
-  async transformAesKdfKey(key, seed, iterations) {
+  hash(algorithm, data) {
+    const hash = crypto.createHash(algorithm);
+
+    data.forEach((datum) => hash.update(datum));
+
+    return Promise.resolve(hash.digest());
+  },
+
+  hmac(algorithm, key, data) {
+    const hmac = crypto.createHmac(algorithm, Uint8Array.from(key));
+
+    data.forEach((datum) => hmac.update(datum));
+
+    return Promise.resolve(hmac.digest());
+  },
+
+  randomBytes(length) {
+    return Promise.resolve(crypto.randomBytes(length));
+  },
+
+  transformAesKdfKey(key, seed, iterations) {
     let result = Uint8Array.from(key);
 
     if (Array.isArray(seed)) {

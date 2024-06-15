@@ -14,6 +14,13 @@ export type CryptoCipher = {
 };
 
 export type CryptoImplementation = {
+  createCipher(
+    mode: SymmetricCipherMode,
+    direction: SymmetricCipherDirection,
+    key: Uint8Array,
+    iv: Uint8Array,
+  ): Promise<CryptoCipher>;
+
   hash(algorithm: HashAlgorithm, data: Uint8Array[]): Promise<Uint8Array>;
 
   hmac(
@@ -22,12 +29,7 @@ export type CryptoImplementation = {
     data: Uint8Array[],
   ): Promise<Uint8Array>;
 
-  createCipher(
-    mode: SymmetricCipherMode,
-    direction: SymmetricCipherDirection,
-    key: Uint8Array,
-    iv: Uint8Array,
-  ): Promise<CryptoCipher>;
+  randomBytes(length: number): Promise<Uint8Array>;
 
   transformAesKdfKey(
     key: Uint8Array,
