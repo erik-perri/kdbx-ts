@@ -26,11 +26,6 @@ export default async function parseDatabase(
   reader: Uint8ArrayCursorReader,
   signature: KdbxSignature,
 ): Promise<KdbxDatabase4> {
-  const header = parseHeader(reader);
-
-  // Store the header data to compare with the checksum later
-  const headerData = reader.processed();
-
   const FILE_VERSION_CRITICAL_MASK = 0xffff0000;
   const fileVersion = signature.formatVersion & FILE_VERSION_CRITICAL_MASK;
   if (fileVersion !== KdbxVersion.Version40) {
@@ -38,6 +33,11 @@ export default async function parseDatabase(
       `Unexpected file version. Expected 0x${KdbxVersion.Version40.toString(16)}, got 0x${fileVersion.toString(16)}`,
     );
   }
+
+  const header = parseHeader(reader);
+
+  // Save the header data to verify the checksum later.
+  const headerData = reader.processed();
 
   const compositeKey = await transformCompositeKey(crypto, header, keys);
 
