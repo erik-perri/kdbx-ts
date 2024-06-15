@@ -1,10 +1,10 @@
 import { readFileSync } from 'fs';
 import { describe, expect, it } from 'vitest';
 
+import nodeCrypto from '../fixtures/crypto/nodeCrypto';
 import { sampleDatabaseCases } from '../fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
 import { type KdbxKey } from './keys/types';
-import nodeCrypto from './nodeCrypto';
 import readKdbxFile from './readKdbxFile';
 
 describe('readKdbxFile', () => {

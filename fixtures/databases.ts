@@ -11,8 +11,8 @@ import createChallengeResponseKey from '../src/keys/createChallengeResponseKey';
 import createFileKey from '../src/keys/createFileKey';
 import createPasswordKey from '../src/keys/createPasswordKey';
 import { type KdbxKey } from '../src/keys/types';
-import nodeCrypto from '../src/nodeCrypto';
 import Uint8ArrayReader from '../src/utilities/Uint8ArrayReader';
+import nodeCrypto from './crypto/nodeCrypto';
 
 const mockChallengeResponseKey = createChallengeResponseKey(
   (challenge: Uint8Array) => {

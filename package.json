@@ -28,6 +28,8 @@
     "eslint": "^8.57.0",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "prettier": "3.3.2",
+    "ts-chacha20": "^1.2.0",
+    "twofish-ts": "^1.0.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.13.0",
     "vitest": "^1.6.0"
