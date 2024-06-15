@@ -18,7 +18,7 @@ export default class Uint8ArrayWriter {
     return result;
   }
 
-  static fromUInt64LE(data: bigint): Uint8Array {
+  static fromUInt64LE(data: bigint | number): Uint8Array {
     const writer = new Uint8ArrayWriter(new Uint8Array(8));
     writer.writeUInt64LE(data, 0);
     return writer.slice();
@@ -44,8 +44,9 @@ export default class Uint8ArrayWriter {
     return this.bytes.slice(start, end);
   }
 
-  writeUInt64BE(value: bigint, offset: number): number {
-    const loAsBigInt = value & BigInt(0xffffffff);
+  writeUInt64BE(value: bigint | number, offset: number): number {
+    const valueAsBigInt = BigInt(value);
+    const loAsBigInt = valueAsBigInt & BigInt(0xffffffff);
     if (
       loAsBigInt < Number.MIN_SAFE_INTEGER ||
       loAsBigInt > Number.MAX_SAFE_INTEGER
@@ -62,7 +63,7 @@ export default class Uint8ArrayWriter {
     lo = lo >> 8;
     this.bytes[offset + 4] = lo;
 
-    const hiAsBigInt = (value >> BigInt(32)) & BigInt(0xffffffff);
+    const hiAsBigInt = (valueAsBigInt >> BigInt(32)) & BigInt(0xffffffff);
     if (
       hiAsBigInt < Number.MIN_SAFE_INTEGER ||
       hiAsBigInt > Number.MAX_SAFE_INTEGER
@@ -82,8 +83,9 @@ export default class Uint8ArrayWriter {
     return offset + 8;
   }
 
-  writeUInt64LE(value: bigint, offset: number): number {
-    const loAsBigInt = value & BigInt(0xffffffff);
+  writeUInt64LE(value: bigint | number, offset: number): number {
+    const valueAsBigInt = BigInt(value);
+    const loAsBigInt = valueAsBigInt & BigInt(0xffffffff);
     if (
       loAsBigInt < Number.MIN_SAFE_INTEGER ||
       loAsBigInt > Number.MAX_SAFE_INTEGER
@@ -100,7 +102,7 @@ export default class Uint8ArrayWriter {
     lo = lo >> 8;
     this.bytes[offset++] = lo;
 
-    const hiAsBigInt = (value >> BigInt(32)) & BigInt(0xffffffff);
+    const hiAsBigInt = (valueAsBigInt >> BigInt(32)) & BigInt(0xffffffff);
     if (
       hiAsBigInt < Number.MIN_SAFE_INTEGER ||
       hiAsBigInt > Number.MAX_SAFE_INTEGER
