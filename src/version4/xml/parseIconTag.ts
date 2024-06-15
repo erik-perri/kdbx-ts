@@ -6,9 +6,7 @@ import readDateTimeValue from './readDateTimeValue';
 import readStringValue from './readStringValue';
 import readUuidValue from './readUuidValue';
 
-export default async function parseCustomIconsTag(
-  reader: XmlReader,
-): Promise<Icon> {
+export default async function parseIconTag(reader: XmlReader): Promise<Icon> {
   reader.assertOpenedTagOf('Icon');
 
   const icon: Partial<Icon> = {};
