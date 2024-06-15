@@ -1,7 +1,7 @@
 {
   "name": "kdbx-ts",
   "version": "0.0.1",
-  "description": "Parse and write KeePass KDBX files",
+  "description": "WIP",
   "exports": {
     "*": {
       "import": "./dist/index.mjs",
@@ -21,7 +21,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "@eslint/js": "^9.4.0",
+    "@eslint/js": "^9.5.0",
     "@types/pako": "^2.0.3",
     "@vitest/coverage-v8": "^1.6.0",
     "argon2": "^0.40.3",
