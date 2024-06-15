@@ -52,7 +52,7 @@ export default async function parseKeePassFileTag(
   }
 
   if (!isDatabaseComplete(database)) {
-    throw new Error('Failed to parse a complete database from the XML data.');
+    throw new Error('Failed to parse a complete database from the XML data');
   }
 
   return database;
