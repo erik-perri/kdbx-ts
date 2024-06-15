@@ -1,8 +1,7 @@
-import type { CryptoCipher } from '../../crypto/types';
 import type Entry from '../../structure/Entry';
 import { isEntryComplete } from '../../structure/utilities';
 import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
-import { type XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import type { BinaryPool } from '../types';
 import parseCustomDataTag from './parseCustomDataTag';
 import parseEntryBinaryTag from './parseEntryBinaryTag';
@@ -10,16 +9,10 @@ import parseEntryHistoryTag from './parseEntryHistoryTag';
 import parseEntryStringTag from './parseEntryStringTag';
 import parseTimesTag from './parseTimesTag';
 import processAutoTypeTag from './processAutoTypeTag';
-import readBooleanValue from './readBooleanValue';
-import readColorValue from './readColorValue';
-import readNumberValue from './readNumberValue';
-import readStringValue from './readStringValue';
-import readUuidValue from './readUuidValue';
 
 export default async function parseEntryTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
   binaryPool: BinaryPool,
-  randomStream: CryptoCipher,
   fromHistory: boolean = false,
 ): Promise<Entry> {
   reader.assertOpenedTagOf('Entry');
@@ -29,13 +22,12 @@ export default async function parseEntryTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'UUID':
-        entry.uuid = await readUuidValue(reader);
+        entry.uuid = await reader.readUuidValue();
         break;
 
       case 'String': {
         const { key, value, isProtected } = await parseEntryStringTag(
           reader.readFromCurrent(),
-          randomStream,
         );
 
         if (!entry.attributes) {
@@ -68,7 +60,6 @@ export default async function parseEntryTag(
         entry.history = await parseEntryHistoryTag(
           reader.readFromCurrent(),
           binaryPool,
-          randomStream,
         );
         break;
 
@@ -77,7 +68,7 @@ export default async function parseEntryTag(
         break;
 
       case 'IconID':
-        entry.iconNumber = readNumberValue(reader);
+        entry.iconNumber = reader.readNumberValue();
 
         if (!isDefaultIconNumber(entry.iconNumber)) {
           console.warn(
@@ -87,27 +78,27 @@ export default async function parseEntryTag(
         break;
 
       case 'CustomIconUUID':
-        entry.customIcon = await readUuidValue(reader);
+        entry.customIcon = await reader.readUuidValue();
         break;
 
       case 'ForegroundColor':
-        entry.foregroundColor = readColorValue(reader);
+        entry.foregroundColor = reader.readColorValue();
         break;
 
       case 'BackgroundColor':
-        entry.backgroundColor = readColorValue(reader);
+        entry.backgroundColor = reader.readColorValue();
         break;
 
       case 'OverrideURL':
-        entry.overrideURL = readStringValue(reader);
+        entry.overrideURL = reader.readStringValue();
         break;
 
       case 'Tags':
-        entry.tags = readStringValue(reader);
+        entry.tags = reader.readStringValue();
         break;
 
       case 'QualityCheck':
-        entry.qualityCheck = readBooleanValue(reader);
+        entry.qualityCheck = reader.readBooleanValue();
         break;
 
       case 'Binary': {
@@ -131,7 +122,7 @@ export default async function parseEntryTag(
         break;
 
       case 'PreviousParentGroup':
-        entry.previousParentGroup = await readUuidValue(reader);
+        entry.previousParentGroup = await reader.readUuidValue();
         break;
 
       default:

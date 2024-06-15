@@ -1,7 +1,7 @@
 import type { CryptoCipher } from '../../crypto/types';
 import type Database from '../../structure/Database';
+import KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import Uint8ArrayReader from '../../utilities/Uint8ArrayReader';
-import { XmlReader } from '../../utilities/XmlReader';
 import { type BinaryPool } from '../types';
 import parseKeePassFileTag from './parseKeePassFileTag';
 
@@ -11,7 +11,7 @@ export default async function parseDatabaseXml(
   randomStream: CryptoCipher,
 ): Promise<Database> {
   const xmlAsString = Uint8ArrayReader.toString(xml);
-  const reader = new XmlReader(xmlAsString);
+  const reader = new KdbxXmlReader(xmlAsString, randomStream);
 
   if (!reader.current.isMeta) {
     throw new Error('Invalid database format. No XML header found');
@@ -20,5 +20,5 @@ export default async function parseDatabaseXml(
   // Skip past the XML header
   reader.readNextStartElement();
 
-  return await parseKeePassFileTag(reader, binaryPool, randomStream);
+  return await parseKeePassFileTag(reader, binaryPool);
 }

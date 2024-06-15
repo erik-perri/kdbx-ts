@@ -1,10 +1,9 @@
 import type AutoTypeAssociation from '../../structure/AutoTypeAssociation';
 import { isAutoTypeAssociationComplete } from '../../structure/utilities';
-import type { XmlReader } from '../../utilities/XmlReader';
-import readStringValue from './readStringValue';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseAutoTypeAssociationTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
 ): AutoTypeAssociation {
   reader.assertOpenedTagOf('Association');
 
@@ -13,11 +12,11 @@ export default function parseAutoTypeAssociationTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'Window':
-        association.window = readStringValue(reader);
+        association.window = reader.readStringValue();
         break;
 
       case 'KeystrokeSequence':
-        association.sequence = readStringValue(reader);
+        association.sequence = reader.readStringValue();
         break;
 
       default:

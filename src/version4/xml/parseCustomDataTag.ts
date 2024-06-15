@@ -1,9 +1,9 @@
 import type CustomDataItem from '../../structure/CustomDateTime';
-import type { XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseCustomDataItemTag from './parseCustomDataItemTag';
 
 export default function parseCustomDataTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
 ): Record<string, CustomDataItem | undefined> {
   reader.assertOpenedTagOf('CustomData');
 

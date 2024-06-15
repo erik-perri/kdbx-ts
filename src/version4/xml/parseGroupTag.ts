@@ -1,22 +1,15 @@
-import { type CryptoCipher } from '../../crypto/types';
 import type Group from '../../structure/Group';
 import { isGroupComplete } from '../../structure/utilities';
 import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
-import { type XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import { type BinaryPool } from '../types';
 import parseCustomDataTag from './parseCustomDataTag';
 import parseEntryTag from './parseEntryTag';
 import parseTimesTag from './parseTimesTag';
-import readBooleanValue from './readBooleanValue';
-import readNumberValue from './readNumberValue';
-import readStringValue from './readStringValue';
-import readTriStateValue from './readTriStateValue';
-import readUuidValue from './readUuidValue';
 
 export default async function parseGroupTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
   binaryPool: BinaryPool,
-  randomStream: CryptoCipher,
 ): Promise<Group> {
   reader.assertOpenedTagOf('Group');
 
@@ -25,19 +18,19 @@ export default async function parseGroupTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'UUID':
-        group.uuid = await readUuidValue(reader);
+        group.uuid = await reader.readUuidValue();
         break;
 
       case 'Name':
-        group.name = readStringValue(reader);
+        group.name = reader.readStringValue();
         break;
 
       case 'Notes':
-        group.notes = readStringValue(reader);
+        group.notes = reader.readStringValue();
         break;
 
       case 'Tags':
-        group.tags = readStringValue(reader);
+        group.tags = reader.readStringValue();
         break;
 
       case 'Times':
@@ -45,7 +38,7 @@ export default async function parseGroupTag(
         break;
 
       case 'IconID':
-        group.iconNumber = readNumberValue(reader);
+        group.iconNumber = reader.readNumberValue();
 
         if (!isDefaultIconNumber(group.iconNumber)) {
           console.warn(
@@ -55,7 +48,7 @@ export default async function parseGroupTag(
         break;
 
       case 'CustomIconUUID':
-        group.customIcon = await readUuidValue(reader);
+        group.customIcon = await reader.readUuidValue();
         break;
 
       case 'Group': {
@@ -64,11 +57,7 @@ export default async function parseGroupTag(
         }
 
         group.children.push(
-          await parseGroupTag(
-            reader.readFromCurrent(),
-            binaryPool,
-            randomStream,
-          ),
+          await parseGroupTag(reader.readFromCurrent(), binaryPool),
         );
         break;
       }
@@ -79,11 +68,7 @@ export default async function parseGroupTag(
         }
 
         group.entries.push(
-          await parseEntryTag(
-            reader.readFromCurrent(),
-            binaryPool,
-            randomStream,
-          ),
+          await parseEntryTag(reader.readFromCurrent(), binaryPool),
         );
         break;
       }
@@ -93,27 +78,27 @@ export default async function parseGroupTag(
         break;
 
       case 'IsExpanded':
-        group.isExpanded = readBooleanValue(reader);
+        group.isExpanded = reader.readBooleanValue();
         break;
 
       case 'DefaultAutoTypeSequence':
-        group.defaultAutoTypeSequence = readStringValue(reader);
+        group.defaultAutoTypeSequence = reader.readStringValue();
         break;
 
       case 'EnableAutoType':
-        group.enableAutoType = readTriStateValue(reader);
+        group.enableAutoType = reader.readTriStateValue();
         break;
 
       case 'EnableSearching':
-        group.enableSearching = readTriStateValue(reader);
+        group.enableSearching = reader.readTriStateValue();
         break;
 
       case 'LastTopVisibleEntry':
-        group.lastTopVisibleEntry = await readUuidValue(reader);
+        group.lastTopVisibleEntry = await reader.readUuidValue();
         break;
 
       case 'PreviousParentGroup':
-        group.previousParentGroup = await readUuidValue(reader);
+        group.previousParentGroup = await reader.readUuidValue();
         break;
 
       default:

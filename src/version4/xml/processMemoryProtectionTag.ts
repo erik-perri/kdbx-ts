@@ -1,9 +1,8 @@
 import type Metadata from '../../structure/Metadata';
-import { type XmlReader } from '../../utilities/XmlReader';
-import readBooleanValue from './readBooleanValue';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function processMemoryProtectionTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
   metadata: Partial<Metadata>,
 ): void {
   reader.assertOpenedTagOf('MemoryProtection');
@@ -11,23 +10,23 @@ export default function processMemoryProtectionTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'ProtectTitle':
-        metadata.protectTitle = readBooleanValue(reader);
+        metadata.protectTitle = reader.readBooleanValue();
         break;
 
       case 'ProtectUserName':
-        metadata.protectUserName = readBooleanValue(reader);
+        metadata.protectUserName = reader.readBooleanValue();
         break;
 
       case 'ProtectPassword':
-        metadata.protectPassword = readBooleanValue(reader);
+        metadata.protectPassword = reader.readBooleanValue();
         break;
 
       case 'ProtectURL':
-        metadata.protectURL = readBooleanValue(reader);
+        metadata.protectURL = reader.readBooleanValue();
         break;
 
       case 'ProtectNotes':
-        metadata.protectNotes = readBooleanValue(reader);
+        metadata.protectNotes = reader.readBooleanValue();
         break;
 
       default:

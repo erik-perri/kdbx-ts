@@ -1,7 +1,4 @@
-import type { CryptoCipher } from '../../crypto/types';
-import type { XmlReader } from '../../utilities/XmlReader';
-import readPotentiallyProtectedStringValue from './readPotentiallyProtectedStringValue';
-import readStringValue from './readStringValue';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 type StringTagData = {
   key: string;
@@ -10,8 +7,7 @@ type StringTagData = {
 };
 
 export default async function parseEntryStringTag(
-  reader: XmlReader,
-  randomStream: CryptoCipher,
+  reader: KdbxXmlReader,
 ): Promise<StringTagData> {
   reader.assertOpenedTagOf('String');
 
@@ -22,14 +18,12 @@ export default async function parseEntryStringTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'Key':
-        key = readStringValue(reader);
+        key = reader.readStringValue();
         break;
 
       case 'Value':
-        [value, isProtected] = await readPotentiallyProtectedStringValue(
-          reader,
-          randomStream,
-        );
+        [value, isProtected] =
+          await reader.readPotentiallyProtectedStringValue();
         break;
 
       default:

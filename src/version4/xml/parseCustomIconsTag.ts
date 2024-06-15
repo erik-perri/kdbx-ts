@@ -1,10 +1,10 @@
 import type Icon from '../../structure/Icon';
 import type { Uuid } from '../../structure/Uuid';
-import type { XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseIconTag from './parseIconTag';
 
 export default async function parseCustomIconsTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
 ): Promise<Record<Uuid, Icon | undefined>> {
   reader.assertOpenedTagOf('CustomIcons');
 

@@ -1,12 +1,10 @@
 import type Icon from '../../structure/Icon';
 import { isIconComplete } from '../../structure/utilities';
-import type { XmlReader } from '../../utilities/XmlReader';
-import readBinaryValue from './readBinaryValue';
-import readDateTimeValue from './readDateTimeValue';
-import readStringValue from './readStringValue';
-import readUuidValue from './readUuidValue';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
-export default async function parseIconTag(reader: XmlReader): Promise<Icon> {
+export default async function parseIconTag(
+  reader: KdbxXmlReader,
+): Promise<Icon> {
   reader.assertOpenedTagOf('Icon');
 
   const icon: Partial<Icon> = {};
@@ -14,19 +12,19 @@ export default async function parseIconTag(reader: XmlReader): Promise<Icon> {
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'UUID':
-        icon.uuid = await readUuidValue(reader);
+        icon.uuid = await reader.readUuidValue();
         break;
 
       case 'Data':
-        icon.data = await readBinaryValue(reader);
+        icon.data = await reader.readBinaryValue();
         break;
 
       case 'Name':
-        icon.name = readStringValue(reader);
+        icon.name = reader.readStringValue();
         break;
 
       case 'LastModificationTime':
-        icon.lastModificationTime = readDateTimeValue(reader);
+        icon.lastModificationTime = reader.readDateTimeValue();
         break;
 
       default:

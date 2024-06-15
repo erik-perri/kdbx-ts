@@ -1,5 +1,4 @@
-import type { XmlReader } from '../../utilities/XmlReader';
-import readStringValue from './readStringValue';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 type BinaryTagData = {
   key: string;
@@ -12,7 +11,9 @@ function isBinaryTagDataComplete(
   return data.key !== undefined && data.ref !== undefined;
 }
 
-export default function parseEntryBinaryTag(reader: XmlReader): BinaryTagData {
+export default function parseEntryBinaryTag(
+  reader: KdbxXmlReader,
+): BinaryTagData {
   reader.assertOpenedTagOf('Binary');
 
   const result: Partial<BinaryTagData> = {};
@@ -20,7 +21,7 @@ export default function parseEntryBinaryTag(reader: XmlReader): BinaryTagData {
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'Key':
-        result.key = readStringValue(reader);
+        result.key = reader.readStringValue();
         break;
 
       case 'Value':

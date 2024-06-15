@@ -1,7 +1,6 @@
-import type { CryptoCipher } from '../../crypto/types';
 import type DeletedObject from '../../structure/DeletedObject';
 import type Group from '../../structure/Group';
-import type { XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import type { BinaryPool } from '../types';
 import parseDeletedObjectsTag from './parseDeletedObjectsTag';
 import parseGroupTag from './parseGroupTag';
@@ -20,9 +19,8 @@ function isRootTagParseResultsComplete(
 }
 
 export default async function parseRootTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
   binaryPool: BinaryPool,
-  randomStream: CryptoCipher,
 ): Promise<RootTagParseResults> {
   reader.assertOpenedTagOf('Root');
 
@@ -38,7 +36,6 @@ export default async function parseRootTag(
         result.rootGroup = await parseGroupTag(
           reader.readFromCurrent(),
           binaryPool,
-          randomStream,
         );
         break;
 

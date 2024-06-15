@@ -1,13 +1,11 @@
-import type { CryptoCipher } from '../../crypto/types';
 import type Entry from '../../structure/Entry';
-import { type XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import type { BinaryPool } from '../types';
 import parseEntryTag from './parseEntryTag';
 
 export default async function parseEntryHistoryTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
   binaryPool: BinaryPool,
-  randomStream: CryptoCipher,
 ): Promise<Entry[]> {
   reader.assertOpenedTagOf('History');
 
@@ -17,12 +15,7 @@ export default async function parseEntryHistoryTag(
     switch (reader.current.name) {
       case 'Entry':
         history.push(
-          await parseEntryTag(
-            reader.readFromCurrent(),
-            binaryPool,
-            randomStream,
-            true,
-          ),
+          await parseEntryTag(reader.readFromCurrent(), binaryPool, true),
         );
         break;
 

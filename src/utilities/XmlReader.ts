@@ -9,8 +9,8 @@ export type XmlElement = {
   position: [number, number];
 };
 
-export class XmlReader {
-  private readonly totalSize: number = 0;
+export default class XmlReader {
+  public readonly totalSize: number = 0;
   private currentElement: XmlElement;
 
   constructor(private readonly contents: string) {
@@ -37,7 +37,11 @@ export class XmlReader {
     return this.currentElement;
   }
 
-  readFromCurrent(): XmlReader {
+  createChildReader(contents: string): XmlReader {
+    return new XmlReader(contents);
+  }
+
+  readFromCurrent(): this {
     const endTag = this.currentElement.isClose
       ? this.currentElement
       : this.findEndOfCurrentElement();
@@ -47,12 +51,14 @@ export class XmlReader {
       );
     }
 
-    const reader = new XmlReader(
+    const reader = this.createChildReader(
       this.contents.slice(this.currentElement.position[0], endTag.position[1]),
     );
 
     this.skipCurrentElement();
 
+    // @ts-expect-error - Child classes are expected to override createChildReader
+    //                    for this to work correctly.
     return reader;
   }
 

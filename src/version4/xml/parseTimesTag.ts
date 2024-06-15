@@ -1,11 +1,8 @@
 import type TimeInfo from '../../structure/TimeInfo';
 import { isTimeInfoComplete } from '../../structure/utilities';
-import { type XmlReader } from '../../utilities/XmlReader';
-import readBooleanValue from './readBooleanValue';
-import readDateTimeValue from './readDateTimeValue';
-import readNumberValue from './readNumberValue';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
-export default function parseTimesTag(reader: XmlReader): TimeInfo {
+export default function parseTimesTag(reader: KdbxXmlReader): TimeInfo {
   reader.assertOpenedTagOf('Times');
 
   const timeInfo: Partial<TimeInfo> = {};
@@ -13,31 +10,31 @@ export default function parseTimesTag(reader: XmlReader): TimeInfo {
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'LastModificationTime':
-        timeInfo.lastModificationTime = readDateTimeValue(reader);
+        timeInfo.lastModificationTime = reader.readDateTimeValue();
         break;
 
       case 'CreationTime':
-        timeInfo.creationTime = readDateTimeValue(reader);
+        timeInfo.creationTime = reader.readDateTimeValue();
         break;
 
       case 'LastAccessTime':
-        timeInfo.lastAccessTime = readDateTimeValue(reader);
+        timeInfo.lastAccessTime = reader.readDateTimeValue();
         break;
 
       case 'ExpiryTime':
-        timeInfo.expiryTime = readDateTimeValue(reader);
+        timeInfo.expiryTime = reader.readDateTimeValue();
         break;
 
       case 'Expires':
-        timeInfo.expires = readBooleanValue(reader);
+        timeInfo.expires = reader.readBooleanValue();
         break;
 
       case 'UsageCount':
-        timeInfo.usageCount = readNumberValue(reader);
+        timeInfo.usageCount = reader.readNumberValue();
         break;
 
       case 'LocationChanged':
-        timeInfo.locationChanged = readDateTimeValue(reader);
+        timeInfo.locationChanged = reader.readDateTimeValue();
         break;
 
       default:

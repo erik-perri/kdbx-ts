@@ -1,11 +1,9 @@
 import type DeletedObject from '../../structure/DeletedObject';
 import { isDeletedObjectComplete } from '../../structure/utilities';
-import { type XmlReader } from '../../utilities/XmlReader';
-import readDateTimeValue from './readDateTimeValue';
-import readUuidValue from './readUuidValue';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default async function parseDeletedObjectTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
 ): Promise<DeletedObject> {
   reader.assertOpenedTagOf('DeletedObject');
 
@@ -14,11 +12,11 @@ export default async function parseDeletedObjectTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'UUID':
-        deleted.uuid = await readUuidValue(reader);
+        deleted.uuid = await reader.readUuidValue();
         break;
 
       case 'DeletionTime':
-        deleted.deletionTime = readDateTimeValue(reader);
+        deleted.deletionTime = reader.readDateTimeValue();
         break;
 
       default:

@@ -1,15 +1,13 @@
-import { type CryptoCipher } from '../../crypto/types';
 import type Database from '../../structure/Database';
 import { isDatabaseComplete } from '../../structure/utilities';
-import { type XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import { type BinaryPool } from '../types';
 import parseMetaTag from './parseMetaTag';
 import parseRootTag from './parseRootTag';
 
 export default async function parseKeePassFileTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
   binaryPool: BinaryPool,
-  randomStream: CryptoCipher,
 ): Promise<Database> {
   reader.assertOpenedTagOf('KeePassFile');
 
@@ -22,10 +20,7 @@ export default async function parseKeePassFileTag(
           throw new Error('Multiple Meta elements');
         }
 
-        database.metadata = await parseMetaTag(
-          reader.readFromCurrent(),
-          randomStream,
-        );
+        database.metadata = await parseMetaTag(reader.readFromCurrent());
         break;
 
       case 'Root': {
@@ -36,7 +31,6 @@ export default async function parseKeePassFileTag(
         const { rootGroup, deletedObjects } = await parseRootTag(
           reader.readFromCurrent(),
           binaryPool,
-          randomStream,
         );
 
         database.rootGroup = rootGroup;

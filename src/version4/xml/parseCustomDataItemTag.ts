@@ -1,11 +1,9 @@
 import type CustomDataItem from '../../structure/CustomDateTime';
 import { isCustomDataItemComplete } from '../../structure/utilities';
-import type { XmlReader } from '../../utilities/XmlReader';
-import readDateTimeValue from './readDateTimeValue';
-import readStringValue from './readStringValue';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseCustomDataItemTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
 ): CustomDataItem {
   reader.assertOpenedTagOf('Item');
 
@@ -14,15 +12,15 @@ export default function parseCustomDataItemTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'Key':
-        customData.key = readStringValue(reader);
+        customData.key = reader.readStringValue();
         break;
 
       case 'Value':
-        customData.value = readStringValue(reader);
+        customData.value = reader.readStringValue();
         break;
 
       case 'LastModificationTime':
-        customData.lastModified = readDateTimeValue(reader);
+        customData.lastModified = reader.readDateTimeValue();
         break;
 
       default:

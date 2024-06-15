@@ -1,9 +1,9 @@
 import type DeletedObject from '../../structure/DeletedObject';
-import { type XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseDeletedObjectTag from './parseDeletedObjectTag';
 
 export default async function parseDeletedObjectsTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
 ): Promise<DeletedObject[]> {
   reader.assertOpenedTagOf('DeletedObjects');
 

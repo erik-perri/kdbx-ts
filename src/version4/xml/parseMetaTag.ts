@@ -1,23 +1,12 @@
-import type { CryptoCipher } from '../../crypto/types';
 import type Metadata from '../../structure/Metadata';
 import { isMetadataComplete } from '../../structure/utilities';
-import type { XmlReader } from '../../utilities/XmlReader';
-import type { BinaryPool } from '../types';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseCustomDataTag from './parseCustomDataTag';
 import parseCustomIconsTag from './parseCustomIconsTag';
 import processMemoryProtectionTag from './processMemoryProtectionTag';
-import readBinaryValue from './readBinaryValue';
-import readBooleanValue from './readBooleanValue';
-import readColorValue from './readColorValue';
-import readDateTimeValue from './readDateTimeValue';
-import readNumberValue from './readNumberValue';
-import readStringValue from './readStringValue';
-import readUnsignedNumberValue from './readUnsignedNumberValue';
-import readUuidValue from './readUuidValue';
 
 export default async function parseMetaTag(
-  reader: XmlReader,
-  randomStream: CryptoCipher,
+  reader: KdbxXmlReader,
 ): Promise<Metadata> {
   reader.assertOpenedTagOf('Meta');
 
@@ -26,55 +15,55 @@ export default async function parseMetaTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'Generator':
-        metadata.generator = readStringValue(reader);
+        metadata.generator = reader.readStringValue();
         break;
 
       case 'HeaderHash':
-        metadata.headerHash = await readBinaryValue(reader, randomStream);
+        metadata.headerHash = await reader.readBinaryValue();
         break;
 
       case 'DatabaseName':
-        metadata.name = readStringValue(reader);
+        metadata.name = reader.readStringValue();
         break;
 
       case 'DatabaseNameChanged':
-        metadata.nameChanged = readDateTimeValue(reader);
+        metadata.nameChanged = reader.readDateTimeValue();
         break;
 
       case 'DatabaseDescription':
-        metadata.description = readStringValue(reader);
+        metadata.description = reader.readStringValue();
         break;
 
       case 'DatabaseDescriptionChanged':
-        metadata.descriptionChanged = readDateTimeValue(reader);
+        metadata.descriptionChanged = reader.readDateTimeValue();
         break;
 
       case 'DefaultUserName':
-        metadata.defaultUserName = readStringValue(reader);
+        metadata.defaultUserName = reader.readStringValue();
         break;
 
       case 'DefaultUserNameChanged':
-        metadata.defaultUserNameChanged = readDateTimeValue(reader);
+        metadata.defaultUserNameChanged = reader.readDateTimeValue();
         break;
 
       case 'MaintenanceHistoryDays':
-        metadata.maintenanceHistoryDays = readNumberValue(reader);
+        metadata.maintenanceHistoryDays = reader.readNumberValue();
         break;
 
       case 'Color':
-        metadata.color = readColorValue(reader);
+        metadata.color = reader.readColorValue();
         break;
 
       case 'MasterKeyChanged':
-        metadata.masterKeyChanged = readDateTimeValue(reader);
+        metadata.masterKeyChanged = reader.readDateTimeValue();
         break;
 
       case 'MasterKeyChangeRec':
-        metadata.masterKeyChangeRec = readNumberValue(reader);
+        metadata.masterKeyChangeRec = reader.readNumberValue();
         break;
 
       case 'MasterKeyChangeForce':
-        metadata.masterKeyChangeForce = readNumberValue(reader);
+        metadata.masterKeyChangeForce = reader.readNumberValue();
         break;
 
       case 'MemoryProtection':
@@ -88,39 +77,39 @@ export default async function parseMetaTag(
         break;
 
       case 'RecycleBinEnabled':
-        metadata.recycleBinEnabled = readBooleanValue(reader);
+        metadata.recycleBinEnabled = reader.readBooleanValue();
         break;
 
       case 'RecycleBinUUID':
-        metadata.recycleBinUuid = await readUuidValue(reader);
+        metadata.recycleBinUuid = await reader.readUuidValue();
         break;
 
       case 'RecycleBinChanged':
-        metadata.recycleBinChanged = readDateTimeValue(reader);
+        metadata.recycleBinChanged = reader.readDateTimeValue();
         break;
 
       case 'EntryTemplatesGroup':
-        metadata.entryTemplatesGroup = await readUuidValue(reader);
+        metadata.entryTemplatesGroup = await reader.readUuidValue();
         break;
 
       case 'EntryTemplatesGroupChanged':
-        metadata.entryTemplatesGroupChanged = readDateTimeValue(reader);
+        metadata.entryTemplatesGroupChanged = reader.readDateTimeValue();
         break;
 
       case 'LastSelectedGroup':
-        metadata.lastSelectedGroup = await readUuidValue(reader);
+        metadata.lastSelectedGroup = await reader.readUuidValue();
         break;
 
       case 'LastTopVisibleGroup':
-        metadata.lastTopVisibleGroup = await readUuidValue(reader);
+        metadata.lastTopVisibleGroup = await reader.readUuidValue();
         break;
 
       case 'HistoryMaxItems':
-        metadata.historyMaxItems = readUnsignedNumberValue(reader);
+        metadata.historyMaxItems = reader.readUnsignedNumberValue();
         break;
 
       case 'HistoryMaxSize':
-        metadata.historyMaxSize = readUnsignedNumberValue(reader);
+        metadata.historyMaxSize = reader.readUnsignedNumberValue();
         break;
 
       case 'Binaries':
@@ -131,7 +120,7 @@ export default async function parseMetaTag(
         break;
 
       case 'SettingsChanged':
-        metadata.settingsChanged = readDateTimeValue(reader);
+        metadata.settingsChanged = reader.readDateTimeValue();
         break;
 
       default:

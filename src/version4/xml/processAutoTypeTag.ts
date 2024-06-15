@@ -1,12 +1,9 @@
 import type Entry from '../../structure/Entry';
-import { type XmlReader } from '../../utilities/XmlReader';
+import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseAutoTypeAssociationTag from './parseAutoTypeAssociationTag';
-import readBooleanValue from './readBooleanValue';
-import readNumberValue from './readNumberValue';
-import readStringValue from './readStringValue';
 
 export default function processAutoTypeTag(
-  reader: XmlReader,
+  reader: KdbxXmlReader,
   entry: Partial<Entry>,
 ): void {
   reader.assertOpenedTagOf('AutoType');
@@ -14,15 +11,15 @@ export default function processAutoTypeTag(
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'Enabled':
-        entry.autoTypeEnabled = readBooleanValue(reader);
+        entry.autoTypeEnabled = reader.readBooleanValue();
         break;
 
       case 'DataTransferObfuscation':
-        entry.autoTypeObfuscation = readNumberValue(reader);
+        entry.autoTypeObfuscation = reader.readNumberValue();
         break;
 
       case 'DefaultSequence':
-        entry.defaultAutoTypeSequence = readStringValue(reader);
+        entry.defaultAutoTypeSequence = reader.readStringValue();
         break;
 
       case 'Association':

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { XmlReader } from './XmlReader';
+import XmlReader from './XmlReader';
 
 describe('XmlReader', () => {
   describe('constructor', () => {
