@@ -1,6 +1,7 @@
 import type { CryptoCipher } from '../../crypto/types';
 import type Entry from '../../structure/Entry';
 import { isEntryComplete } from '../../structure/utilities';
+import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
 import { type XmlReader } from '../../utilities/XmlReader';
 import type { BinaryPool } from '../types';
 import parseCustomDataTag from './parseCustomDataTag';
@@ -77,6 +78,12 @@ export default async function parseEntryTag(
 
       case 'IconID':
         entry.iconNumber = readNumberValue(reader);
+
+        if (!isDefaultIconNumber(entry.iconNumber)) {
+          console.warn(
+            `Entry has unexpected default icon number "${entry.iconNumber}"`,
+          );
+        }
         break;
 
       case 'CustomIconUUID':

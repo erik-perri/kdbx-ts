@@ -1,6 +1,7 @@
 import { type CryptoCipher } from '../../crypto/types';
 import type Group from '../../structure/Group';
 import { isGroupComplete } from '../../structure/utilities';
+import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
 import { type XmlReader } from '../../utilities/XmlReader';
 import { type BinaryPool } from '../types';
 import parseCustomDataTag from './parseCustomDataTag';
@@ -45,6 +46,12 @@ export default async function parseGroupTag(
 
       case 'IconID':
         group.iconNumber = readNumberValue(reader);
+
+        if (!isDefaultIconNumber(group.iconNumber)) {
+          console.warn(
+            `Group has unexpected default icon number "${group.iconNumber}"`,
+          );
+        }
         break;
 
       case 'CustomIconUUID':
