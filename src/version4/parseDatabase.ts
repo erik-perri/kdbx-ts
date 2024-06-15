@@ -1,50 +1,30 @@
+import pako from 'pako';
+
+import createSymmetricCipher from '../crypto/createSymmetricCipher';
+import getBlockHmacKey from '../crypto/getBlockHmacKey';
+import getKeepassHmacKey from '../crypto/getKeepassHmacKey';
 import transformCompositeKey from '../crypto/transformCompositeKey';
 import type { CryptoImplementation } from '../crypto/types';
+import CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import KdbxVersion from '../enums/KdbxVersion';
+import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 import type { KdbxHeader, KdbxSignature } from '../header/types';
 import { type KdbxKey } from '../keys/types';
 import displayHash from '../utilities/displayHash';
-import type Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
+import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
 import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
-import Uint8ArrayWriter from '../utilities/Uint8ArrayWriter';
 import parseHeader from './parseHeader';
+import readHmacHashedBlocks from './readHmacHashedBlocks';
+import readInnerHeaderFields, {
+  type KdbxInnerHeaderFields,
+} from './readInnerHeaderFields';
 
 export type KdbxDatabase4 = {
   signature: KdbxSignature;
   header: KdbxHeader;
+  innerHeaders: KdbxInnerHeaderFields;
 };
-
-async function keepassHmacKey(
-  crypto: CryptoImplementation,
-  masterSeed: Uint8Array,
-  transformedMasterKey: Uint8Array,
-): Promise<Uint8Array> {
-  return await crypto.hash(HashAlgorithm.Sha512, [
-    masterSeed,
-    transformedMasterKey,
-    Uint8Array.from([0x01]),
-  ]);
-}
-
-async function getBlockHmacKey(
-  crypto: CryptoImplementation,
-  blockIndex: bigint,
-  key: Uint8Array,
-): Promise<Uint8Array> {
-  if (key.byteLength !== 64) {
-    throw new Error(
-      'Unexpected key length. Expected 64 bytes, got ${key.byteLength}',
-    );
-  }
-
-  return crypto.hash(HashAlgorithm.Sha512, [
-    Uint8ArrayWriter.fromUInt64LE(blockIndex),
-    key,
-  ]);
-}
-
-const UINT64_MAX = BigInt('18446744073709551615'); // 0xffffffffffffffff
 
 export default async function parseDatabase(
   crypto: CryptoImplementation,
@@ -88,11 +68,15 @@ export default async function parseDatabase(
     );
   }
 
-  const hmacKey = await keepassHmacKey(crypto, header.masterSeed, compositeKey);
+  const hmacKey = await getKeepassHmacKey(
+    crypto,
+    header.masterSeed,
+    compositeKey,
+  );
 
   const headerHmac = await crypto.hmac(
     HashAlgorithm.Sha256,
-    await getBlockHmacKey(crypto, UINT64_MAX, hmacKey),
+    await getBlockHmacKey(crypto, null, hmacKey),
     [headerData],
   );
 
@@ -100,8 +84,45 @@ export default async function parseDatabase(
     throw new Error('HMAC mismatch');
   }
 
-  return Promise.resolve({
+  const blocks = await readHmacHashedBlocks(crypto, reader, hmacKey);
+
+  const finalKey = await crypto.hash(HashAlgorithm.Sha256, [
+    header.masterSeed,
+    compositeKey,
+  ]);
+
+  const cipher = await crypto.createCipher(
+    header.cipherMode,
+    SymmetricCipherDirection.Decrypt,
+    finalKey,
+    header.encryptionIV,
+  );
+
+  const processedBytes: Uint8Array = await cipher.finish(
+    blocks.reduce(
+      (previous, current) => Uint8Array.from([...previous, ...current]),
+      new Uint8Array(0),
+    ),
+  );
+
+  const buffer =
+    header.compressionAlgorithm === CompressionAlgorithm.GZip
+      ? pako.inflate(processedBytes)
+      : processedBytes;
+
+  const bufferReader = new Uint8ArrayCursorReader(buffer);
+
+  const innerHeaders = readInnerHeaderFields(bufferReader);
+
+  /*const randomStreamCipher =*/ await createSymmetricCipher(
+    crypto,
+    innerHeaders.innerRandomStreamMode,
+    innerHeaders.innerRandomStreamKey,
+  );
+
+  return {
     signature,
     header,
-  });
+    innerHeaders,
+  };
 }
