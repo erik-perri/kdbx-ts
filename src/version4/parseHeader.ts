@@ -1,9 +1,9 @@
 import HeaderFieldId from '../enums/HeaderFieldId';
 import isHeaderComplete from '../header/isHeaderComplete';
-import processCipherId from '../header/processCipherId';
-import processCompressionFlags from '../header/processCompressionFlags';
-import processMasterSeed from '../header/processMasterSeed';
 import type { KdbxHeader, KdbxHeaderField } from '../header/types';
+import validateCipherId from '../header/validateCipherId';
+import validateCompressionFlags from '../header/validateCompressionFlags';
+import validateMasterSeed from '../header/validateMasterSeed';
 import displayKdbxHeaderFieldId from '../utilities/displayKdbxHeaderFieldId';
 import { isKdbxHeaderFieldId } from '../utilities/isKdbxHeaderFieldId';
 import type Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
@@ -56,7 +56,7 @@ export default function parseHeader(
         break;
 
       case HeaderFieldId.CipherID: {
-        const [cipherId, cipherMode] = processCipherId(field.data);
+        const [cipherId, cipherMode] = validateCipherId(field.data);
 
         header.cipherId = cipherId;
         header.cipherMode = cipherMode;
@@ -64,11 +64,11 @@ export default function parseHeader(
       }
 
       case HeaderFieldId.CompressionFlags:
-        header.compressionAlgorithm = processCompressionFlags(field.data);
+        header.compressionAlgorithm = validateCompressionFlags(field.data);
         break;
 
       case HeaderFieldId.MasterSeed:
-        header.masterSeed = processMasterSeed(field.data);
+        header.masterSeed = validateMasterSeed(field.data);
         break;
 
       case HeaderFieldId.EncryptionIV:

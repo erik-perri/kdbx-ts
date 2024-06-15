@@ -2,7 +2,7 @@ import SymmetricCipherMode from '../enums/SymmetricCipherMode';
 import convertSymmetricCipherUuidToMode from '../utilities/convertSymmetricCipherUuidToMode';
 import displayUuid from '../utilities/displayUuid';
 
-export default function processCipherId(
+export default function validateCipherId(
   data: Uint8Array,
 ): [string, SymmetricCipherMode] {
   if (data.byteLength !== 16) {

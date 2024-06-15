@@ -2,7 +2,7 @@ import type CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import { isCompressionAlgorithm } from '../utilities/isCompressionAlgorithm';
 import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
 
-export default function processCompressionFlags(
+export default function validateCompressionFlags(
   data: Uint8Array,
 ): CompressionAlgorithm {
   if (data.byteLength !== 4) {

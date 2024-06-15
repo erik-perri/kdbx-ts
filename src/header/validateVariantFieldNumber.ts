@@ -3,7 +3,7 @@ import type {
   VariantFieldTypes,
 } from '../version4/parseVariantMap';
 
-export default function processVariantFieldNumber(
+export default function validateVariantFieldNumber(
   key: string,
   variants: VariantFieldMap,
 ): number {

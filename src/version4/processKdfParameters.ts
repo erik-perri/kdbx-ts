@@ -2,10 +2,10 @@ import Argon2Type from '../enums/Argon2Type';
 import Argon2Version from '../enums/Argon2Version';
 import KdfParameterKey from '../enums/KdfParameterKey';
 import KdfUuid from '../enums/KdfUuid';
-import processVariantFieldBigInt from '../header/processVariantFieldBigInt';
-import processVariantFieldNumber from '../header/processVariantFieldNumber';
-import processVariantFieldUint8Array from '../header/processVariantFieldUint8Array';
 import type { KdfParameters } from '../header/types';
+import validateVariantFieldBigInt from '../header/validateVariantFieldBigInt';
+import validateVariantFieldNumber from '../header/validateVariantFieldNumber';
+import validateVariantFieldUint8Array from '../header/validateVariantFieldUint8Array';
 import displayUuid from '../utilities/displayUuid';
 import type { VariantFieldMap } from './parseVariantMap';
 
@@ -102,36 +102,39 @@ export default function processKdfParameters(
         // Upgrade Kdbx3 automatically to Kdbx4.
         uuid: KdfUuid.AesKdbx4,
         rounds: validateRounds(
-          processVariantFieldBigInt(KdfParameterKey.AesRounds, variants),
+          validateVariantFieldBigInt(KdfParameterKey.AesRounds, variants),
         ),
         seed: validateSeed(
-          processVariantFieldUint8Array(KdfParameterKey.AesSeed, variants),
+          validateVariantFieldUint8Array(KdfParameterKey.AesSeed, variants),
         ),
       };
     case KdfUuid.Argon2d:
     case KdfUuid.Argon2id:
       return {
         iterations: validateRounds(
-          processVariantFieldBigInt(KdfParameterKey.Argon2Iterations, variants),
+          validateVariantFieldBigInt(
+            KdfParameterKey.Argon2Iterations,
+            variants,
+          ),
         ),
         memoryInKibibytes: validateArgonMemory(
-          processVariantFieldBigInt(KdfParameterKey.Argon2Memory, variants),
+          validateVariantFieldBigInt(KdfParameterKey.Argon2Memory, variants),
         ),
         parallelism: validateArgonParallelism(
-          processVariantFieldBigInt(
+          validateVariantFieldBigInt(
             KdfParameterKey.Argon2Parallelism,
             variants,
             true,
           ),
         ),
         seed: validateSeed(
-          processVariantFieldUint8Array(KdfParameterKey.Argon2Salt, variants),
+          validateVariantFieldUint8Array(KdfParameterKey.Argon2Salt, variants),
         ),
         type:
           uuid === KdfUuid.Argon2d ? Argon2Type.Argon2d : Argon2Type.Argon2id,
         uuid,
         version: validateArgonVersion(
-          processVariantFieldNumber(KdfParameterKey.Argon2Version, variants),
+          validateVariantFieldNumber(KdfParameterKey.Argon2Version, variants),
         ),
       };
     default:

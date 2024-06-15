@@ -3,7 +3,7 @@ import type {
   VariantFieldTypes,
 } from '../version4/parseVariantMap';
 
-export default function processVariantFieldBigInt(
+export default function validateVariantFieldBigInt(
   key: string,
   variants: VariantFieldMap,
   allowNumber: boolean = false,

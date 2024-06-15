@@ -1,6 +1,6 @@
 import type { VariantFieldMap } from '../version4/parseVariantMap';
 
-export default function processVariantFieldUint8Array(
+export default function validateVariantFieldUint8Array(
   key: string,
   variants: VariantFieldMap,
 ): Uint8Array {
