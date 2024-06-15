@@ -2,7 +2,7 @@ export default class Uint8ArrayReader {
   private readonly bytes: Uint8Array;
 
   constructor(bytes: number[] | Uint8Array) {
-    this.bytes = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
+    this.bytes = ArrayBuffer.isView(bytes) ? bytes : Uint8Array.from(bytes);
   }
 
   static equals(a: Uint8Array, b: Uint8Array): boolean {
