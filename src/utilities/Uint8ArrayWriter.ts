@@ -5,6 +5,10 @@ export default class Uint8ArrayWriter {
     this.bytes = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
   }
 
+  static fromBase64(data: string): Uint8Array {
+    return Uint8Array.from(Buffer.from(data, 'base64'));
+  }
+
   static fromString(data: string): Uint8Array {
     const length = data.length;
     const result = new Uint8Array(length);
