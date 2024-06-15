@@ -4,7 +4,8 @@ import KeePassVersion from './enums/KeePassVersion';
 import parseFileSignature from './header/parseFileSignature';
 import { type KdbxKey } from './keys/types';
 import Uint8ArrayCursorReader from './utilities/Uint8ArrayCursorReader';
-import parseDatabase, { type KdbxDatabase4 } from './version4/parseDatabase';
+import parseDatabase from './version4/parseDatabase';
+import { type KdbxDatabase4 } from './version4/types';
 
 export default async function readKdbxFile(
   crypto: CryptoImplementation,

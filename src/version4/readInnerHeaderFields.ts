@@ -4,11 +4,12 @@ import displayInnerHeaderFieldId from '../utilities/displayInnerHeaderFieldId';
 import isInnerHeaderFieldId from '../utilities/isInnerHeaderFieldId';
 import type Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
 import processInnerRandomStreamId from './processInnerRandomStreamId';
+import { type BinaryPool } from './types';
 
 export type KdbxInnerHeaderFields = {
   innerRandomStreamMode: SymmetricCipherMode;
   innerRandomStreamKey: Uint8Array;
-  binaryPools: Record<string, Uint8Array>;
+  binaryPool: BinaryPool;
 };
 
 function isInnerHeaderFieldsComplete(
@@ -17,7 +18,7 @@ function isInnerHeaderFieldsComplete(
   return (
     header.innerRandomStreamMode !== undefined &&
     header.innerRandomStreamKey !== undefined &&
-    header.binaryPools !== undefined
+    header.binaryPool !== undefined
   );
 }
 
@@ -55,8 +56,8 @@ export default function readInnerHeaderFields(
   reader: Uint8ArrayCursorReader,
 ): KdbxInnerHeaderFields {
   const fields: Partial<KdbxInnerHeaderFields> &
-    Pick<KdbxInnerHeaderFields, 'binaryPools'> = {
-    binaryPools: {},
+    Pick<KdbxInnerHeaderFields, 'binaryPool'> = {
+    binaryPool: {},
   };
 
   for (;;) {
@@ -82,8 +83,8 @@ export default function readInnerHeaderFields(
           );
         }
 
-        const next = Object.keys(fields.binaryPools).length;
-        fields.binaryPools[`${next}`] = field.data.subarray(1);
+        const next = Object.keys(fields.binaryPool).length;
+        fields.binaryPool[`${next}`] = field.data.subarray(1);
         break;
       }
     }

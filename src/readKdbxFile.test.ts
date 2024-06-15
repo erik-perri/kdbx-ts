@@ -76,10 +76,16 @@ describe('readKdbxFile', () => {
       const keys: KdbxKey[] = await keyFactory();
 
       // Act
-      const database = await readKdbxFile(nodeCrypto, keys, file);
+      const parsed = await readKdbxFile(nodeCrypto, keys, file);
 
       // Assert
-      expect(database).toBeDefined();
+      expect(parsed.database.metadata.name).toEqual('Passwords');
+      expect(parsed.database.rootGroup.entries[0].attributes.Title).toEqual(
+        'Sample Entry',
+      );
+      expect(parsed.database.rootGroup.entries[0].attributes.Password).toEqual(
+        'winking-unicycle-ecology-decimal',
+      );
     },
   );
 });

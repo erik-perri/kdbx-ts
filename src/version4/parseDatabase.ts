@@ -9,22 +9,16 @@ import CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import KdbxVersion from '../enums/KdbxVersion';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
-import type { KdbxHeader, KdbxSignature } from '../header/types';
+import type { KdbxSignature } from '../header/types';
 import { type KdbxKey } from '../keys/types';
 import displayHash from '../utilities/displayHash';
 import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
 import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
 import parseHeader from './parseHeader';
 import readHmacHashedBlocks from './readHmacHashedBlocks';
-import readInnerHeaderFields, {
-  type KdbxInnerHeaderFields,
-} from './readInnerHeaderFields';
-
-export type KdbxDatabase4 = {
-  signature: KdbxSignature;
-  header: KdbxHeader;
-  innerHeaders: KdbxInnerHeaderFields;
-};
+import readInnerHeaderFields from './readInnerHeaderFields';
+import { type KdbxDatabase4 } from './types';
+import parseDatabaseXml from './xml/parseDatabaseXml';
 
 export default async function parseDatabase(
   crypto: CryptoImplementation,
@@ -114,15 +108,22 @@ export default async function parseDatabase(
 
   const innerHeaders = readInnerHeaderFields(bufferReader);
 
-  /*const randomStreamCipher =*/ await createSymmetricCipher(
+  const randomStreamCipher = await createSymmetricCipher(
     crypto,
     innerHeaders.innerRandomStreamMode,
     innerHeaders.innerRandomStreamKey,
   );
 
+  const database = await parseDatabaseXml(
+    bufferReader.slice(),
+    innerHeaders.binaryPool,
+    randomStreamCipher,
+  );
+
   return {
-    signature,
+    database,
     header,
     innerHeaders,
+    signature,
   };
 }
