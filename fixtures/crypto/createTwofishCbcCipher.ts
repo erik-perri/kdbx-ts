@@ -20,7 +20,7 @@ export default function createTwofishCbcCipher(
   }
 
   return {
-    async process(data): Promise<Uint8Array> {
+    process(data): Promise<Uint8Array> {
       if (!session) {
         throw new Error('Cipher is no longer available');
       }
