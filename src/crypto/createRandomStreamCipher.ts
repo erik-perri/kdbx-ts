@@ -8,7 +8,7 @@ const INNER_STREAM_SALSA20_IV = Uint8Array.from([
   0xe8, 0x30, 0x09, 0x4b, 0x97, 0x20, 0x5d, 0x2a,
 ]);
 
-export default async function createSymmetricCipher(
+export default async function createRandomStreamCipher(
   crypto: CryptoImplementation,
   mode: SymmetricCipherMode,
   key: Uint8Array,
