@@ -19,7 +19,7 @@ export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
   const maxVersion = VARIANTMAP_VERSION & VARIANTMAP_CRITICAL_MASK;
   if (version > maxVersion) {
     throw new Error(
-      `Expected variant map version to be less than max of ${maxVersion}, got ${version}`,
+      `Invalid variant map version. Expected less than max ${maxVersion}, got ${version}`,
     );
   }
   const map: VariantFieldMap = {};

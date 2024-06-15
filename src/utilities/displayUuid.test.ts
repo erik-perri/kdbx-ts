@@ -9,7 +9,7 @@ describe('displayUuid', () => {
 
     // Act
     expect(() => displayUuid(bytes)).toThrowError(
-      'Unexpected UUID length. Expected 16 bytes, got 3',
+      'Invalid UUID length. Expected 16 bytes, got 3',
     );
 
     // Assert

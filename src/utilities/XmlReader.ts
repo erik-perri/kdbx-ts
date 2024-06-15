@@ -237,7 +237,7 @@ export class XmlReader {
         continue;
       }
 
-      throw new Error(`Unexpected attribute format "${remaining}"`);
+      throw new Error(`Invalid attribute format "${remaining}"`);
     }
 
     return attributes;

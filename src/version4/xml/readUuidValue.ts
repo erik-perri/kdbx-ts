@@ -9,7 +9,7 @@ export default async function readUuidValue(
 
   if (data.byteLength !== 16) {
     throw new Error(
-      `Unexpected UUID length. Expected 16 bytes, got ${data.byteLength}`,
+      `Invalid UUID length. Expected 16 bytes, got ${data.byteLength}`,
     );
   }
 

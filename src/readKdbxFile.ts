@@ -16,7 +16,7 @@ export default async function readKdbxFile(
   const signature = parseFileSignature(reader);
 
   if (signature.appVersion === KeePassVersion.KeePass1) {
-    throw new Error('KeePass 1 databases are not supported');
+    throw new Error('KeePass1 databases are not supported');
   }
 
   if (signature.appVersion === KeePassVersion.Unknown) {
@@ -24,7 +24,7 @@ export default async function readKdbxFile(
   }
 
   if (signature.formatVersion < KdbxVersion.Version40) {
-    throw new Error('KeePass databases less than v4.0 are not supported');
+    throw new Error('KeePass2 databases less than v4.0 are not supported');
   }
 
   return parseDatabase(crypto, keys, reader, signature);

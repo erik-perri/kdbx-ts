@@ -32,7 +32,7 @@ function readInnerHeaderField(
 ): KdbxInnerHeaderField {
   const id = reader.readInt8();
   if (!isInnerHeaderFieldId(id)) {
-    throw new Error(`Unexpected inner header field ID "${id}"`);
+    throw new Error(`Invalid inner header field ID "${id}"`);
   }
 
   const fieldLength = reader.readUInt32LE();
@@ -45,7 +45,7 @@ function readInnerHeaderField(
 
   if (data.byteLength !== fieldLength) {
     throw new Error(
-      `Unexpected inner header data length for ${displayInnerHeaderFieldId(id)}. Expected ${fieldLength}, got ${data.byteLength}`,
+      `Invalid inner header data length for ${displayInnerHeaderFieldId(id)}. Expected ${fieldLength} bytes, got ${data.byteLength}`,
     );
   }
 
@@ -79,7 +79,7 @@ export default function readInnerHeaderFields(
       case InnerHeaderFieldId.Binary: {
         if (field.data.byteLength < 1) {
           throw new Error(
-            'Unexpected inner header binary size. Expected at least 1 byte',
+            'Invalid inner header binary size. Expected at least 1 byte',
           );
         }
 

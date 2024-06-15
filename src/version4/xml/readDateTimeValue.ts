@@ -20,7 +20,7 @@ export default function readDateTimeValue(reader: XmlReader): Date {
       secondsSinceBc > Number.MAX_SAFE_INTEGER
     ) {
       throw new Error(
-        `Unexpected date time outside of range "${secondsSinceBc}"`,
+        `Invalid date time found. Out of range "${secondsSinceBc}"`,
       );
     }
 

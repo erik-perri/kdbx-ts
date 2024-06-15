@@ -9,7 +9,7 @@ export default async function getBlockHmacKey(
 ): Promise<Uint8Array> {
   if (key.byteLength !== 64) {
     throw new Error(
-      `Unexpected key length. Expected 64 bytes, got ${key.byteLength}`,
+      `Invalid key length. Expected 64 bytes, got ${key.byteLength}`,
     );
   }
 

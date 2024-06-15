@@ -18,7 +18,7 @@ describe('displayHash', () => {
 
     // Act
     expect(() => displayHash(bytes)).toThrowError(
-      'Unexpected hash length. Expected at least 1 byte',
+      'Invalid hash length. Expected at least 1 byte',
     );
 
     // Assert

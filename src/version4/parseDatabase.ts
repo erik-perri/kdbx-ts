@@ -30,7 +30,7 @@ export default async function parseDatabase(
   const fileVersion = signature.formatVersion & FILE_VERSION_CRITICAL_MASK;
   if (fileVersion !== KdbxVersion.Version40) {
     throw new Error(
-      `Unexpected file version. Expected 0x${KdbxVersion.Version40.toString(16)}, got 0x${fileVersion.toString(16)}`,
+      `Invalid file version. Expected 0x${KdbxVersion.Version40.toString(16)}, got 0x${fileVersion.toString(16)}`,
     );
   }
 
@@ -44,21 +44,21 @@ export default async function parseDatabase(
   const expectedHeaderHash = reader.readBytes(32);
   if (expectedHeaderHash.byteLength !== 32) {
     throw new Error(
-      `Unexpected header hash length. Expected 32 bytes, got ${expectedHeaderHash.byteLength} bytes`,
+      `Invalid header hash length. Expected 32 bytes, got ${expectedHeaderHash.byteLength}`,
     );
   }
 
   const headerHash = await crypto.hash(HashAlgorithm.Sha256, [headerData]);
   if (!Uint8ArrayReader.equals(expectedHeaderHash, headerHash)) {
     throw new Error(
-      `Header data hash mismatch. Expected "${displayHash(expectedHeaderHash)}", got "${displayHash(headerHash)}"`,
+      `Invalid header hash. Expected "${displayHash(expectedHeaderHash)}", got "${displayHash(headerHash)}"`,
     );
   }
 
   const expectedHeaderHmac = reader.readBytes(32);
   if (expectedHeaderHmac.byteLength !== 32) {
     throw new Error(
-      `Unexpected header HMAC length. Expected 32 bytes, got ${expectedHeaderHmac.byteLength} bytes`,
+      `Invalid header HMAC length. Expected 32 bytes, got ${expectedHeaderHmac.byteLength}`,
     );
   }
 

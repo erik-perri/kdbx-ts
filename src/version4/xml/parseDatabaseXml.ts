@@ -14,7 +14,7 @@ export default async function parseDatabaseXml(
   const reader = new XmlReader(xmlAsString);
 
   if (!reader.current.isMeta) {
-    throw new Error('Unexpected database format, no XML header');
+    throw new Error('Invalid database format. No XML header found');
   }
 
   // Skip past the XML header

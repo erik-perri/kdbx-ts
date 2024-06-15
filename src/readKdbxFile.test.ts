@@ -30,14 +30,14 @@ describe('readKdbxFile', () => {
       'KeePass 1.x',
       {
         file: readFileSync('fixtures/databases/kp1-aes.kdb'),
-        expected: 'KeePass 1 databases are not supported',
+        expected: 'KeePass1 databases are not supported',
       },
     ],
     [
       'Kdbx 3.x',
       {
         file: readFileSync('fixtures/databases/kdbx3-aes-kdf.kdbx'),
-        expected: 'KeePass databases less than v4.0 are not supported',
+        expected: 'KeePass2 databases less than v4.0 are not supported',
       },
     ],
   ])(

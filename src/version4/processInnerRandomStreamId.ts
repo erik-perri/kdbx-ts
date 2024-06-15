@@ -8,7 +8,7 @@ export default function processInnerRandomStreamId(
 ): SymmetricCipherMode {
   if (data.byteLength !== 4) {
     throw new Error(
-      `Unexpected random stream ID size. Expected 4 bytes, got ${data.byteLength}`,
+      `Invalid random stream ID length. Expected 4 bytes, got ${data.byteLength}`,
     );
   }
 

@@ -1,7 +1,7 @@
 export default function displayUuid(uuid: Uint8Array): string {
   if (uuid.length !== 16) {
     throw new Error(
-      `Unexpected UUID length. Expected 16 bytes, got ${uuid.length}`,
+      `Invalid UUID length. Expected 16 bytes, got ${uuid.length}`,
     );
   }
 
