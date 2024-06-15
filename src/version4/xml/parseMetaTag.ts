@@ -17,7 +17,6 @@ import readUuidValue from './readUuidValue';
 
 export default async function parseMetaTag(
   reader: XmlReader,
-  binaryPool: BinaryPool,
   randomStream: CryptoCipher,
 ): Promise<Metadata> {
   reader.assertOpenedTagOf('Meta');

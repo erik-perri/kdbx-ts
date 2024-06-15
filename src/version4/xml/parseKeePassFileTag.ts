@@ -24,7 +24,6 @@ export default async function parseKeePassFileTag(
 
         database.metadata = await parseMetaTag(
           reader.readFromCurrent(),
-          binaryPool,
           randomStream,
         );
         break;
