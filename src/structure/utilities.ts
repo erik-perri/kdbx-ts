@@ -9,33 +9,33 @@ import type Metadata from './Metadata';
 import type TimeInfo from './TimeInfo';
 
 export function isAutoTypeAssociationComplete(
-  item: Partial<AutoTypeAssociation>,
-): item is AutoTypeAssociation {
-  return item.window !== undefined && item.sequence !== undefined;
+  association: Partial<AutoTypeAssociation>,
+): association is AutoTypeAssociation {
+  return association.window !== undefined && association.sequence !== undefined;
 }
 
 export function isCustomDataItemComplete(
   item: Partial<CustomDataItem>,
 ): item is CustomDataItem {
-  return (
-    item.key !== undefined &&
-    item.value !== undefined &&
-    item.lastModified !== undefined
-  );
+  return item.key !== undefined && item.value !== undefined;
 }
 
-export function isDatabaseComplete(item: Partial<Database>): item is Database {
+export function isDatabaseComplete(
+  database: Partial<Database>,
+): database is Database {
   return (
-    item.metadata !== undefined &&
-    item.rootGroup !== undefined &&
-    item.deletedObjects !== undefined
+    database.metadata !== undefined &&
+    database.rootGroup !== undefined &&
+    database.deletedObjects !== undefined
   );
 }
 
 export function isDeletedObjectComplete(
-  obj: Partial<DeletedObject>,
-): obj is DeletedObject {
-  return obj.uuid !== undefined && obj.deletionTime !== undefined;
+  deletedObject: Partial<DeletedObject>,
+): deletedObject is DeletedObject {
+  return (
+    deletedObject.uuid !== undefined && deletedObject.deletionTime !== undefined
+  );
 }
 
 export function isEntryComplete(entry: Partial<Entry>): entry is Entry {
@@ -55,28 +55,27 @@ export function isEntryComplete(entry: Partial<Entry>): entry is Entry {
   );
 }
 
-export function isGroupComplete(item: Partial<Group>): item is Group {
+export function isGroupComplete(group: Partial<Group>): group is Group {
   return (
-    item.defaultAutoTypeSequence !== undefined &&
-    item.enableAutoType !== undefined &&
-    item.enableSearching !== undefined &&
-    item.entries !== undefined &&
-    item.iconNumber !== undefined &&
-    item.isExpanded !== undefined &&
-    item.lastTopVisibleEntry !== undefined &&
-    item.name !== undefined &&
-    item.notes !== undefined &&
-    item.timeInfo !== undefined &&
-    item.uuid !== undefined
+    group.defaultAutoTypeSequence !== undefined &&
+    group.enableAutoType !== undefined &&
+    group.enableSearching !== undefined &&
+    group.iconNumber !== undefined &&
+    group.isExpanded !== undefined &&
+    group.lastTopVisibleEntry !== undefined &&
+    group.name !== undefined &&
+    group.notes !== undefined &&
+    group.timeInfo !== undefined &&
+    group.uuid !== undefined
   );
 }
 
-export function isIconComplete(item: Partial<Icon>): item is Icon {
+export function isIconComplete(icon: Partial<Icon>): icon is Icon {
   return (
-    item.data !== undefined &&
-    item.lastModificationTime !== undefined &&
-    item.name !== undefined &&
-    item.uuid !== undefined
+    icon.data !== undefined &&
+    icon.lastModificationTime !== undefined &&
+    icon.name !== undefined &&
+    icon.uuid !== undefined
   );
 }
 

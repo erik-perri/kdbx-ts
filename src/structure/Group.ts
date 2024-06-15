@@ -11,7 +11,7 @@ type Group = {
   defaultAutoTypeSequence: string;
   enableAutoType: TriState;
   enableSearching: TriState;
-  entries: Entry[];
+  entries?: Entry[];
   iconNumber: number;
   isExpanded: boolean;
   lastTopVisibleEntry: Uuid;
