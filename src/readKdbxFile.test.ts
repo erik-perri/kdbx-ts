@@ -2,7 +2,10 @@ import { readFileSync } from 'fs';
 import { describe, expect, it } from 'vitest';
 
 import nodeCrypto from '../fixtures/crypto/nodeCrypto';
-import { sampleDatabaseCases } from '../fixtures/databases';
+import {
+  sampleDatabaseCases,
+  sampleDatabaseFeatures,
+} from '../fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
 import { type KdbxKey } from './keys/types';
 import readKdbxFile from './readKdbxFile';
@@ -88,4 +91,19 @@ describe('readKdbxFile', () => {
       ).toEqual('winking-unicycle-ecology-decimal');
     },
   );
+
+  it('parses known fields', async () => {
+    // Arrange
+    const keys = [await createPasswordKey(nodeCrypto, 'password')];
+
+    // Act
+    const parsed = await readKdbxFile(
+      nodeCrypto,
+      keys,
+      readFileSync('fixtures/databases/kdbx4-aes-kdf-aes-features.kdbx'),
+    );
+
+    // Assert
+    expect(parsed.database).toEqual(sampleDatabaseFeatures);
+  });
 });
