@@ -2,12 +2,13 @@ import Argon2Type from '../enums/Argon2Type';
 import Argon2Version from '../enums/Argon2Version';
 import KdfParameterKey from '../enums/KdfParameterKey';
 import KdfUuid from '../enums/KdfUuid';
+import VariantMapFieldType from '../enums/VariantMapFieldType';
 import type { KdfParameters } from '../header/types';
 import validateVariantFieldBigInt from '../header/validateVariantFieldBigInt';
 import validateVariantFieldNumber from '../header/validateVariantFieldNumber';
 import validateVariantFieldUint8Array from '../header/validateVariantFieldUint8Array';
 import displayUuid from '../utilities/displayUuid';
-import type { VariantFieldMap } from './parseVariantMap';
+import type { VariantMap } from './parseVariantMap';
 
 function validateArgonMemory(memoryBytes: bigint): bigint {
   const ARGON2_MEMORY_MIN = BigInt(8);
@@ -79,21 +80,21 @@ function validateSeed(seed: Uint8Array): Uint8Array {
 }
 
 export default function processKdfParameters(
-  variants: VariantFieldMap,
+  variants: VariantMap,
 ): KdfParameters {
-  const uuidBytes = variants[KdfParameterKey.Uuid];
+  const variantData = variants[KdfParameterKey.Uuid];
 
-  if (uuidBytes === undefined) {
+  if (variantData === undefined) {
     throw new Error('KDF UUID not found in variant map');
   }
 
-  if (!ArrayBuffer.isView(uuidBytes)) {
+  if (variantData.type !== VariantMapFieldType.ByteArray) {
     throw new Error(
-      `Invalid KDF UUID data found. Expected Uint8Array, got ${typeof uuidBytes}`,
+      `Invalid KDF UUID data found. Expected ByteArray, got ${variantData.type}`,
     );
   }
 
-  const uuid = displayUuid(uuidBytes);
+  const uuid = displayUuid(variantData.value);
 
   switch (uuid) {
     case KdfUuid.AesKdbx3:

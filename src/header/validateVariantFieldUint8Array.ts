@@ -1,16 +1,20 @@
-import type { VariantFieldMap } from '../version4/parseVariantMap';
+import type { VariantMap } from '../version4/parseVariantMap';
 
 export default function validateVariantFieldUint8Array(
   key: string,
-  variants: VariantFieldMap,
+  variants: VariantMap,
 ): Uint8Array {
-  const value = variants[key];
+  const variantData = variants[key];
 
-  if (!ArrayBuffer.isView(value)) {
+  if (variantData === undefined) {
+    throw new Error(`Missing variant value for ${key}`);
+  }
+
+  if (!ArrayBuffer.isView(variantData.value)) {
     throw new Error(
-      `Invalid variant value type found for ${key}. Expected Uint8Array, got ${typeof value}`,
+      `Invalid variant value type found for ${key}. Expected Uint8Array, got ${typeof variantData.value}`,
     );
   }
 
-  return value;
+  return variantData.value;
 }

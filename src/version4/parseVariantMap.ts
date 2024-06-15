@@ -3,16 +3,48 @@ import isVariantMapFieldType from '../utilities/isVariantMapFieldType';
 import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
 import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
 
-export type VariantFieldTypes = boolean | bigint | number | string | Uint8Array;
+export type VariantMapData =
+  | {
+      type: typeof VariantMapFieldType.End;
+      value: never;
+    }
+  | {
+      type: typeof VariantMapFieldType.Bool;
+      value: boolean;
+    }
+  | {
+      type: typeof VariantMapFieldType.Int32;
+      value: number;
+    }
+  | {
+      type: typeof VariantMapFieldType.UInt32;
+      value: number;
+    }
+  | {
+      type: typeof VariantMapFieldType.Int64;
+      value: bigint;
+    }
+  | {
+      type: typeof VariantMapFieldType.UInt64;
+      value: bigint;
+    }
+  | {
+      type: typeof VariantMapFieldType.String;
+      value: string;
+    }
+  | {
+      type: typeof VariantMapFieldType.ByteArray;
+      value: Uint8Array;
+    };
 
-export type VariantFieldMap = {
-  [key: string]: VariantFieldTypes | undefined;
+export type VariantMap = {
+  [key: string]: VariantMapData | undefined;
 };
 
-export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
-  const VARIANTMAP_VERSION = 0x0100;
-  const VARIANTMAP_CRITICAL_MASK = 0xff00;
+export const VARIANTMAP_VERSION = 0x0100;
+const VARIANTMAP_CRITICAL_MASK = 0xff00;
 
+export default function parseVariantMap(data: Uint8Array): VariantMap {
   const reader = new Uint8ArrayCursorReader(data);
   const version = reader.readUInt16LE() & VARIANTMAP_CRITICAL_MASK;
 
@@ -22,15 +54,15 @@ export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
       `Invalid variant map version. Expected less than max ${maxVersion}, got ${version}`,
     );
   }
-  const map: VariantFieldMap = {};
+  const map: VariantMap = {};
 
   for (;;) {
-    const fieldType = reader.readInt8();
-    if (!isVariantMapFieldType(fieldType)) {
-      throw new Error(`Invalid variant map field type "${fieldType}"`);
+    const type = reader.readInt8();
+    if (!isVariantMapFieldType(type)) {
+      throw new Error(`Invalid variant map field type "${type}"`);
     }
 
-    if (fieldType === VariantMapFieldType.End) {
+    if (type === VariantMapFieldType.End) {
       break;
     }
 
@@ -57,7 +89,7 @@ export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
       }
     }
 
-    switch (fieldType) {
+    switch (type) {
       case VariantMapFieldType.Bool:
         if (valueLength !== 1) {
           throw new Error(
@@ -65,7 +97,10 @@ export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
           );
         }
 
-        map[name] = valueBytes.at(0) !== 0;
+        map[name] = {
+          type,
+          value: valueBytes.at(0) !== 0,
+        };
         break;
 
       case VariantMapFieldType.Int32:
@@ -75,7 +110,10 @@ export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
           );
         }
 
-        map[name] = Uint8ArrayReader.toInt32LE(valueBytes);
+        map[name] = {
+          type,
+          value: Uint8ArrayReader.toInt32LE(valueBytes),
+        };
         break;
 
       case VariantMapFieldType.UInt32:
@@ -85,7 +123,10 @@ export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
           );
         }
 
-        map[name] = Uint8ArrayReader.toUInt32LE(valueBytes);
+        map[name] = {
+          type,
+          value: Uint8ArrayReader.toUInt32LE(valueBytes),
+        };
         break;
 
       case VariantMapFieldType.Int64:
@@ -95,7 +136,10 @@ export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
           );
         }
 
-        map[name] = Uint8ArrayReader.toInt64LE(valueBytes);
+        map[name] = {
+          type,
+          value: Uint8ArrayReader.toInt64LE(valueBytes),
+        };
         break;
 
       case VariantMapFieldType.UInt64:
@@ -105,15 +149,24 @@ export default function parseVariantMap(data: Uint8Array): VariantFieldMap {
           );
         }
 
-        map[name] = Uint8ArrayReader.toUInt64LE(valueBytes);
+        map[name] = {
+          type,
+          value: Uint8ArrayReader.toUInt64LE(valueBytes),
+        };
         break;
 
       case VariantMapFieldType.String:
-        map[name] = Uint8ArrayReader.toString(valueBytes);
+        map[name] = {
+          type,
+          value: Uint8ArrayReader.toString(valueBytes),
+        };
         break;
 
       case VariantMapFieldType.ByteArray:
-        map[name] = valueBytes;
+        map[name] = {
+          type,
+          value: valueBytes,
+        };
         break;
     }
   }

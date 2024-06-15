@@ -1,19 +1,20 @@
-import type {
-  VariantFieldMap,
-  VariantFieldTypes,
-} from '../version4/parseVariantMap';
+import type { VariantMap } from '../version4/parseVariantMap';
 
 export default function validateVariantFieldNumber(
   key: string,
-  variants: VariantFieldMap,
+  variants: VariantMap,
 ): number {
-  const value: VariantFieldTypes | undefined = variants[key];
+  const variantData = variants[key];
 
-  if (typeof value !== 'number') {
+  if (variantData === undefined) {
+    throw new Error(`Missing variant value for ${key}`);
+  }
+
+  if (typeof variantData.value !== 'number') {
     throw new Error(
-      `Invalid variant value type found for ${key}. Expected number, got ${typeof value}`,
+      `Invalid variant value type found for ${key}. Expected number, got ${typeof variantData.value}`,
     );
   }
 
-  return value;
+  return variantData.value;
 }

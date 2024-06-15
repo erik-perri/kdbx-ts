@@ -1,23 +1,24 @@
-import type {
-  VariantFieldMap,
-  VariantFieldTypes,
-} from '../version4/parseVariantMap';
+import type { VariantMap } from '../version4/parseVariantMap';
 
 export default function validateVariantFieldBigInt(
   key: string,
-  variants: VariantFieldMap,
+  variants: VariantMap,
   allowNumber: boolean = false,
 ): bigint {
-  const value: VariantFieldTypes | undefined = variants[key];
+  const variantData = variants[key];
+
+  if (variantData === undefined) {
+    throw new Error(`Missing variant value for ${key}`);
+  }
 
   if (
-    typeof value !== 'bigint' &&
-    (!allowNumber || typeof value !== 'number')
+    typeof variantData.value !== 'bigint' &&
+    (!allowNumber || typeof variantData.value !== 'number')
   ) {
     throw new Error(
-      `Invalid variant value type found for ${key}. Expected bigint, got ${typeof value}`,
+      `Invalid variant value type found for ${key}. Expected bigint, got ${typeof variantData.value}`,
     );
   }
 
-  return BigInt(value);
+  return BigInt(variantData.value);
 }
