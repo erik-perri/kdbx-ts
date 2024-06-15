@@ -9,10 +9,6 @@ export default tsEslint.config(
     ignores: ['dist'],
   },
   {
-    files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
-    ...tsEslint.configs.disableTypeChecked,
-  },
-  {
     languageOptions: {
       parserOptions: {
         project: true,
@@ -49,5 +45,9 @@ export default tsEslint.config(
       'simple-import-sort/exports': 'error',
       'simple-import-sort/imports': 'error',
     },
+  },
+  {
+    files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
+    ...tsEslint.configs.disableTypeChecked,
   },
 );
