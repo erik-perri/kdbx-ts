@@ -75,12 +75,11 @@ export default function parseHeader(
         header.encryptionIV = field.data;
         break;
 
-      case HeaderFieldId.KdfParameters: {
+      case HeaderFieldId.KdfParameters:
         header.kdfParameters = processKdfParameters(
           parseVariantMap(field.data),
         );
         break;
-      }
 
       case HeaderFieldId.PublicCustomData:
         throw new Error('Public custom data is not implemented');
