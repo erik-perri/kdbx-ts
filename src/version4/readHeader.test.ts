@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { sampleDatabaseCases } from '../../fixtures/databases';
 import BufferReader from '../utilities/BufferReader';
-import parseHeader from './parseHeader';
+import readHeader from './readHeader';
 
-describe('parseHeader', () => {
+describe('readHeader', () => {
   it.each(sampleDatabaseCases)(
     `parses kdbx header %s`,
     (
@@ -26,7 +26,7 @@ describe('parseHeader', () => {
       reader.readUInt32LE();
 
       // Act
-      const header = parseHeader(reader);
+      const header = readHeader(reader);
 
       // Assert
       expect(header.cipherId).toEqual(expectedCipher);

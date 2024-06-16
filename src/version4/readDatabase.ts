@@ -14,13 +14,13 @@ import { type KdbxKey } from '../keys/types';
 import BufferReader from '../utilities/BufferReader';
 import displayHash from '../utilities/displayHash';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
-import parseHeader from './parseHeader';
+import readHeader from './readHeader';
 import readHmacHashedBlocks from './readHmacHashedBlocks';
 import readInnerHeaderFields from './readInnerHeaderFields';
 import { type KdbxDatabase4 } from './types';
 import parseDatabaseXml from './xml/parseDatabaseXml';
 
-export default async function parseDatabase(
+export default async function readDatabase(
   crypto: CryptoImplementation,
   keys: KdbxKey[],
   reader: BufferReader,
@@ -34,7 +34,7 @@ export default async function parseDatabase(
     );
   }
 
-  const header = parseHeader(reader);
+  const header = readHeader(reader);
 
   // Save the header data to verify the checksum later.
   const headerData = reader.processed();
@@ -99,14 +99,14 @@ export default async function parseDatabase(
     ),
   );
 
-  const buffer =
+  const innerBuffer =
     header.compressionAlgorithm === CompressionAlgorithm.GZip
       ? pako.inflate(processedBytes)
       : processedBytes;
 
-  const bufferReader = new BufferReader(buffer);
+  const innerBufferReader = new BufferReader(innerBuffer);
 
-  const innerHeaders = readInnerHeaderFields(bufferReader);
+  const innerHeaders = readInnerHeaderFields(innerBufferReader);
 
   const randomStreamCipher = await createRandomStreamCipher(
     crypto,
@@ -115,7 +115,7 @@ export default async function parseDatabase(
   );
 
   const database = await parseDatabaseXml(
-    bufferReader.remaining(),
+    innerBufferReader.remaining(),
     innerHeaders.binaryPool,
     randomStreamCipher,
   );

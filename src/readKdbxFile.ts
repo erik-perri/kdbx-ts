@@ -4,7 +4,7 @@ import parseFileSignature from './header/parseFileSignature';
 import { KeePass2 } from './header/versions';
 import { type KdbxKey } from './keys/types';
 import BufferReader from './utilities/BufferReader';
-import parseDatabase from './version4/parseDatabase';
+import readDatabase from './version4/readDatabase';
 import { type KdbxDatabase4 } from './version4/types';
 
 export default async function readKdbxFile(
@@ -27,5 +27,5 @@ export default async function readKdbxFile(
     throw new Error('KeePass2 databases less than v4.0 are not supported');
   }
 
-  return parseDatabase(crypto, keys, reader, signature);
+  return readDatabase(crypto, keys, reader, signature);
 }

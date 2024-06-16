@@ -9,7 +9,7 @@ import { isKdbxHeaderFieldId } from '../utilities/isKdbxHeaderFieldId';
 import parseKdfParameters from './parseKdfParameters';
 import parseVariantMap from './parseVariantMap';
 
-export default function parseHeader(reader: BufferReader): KdbxHeader {
+export default function readHeader(reader: BufferReader): KdbxHeader {
   const header: Partial<KdbxHeader> = {};
 
   for (;;) {
