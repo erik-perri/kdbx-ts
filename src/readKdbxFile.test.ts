@@ -36,10 +36,19 @@ describe('readKdbxFile', () => {
       },
     ],
     [
+      'Kdbx 2.x',
+      {
+        file: readFileSync(
+          'fixtures/databases/keepass2-kdbx2-aes-kdf-aes.kdbx',
+        ),
+        expected: 'KeePass2 v2.x databases are not supported',
+      },
+    ],
+    [
       'Kdbx 3.x',
       {
         file: readFileSync('fixtures/databases/kdbx3-aes-kdf.kdbx'),
-        expected: 'KeePass2 databases less than v4.0 are not supported',
+        expected: 'KeePass2 v3.x databases are not supported',
       },
     ],
   ])(
