@@ -54,6 +54,44 @@ const Uint8ArrayHelper = {
 
     return Uint8Array.from(Uint8Array.prototype.slice.call(buffer));
   },
+  /**
+   * Converts a UUID string to an RFC4122-compliant byte array.
+   */
+  fromUuid(data: string, ensureCompliance: boolean = true): Uint8Array {
+    const match = data.replace(/-/g, '').match(/.{2}/g);
+
+    if (!match) {
+      throw new Error(`Invalid UUID "${data}"`);
+    }
+
+    if (match.length !== 16) {
+      throw new Error(
+        `Unexpected UUID length. Expected 36 bytes, got ${data.length}`,
+      );
+    }
+
+    const hexArray = match.map((hex) => parseInt(hex, 16));
+
+    if (hexArray.some(Number.isNaN)) {
+      throw new Error(`Invalid UUID "${data}"`);
+    }
+
+    if (ensureCompliance) {
+      // Check for version (4 bits at index 6)
+      const version = (hexArray[6] & 0xf0) >> 4;
+      if (version !== 4) {
+        throw new Error(`Unexpected UUID version. Expected 4, got ${version}`);
+      }
+
+      // Check for variant (2 bits at index 8)
+      const variant = (hexArray[8] & 0xc0) >> 6;
+      if (variant !== 2) {
+        throw new Error(`Unexpected UUID variant. Expected 2, got ${variant}`);
+      }
+    }
+
+    return Uint8Array.from(hexArray);
+  },
   leftJustify(
     data: Uint8Array,
     size: number,
