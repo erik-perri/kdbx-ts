@@ -1,7 +1,7 @@
 import pako from 'pako';
 
 import getBlockHmacKey from '../crypto/getBlockHmacKey';
-import getKeepassHmacKey from '../crypto/getKeepassHmacKey';
+import getHmacKeySeed from '../crypto/getHmacKeySeed';
 import transformCompositeKey from '../crypto/transformCompositeKey';
 import type { CryptoImplementation } from '../crypto/types';
 import CompressionAlgorithm from '../enums/CompressionAlgorithm';
@@ -51,7 +51,7 @@ export default async function writeDatabase(
 
   const headerHash = await crypto.hash(HashAlgorithm.Sha256, [headerData]);
 
-  const hmacKey = await getKeepassHmacKey(crypto, masterSeed, compositeKey);
+  const hmacKey = await getHmacKeySeed(crypto, masterSeed, compositeKey);
 
   const headerHmac = await crypto.hmac(
     HashAlgorithm.Sha256,

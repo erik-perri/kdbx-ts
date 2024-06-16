@@ -1,7 +1,7 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
 import type { CryptoImplementation } from './types';
 
-export default async function getKeepassHmacKey(
+export default async function getHmacKeySeed(
   crypto: CryptoImplementation,
   masterSeed: Uint8Array,
   transformedMasterKey: Uint8Array,

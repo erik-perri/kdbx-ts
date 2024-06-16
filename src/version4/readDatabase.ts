@@ -2,7 +2,7 @@ import pako from 'pako';
 
 import createInnerStreamCipher from '../crypto/createInnerStreamCipher';
 import getBlockHmacKey from '../crypto/getBlockHmacKey';
-import getKeepassHmacKey from '../crypto/getKeepassHmacKey';
+import getHmacKeySeed from '../crypto/getHmacKeySeed';
 import transformCompositeKey from '../crypto/transformCompositeKey';
 import type { CryptoImplementation } from '../crypto/types';
 import CompressionAlgorithm from '../enums/CompressionAlgorithm';
@@ -62,11 +62,7 @@ export default async function readDatabase(
     );
   }
 
-  const hmacKey = await getKeepassHmacKey(
-    crypto,
-    header.masterSeed,
-    compositeKey,
-  );
+  const hmacKey = await getHmacKeySeed(crypto, header.masterSeed, compositeKey);
 
   const headerHmac = await crypto.hmac(
     HashAlgorithm.Sha256,
