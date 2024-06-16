@@ -14,7 +14,7 @@ export default async function getBlockHmacKey(
   }
 
   if (blockIndex === null) {
-    blockIndex = BigInt('18446744073709551615'); // 0xffffffffffffffff (UINT64_MAX)
+    blockIndex = BigInt('0xffffffffffffffff'); // UINT64_MAX
   }
 
   return crypto.hash(HashAlgorithm.Sha512, [
