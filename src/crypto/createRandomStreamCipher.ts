@@ -1,12 +1,9 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 import SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import { KeePass2 } from '../header/versions';
 import displaySymmetricCipherMode from '../utilities/displaySymmetricCipherMode';
 import type { CryptoCipher, CryptoImplementation } from './types';
-
-const INNER_STREAM_SALSA20_IV = Uint8Array.from([
-  0xe8, 0x30, 0x09, 0x4b, 0x97, 0x20, 0x5d, 0x2a,
-]);
 
 export default async function createRandomStreamCipher(
   crypto: CryptoImplementation,
@@ -19,7 +16,7 @@ export default async function createRandomStreamCipher(
         SymmetricCipherMode.Salsa20,
         SymmetricCipherDirection.Encrypt,
         await crypto.hash(HashAlgorithm.Sha256, [key]),
-        INNER_STREAM_SALSA20_IV,
+        KeePass2.innerStreamSalsa20IV,
       );
     case SymmetricCipherMode.ChaCha20: {
       const keyIv = await crypto.hash(HashAlgorithm.Sha512, [key]);

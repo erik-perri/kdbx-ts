@@ -7,9 +7,9 @@ import transformCompositeKey from '../crypto/transformCompositeKey';
 import type { CryptoImplementation } from '../crypto/types';
 import CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import HashAlgorithm from '../enums/HashAlgorithm';
-import KdbxVersion from '../enums/KdbxVersion';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 import type { KdbxSignature } from '../header/types';
+import { KeePass2 } from '../header/versions';
 import { type KdbxKey } from '../keys/types';
 import displayHash from '../utilities/displayHash';
 import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
@@ -26,11 +26,11 @@ export default async function parseDatabase(
   reader: Uint8ArrayCursorReader,
   signature: KdbxSignature,
 ): Promise<KdbxDatabase4> {
-  const FILE_VERSION_CRITICAL_MASK = 0xffff0000;
-  const fileVersion = signature.formatVersion & FILE_VERSION_CRITICAL_MASK;
-  if (fileVersion !== KdbxVersion.Version40) {
+  const fileVersion =
+    signature.formatVersion & KeePass2.fileVersionCriticalMask;
+  if (fileVersion !== KeePass2.fileVersion40) {
     throw new Error(
-      `Invalid file version. Expected 0x${KdbxVersion.Version40.toString(16)}, got 0x${fileVersion.toString(16)}`,
+      `Invalid file version. Expected 0x${KeePass2.fileVersion40.toString(16)}, got 0x${fileVersion.toString(16)}`,
     );
   }
 
@@ -92,7 +92,7 @@ export default async function parseDatabase(
     header.encryptionIV,
   );
 
-  const processedBytes: Uint8Array = await cipher.finish(
+  const processedBytes = await cipher.finish(
     blocks.reduce(
       (previous, current) => Uint8Array.from([...previous, ...current]),
       new Uint8Array(0),

@@ -1,7 +1,7 @@
 import type { CryptoImplementation } from './crypto/types';
-import KdbxVersion from './enums/KdbxVersion';
 import KeePassVersion from './enums/KeePassVersion';
 import parseFileSignature from './header/parseFileSignature';
+import { KeePass2 } from './header/versions';
 import { type KdbxKey } from './keys/types';
 import Uint8ArrayCursorReader from './utilities/Uint8ArrayCursorReader';
 import parseDatabase from './version4/parseDatabase';
@@ -23,7 +23,7 @@ export default async function readKdbxFile(
     throw new Error('Unknown database format');
   }
 
-  if (signature.formatVersion < KdbxVersion.Version40) {
+  if (signature.formatVersion < KeePass2.fileVersion40) {
     throw new Error('KeePass2 databases less than v4.0 are not supported');
   }
 

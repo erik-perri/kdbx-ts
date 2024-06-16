@@ -1,4 +1,5 @@
 import VariantMapFieldType from '../enums/VariantMapFieldType';
+import { KeePass2 } from '../header/versions';
 import isVariantMapFieldType from '../utilities/isVariantMapFieldType';
 import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
 import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
@@ -41,19 +42,18 @@ export type VariantMap = {
   [key: string]: VariantMapData | undefined;
 };
 
-export const VARIANTMAP_VERSION = 0x0100;
-const VARIANTMAP_CRITICAL_MASK = 0xff00;
-
 export default function parseVariantMap(data: Uint8Array): VariantMap {
   const reader = new Uint8ArrayCursorReader(data);
-  const version = reader.readUInt16LE() & VARIANTMAP_CRITICAL_MASK;
+  const version = reader.readUInt16LE() & KeePass2.variantMapCriticalMask;
 
-  const maxVersion = VARIANTMAP_VERSION & VARIANTMAP_CRITICAL_MASK;
+  const maxVersion =
+    KeePass2.variantMapVersion & KeePass2.variantMapCriticalMask;
   if (version > maxVersion) {
     throw new Error(
       `Invalid variant map version. Expected less than max ${maxVersion}, got ${version}`,
     );
   }
+
   const map: VariantMap = {};
 
   for (;;) {
