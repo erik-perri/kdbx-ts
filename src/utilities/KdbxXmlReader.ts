@@ -78,23 +78,23 @@ export default class KdbxXmlReader extends XmlReader {
       8,
     ).slice(0, 8);
 
-    const secondsSinceBc = Uint8ArrayHelper.toUInt64LE(data);
+    const julianSeconds = Uint8ArrayHelper.toUInt64LE(data);
 
     if (
-      secondsSinceBc < Number.MIN_SAFE_INTEGER ||
-      secondsSinceBc > Number.MAX_SAFE_INTEGER
+      julianSeconds < Number.MIN_SAFE_INTEGER ||
+      julianSeconds > Number.MAX_SAFE_INTEGER
     ) {
       throw new Error(
-        `Invalid date time found. Out of range "${secondsSinceBc}"`,
+        `Invalid date time found. Out of range for Date seconds "${julianSeconds}"`,
       );
     }
 
-    const secondsSinceBcAsNumber = Number(secondsSinceBc);
+    const julianSecondsAsNumber = Number(julianSeconds);
 
     const date = new Date();
     date.setUTCFullYear(0, 0, 0);
     date.setUTCHours(0, 0, 0, 0);
-    date.setUTCSeconds(secondsSinceBcAsNumber);
+    date.setUTCSeconds(julianSecondsAsNumber);
     return date;
   }
 
