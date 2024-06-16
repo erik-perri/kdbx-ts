@@ -14,7 +14,7 @@ import createFileKey from '../src/keys/createFileKey';
 import createPasswordKey from '../src/keys/createPasswordKey';
 import { type KdbxKey } from '../src/keys/types';
 import type Database from '../src/structure/Database';
-import Uint8ArrayReader from '../src/utilities/Uint8ArrayReader';
+import Uint8ArrayHelper from '../src/utilities/Uint8ArrayHelper';
 import jsIcon from './attachments/js-icon';
 import nodeCrypto from './crypto/nodeCrypto';
 
@@ -36,7 +36,7 @@ const mockChallengeResponseKey = createChallengeResponseKey(
     ];
 
     for (const { data, response } of mockResponses) {
-      if (Uint8ArrayReader.equals(data, challenge)) {
+      if (Uint8ArrayHelper.areEqual(data, challenge)) {
         return Promise.resolve(response);
       }
     }

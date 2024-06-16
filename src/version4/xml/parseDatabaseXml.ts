@@ -1,7 +1,7 @@
 import type { CryptoCipher } from '../../crypto/types';
 import type Database from '../../structure/Database';
 import KdbxXmlReader from '../../utilities/KdbxXmlReader';
-import Uint8ArrayReader from '../../utilities/Uint8ArrayReader';
+import Uint8ArrayHelper from '../../utilities/Uint8ArrayHelper';
 import { type BinaryPool } from '../types';
 import parseKeePassFileTag from './parseKeePassFileTag';
 
@@ -10,7 +10,7 @@ export default async function parseDatabaseXml(
   binaryPool: BinaryPool,
   randomStream: CryptoCipher,
 ): Promise<Database> {
-  const xmlAsString = Uint8ArrayReader.toString(xml);
+  const xmlAsString = Uint8ArrayHelper.toString(xml);
   const reader = new KdbxXmlReader(xmlAsString, randomStream);
 
   if (!reader.current.isMeta) {

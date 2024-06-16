@@ -1,8 +1,8 @@
 import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
 import type SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import type BufferReader from '../utilities/BufferReader';
 import displayInnerHeaderFieldId from '../utilities/displayInnerHeaderFieldId';
 import isInnerHeaderFieldId from '../utilities/isInnerHeaderFieldId';
-import type Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
 import processInnerRandomStreamId from './processInnerRandomStreamId';
 import { type BinaryPool } from './types';
 
@@ -27,9 +27,7 @@ type KdbxInnerHeaderField = {
   data: Uint8Array;
 };
 
-function readInnerHeaderField(
-  reader: Uint8ArrayCursorReader,
-): KdbxInnerHeaderField {
+function readInnerHeaderField(reader: BufferReader): KdbxInnerHeaderField {
   const id = reader.readInt8();
   if (!isInnerHeaderFieldId(id)) {
     throw new Error(`Invalid inner header field ID "${id}"`);
@@ -53,7 +51,7 @@ function readInnerHeaderField(
 }
 
 export default function readInnerHeaderFields(
-  reader: Uint8ArrayCursorReader,
+  reader: BufferReader,
 ): KdbxInnerHeaderFields {
   const fields: Partial<KdbxInnerHeaderFields> &
     Pick<KdbxInnerHeaderFields, 'binaryPool'> = {

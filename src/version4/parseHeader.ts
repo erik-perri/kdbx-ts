@@ -4,13 +4,13 @@ import type { KdbxHeader, KdbxHeaderField } from '../header/types';
 import validateCipherId from '../header/validateCipherId';
 import validateCompressionFlags from '../header/validateCompressionFlags';
 import validateMasterSeed from '../header/validateMasterSeed';
+import type BufferReader from '../utilities/BufferReader';
 import displayKdbxHeaderFieldId from '../utilities/displayKdbxHeaderFieldId';
 import { isKdbxHeaderFieldId } from '../utilities/isKdbxHeaderFieldId';
-import type Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
 import parseVariantMap from './parseVariantMap';
 import processKdfParameters from './processKdfParameters';
 
-function readKdbxHeaderField(reader: Uint8ArrayCursorReader): KdbxHeaderField {
+function readKdbxHeaderField(reader: BufferReader): KdbxHeaderField {
   const fieldId = reader.readInt8();
   if (!isKdbxHeaderFieldId(fieldId)) {
     throw new Error(`Unknown header field ID encountered "${fieldId}"`);
@@ -39,9 +39,7 @@ function readKdbxHeaderField(reader: Uint8ArrayCursorReader): KdbxHeaderField {
   };
 }
 
-export default function parseHeader(
-  reader: Uint8ArrayCursorReader,
-): KdbxHeader {
+export default function parseHeader(reader: BufferReader): KdbxHeader {
   const header: Partial<KdbxHeader> = {};
 
   for (;;) {

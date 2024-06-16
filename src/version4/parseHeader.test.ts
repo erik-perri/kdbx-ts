@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { sampleDatabaseCases } from '../../fixtures/databases';
-import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
+import BufferReader from '../utilities/BufferReader';
 import parseHeader from './parseHeader';
 
 describe('parseHeader', () => {
@@ -18,10 +18,12 @@ describe('parseHeader', () => {
       },
     ) => {
       // Arrange
-      const reader = new Uint8ArrayCursorReader(file);
+      const reader = new BufferReader(file);
 
       // Skip the signature and version fields.
-      reader.offset = 0xc;
+      reader.readUInt32LE();
+      reader.readUInt32LE();
+      reader.readUInt32LE();
 
       // Act
       const header = parseHeader(reader);

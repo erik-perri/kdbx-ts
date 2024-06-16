@@ -3,7 +3,7 @@ import KeePassVersion from './enums/KeePassVersion';
 import parseFileSignature from './header/parseFileSignature';
 import { KeePass2 } from './header/versions';
 import { type KdbxKey } from './keys/types';
-import Uint8ArrayCursorReader from './utilities/Uint8ArrayCursorReader';
+import BufferReader from './utilities/BufferReader';
 import parseDatabase from './version4/parseDatabase';
 import { type KdbxDatabase4 } from './version4/types';
 
@@ -12,7 +12,7 @@ export default async function readKdbxFile(
   keys: KdbxKey[],
   fileBytes: Uint8Array,
 ): Promise<KdbxDatabase4> {
-  const reader = new Uint8ArrayCursorReader(fileBytes);
+  const reader = new BufferReader(fileBytes);
   const signature = parseFileSignature(reader);
 
   if (signature.appVersion === KeePassVersion.KeePass1) {

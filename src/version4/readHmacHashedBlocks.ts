@@ -1,13 +1,12 @@
 import getBlockHmacKey from '../crypto/getBlockHmacKey';
 import type { CryptoImplementation } from '../crypto/types';
 import HashAlgorithm from '../enums/HashAlgorithm';
-import type Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
-import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
-import Uint8ArrayWriter from '../utilities/Uint8ArrayWriter';
+import type BufferReader from '../utilities/BufferReader';
+import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 
 export default async function readHmacHashedBlocks(
   crypto: CryptoImplementation,
-  reader: Uint8ArrayCursorReader,
+  reader: BufferReader,
   key: Uint8Array,
 ): Promise<Uint8Array[]> {
   const blocks: Uint8Array[] = [];
@@ -27,7 +26,7 @@ export default async function readHmacHashedBlocks(
       );
     }
 
-    const blockLength = Uint8ArrayReader.toInt32LE(blockLengthBytes);
+    const blockLength = Uint8ArrayHelper.toInt32LE(blockLengthBytes);
     if (blockLength < 0 || isNaN(blockLength)) {
       throw new Error(
         'Invalid block size. Expected a number greater than or equal to 0',
@@ -44,12 +43,12 @@ export default async function readHmacHashedBlocks(
     const blockHmacKey = await getBlockHmacKey(crypto, blockIndex, key);
 
     const hmac = await crypto.hmac(HashAlgorithm.Sha256, blockHmacKey, [
-      Uint8ArrayWriter.fromUInt64LE(blockIndex),
+      Uint8ArrayHelper.fromUInt64LE(blockIndex),
       blockLengthBytes,
       buffer,
     ]);
 
-    if (!Uint8ArrayReader.equals(expectedHmac, hmac)) {
+    if (!Uint8ArrayHelper.areEqual(expectedHmac, hmac)) {
       throw new Error(`HMAC mismatch on block ${blockIndex}`);
     }
 

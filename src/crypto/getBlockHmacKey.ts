@@ -1,5 +1,5 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
-import Uint8ArrayWriter from '../utilities/Uint8ArrayWriter';
+import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import type { CryptoImplementation } from './types';
 
 export default async function getBlockHmacKey(
@@ -18,7 +18,7 @@ export default async function getBlockHmacKey(
   }
 
   return crypto.hash(HashAlgorithm.Sha512, [
-    Uint8ArrayWriter.fromUInt64LE(blockIndex),
+    Uint8ArrayHelper.fromUInt64LE(blockIndex),
     key,
   ]);
 }

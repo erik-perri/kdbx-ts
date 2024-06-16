@@ -14,7 +14,9 @@ describe('readKdbxFile', () => {
   it('fails when encountering an unknown file type', async () => {
     // Arrange
     const key: KdbxKey = await createPasswordKey(nodeCrypto, 'what');
-    const bytes = Uint8Array.from([]);
+    const bytes = Uint8Array.from(
+      Array.from({ length: 20 }, (_, index) => index),
+    );
 
     // Act
     await expect(readKdbxFile(nodeCrypto, [key], bytes)).rejects.toThrow(

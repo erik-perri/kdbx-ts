@@ -1,7 +1,7 @@
 import ProtectedStreamAlgorithm from '../enums/ProtectedStreamAlgorithm';
 import SymmetricCipherMode from '../enums/SymmetricCipherMode';
 import isProtectedStreamAlgorithm from '../utilities/isProtectedStreamAlgorithm';
-import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
+import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 
 export default function processInnerRandomStreamId(
   data: Uint8Array,
@@ -12,7 +12,7 @@ export default function processInnerRandomStreamId(
     );
   }
 
-  const id = Uint8ArrayReader.toUInt32LE(data);
+  const id = Uint8ArrayHelper.toUInt32LE(data);
   const unsupportedAlgorithms: number[] = [
     ProtectedStreamAlgorithm.Invalid,
     ProtectedStreamAlgorithm.ArcFourVariant,

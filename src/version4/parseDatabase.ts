@@ -11,9 +11,9 @@ import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 import type { KdbxSignature } from '../header/types';
 import { KeePass2 } from '../header/versions';
 import { type KdbxKey } from '../keys/types';
+import BufferReader from '../utilities/BufferReader';
 import displayHash from '../utilities/displayHash';
-import Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
-import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
+import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import parseHeader from './parseHeader';
 import readHmacHashedBlocks from './readHmacHashedBlocks';
 import readInnerHeaderFields from './readInnerHeaderFields';
@@ -23,7 +23,7 @@ import parseDatabaseXml from './xml/parseDatabaseXml';
 export default async function parseDatabase(
   crypto: CryptoImplementation,
   keys: KdbxKey[],
-  reader: Uint8ArrayCursorReader,
+  reader: BufferReader,
   signature: KdbxSignature,
 ): Promise<KdbxDatabase4> {
   const fileVersion =
@@ -49,7 +49,7 @@ export default async function parseDatabase(
   }
 
   const headerHash = await crypto.hash(HashAlgorithm.Sha256, [headerData]);
-  if (!Uint8ArrayReader.equals(expectedHeaderHash, headerHash)) {
+  if (!Uint8ArrayHelper.areEqual(expectedHeaderHash, headerHash)) {
     throw new Error(
       `Invalid header hash. Expected "${displayHash(expectedHeaderHash)}", got "${displayHash(headerHash)}"`,
     );
@@ -74,7 +74,7 @@ export default async function parseDatabase(
     [headerData],
   );
 
-  if (!Uint8ArrayReader.equals(expectedHeaderHmac, headerHmac)) {
+  if (!Uint8ArrayHelper.areEqual(expectedHeaderHmac, headerHmac)) {
     throw new Error('HMAC mismatch');
   }
 
@@ -104,7 +104,7 @@ export default async function parseDatabase(
       ? pako.inflate(processedBytes)
       : processedBytes;
 
-  const bufferReader = new Uint8ArrayCursorReader(buffer);
+  const bufferReader = new BufferReader(buffer);
 
   const innerHeaders = readInnerHeaderFields(bufferReader);
 
@@ -115,7 +115,7 @@ export default async function parseDatabase(
   );
 
   const database = await parseDatabaseXml(
-    bufferReader.slice(),
+    bufferReader.remaining(),
     innerHeaders.binaryPool,
     randomStreamCipher,
   );

@@ -2,8 +2,7 @@ import type { CryptoCipher } from '../crypto/types';
 import TriState from '../enums/TriState';
 import displayUuid from './displayUuid';
 import isBase64 from './isBase64';
-import Uint8ArrayReader from './Uint8ArrayReader';
-import Uint8ArrayWriter from './Uint8ArrayWriter';
+import Uint8ArrayHelper from './Uint8ArrayHelper';
 import XmlReader from './XmlReader';
 
 export default class KdbxXmlReader extends XmlReader {
@@ -24,7 +23,7 @@ export default class KdbxXmlReader extends XmlReader {
 
   async readBinaryValue(): Promise<Uint8Array> {
     const value = this.readElementText();
-    let data = Uint8ArrayWriter.fromBase64(value);
+    let data = Uint8ArrayHelper.fromBase64(value);
 
     if (this.isProtectedValue()) {
       data = await this.randomStream.process(data);
@@ -74,12 +73,12 @@ export default class KdbxXmlReader extends XmlReader {
       throw new Error('Non-encoded dates not implemented');
     }
 
-    const data = Uint8ArrayWriter.leftJustify(
-      Uint8ArrayWriter.fromBase64(value),
+    const data = Uint8ArrayHelper.leftJustify(
+      Uint8ArrayHelper.fromBase64(value),
       8,
     ).slice(0, 8);
 
-    const secondsSinceBc = Uint8ArrayReader.toUInt64LE(data);
+    const secondsSinceBc = Uint8ArrayHelper.toUInt64LE(data);
 
     if (
       secondsSinceBc < Number.MIN_SAFE_INTEGER ||
@@ -118,9 +117,9 @@ export default class KdbxXmlReader extends XmlReader {
     }
 
     const data = await this.randomStream.process(
-      Uint8ArrayWriter.fromBase64(text),
+      Uint8ArrayHelper.fromBase64(text),
     );
-    return [Uint8ArrayReader.toString(data), isProtected];
+    return [Uint8ArrayHelper.toString(data), isProtected];
   }
 
   readStringValue(): string {

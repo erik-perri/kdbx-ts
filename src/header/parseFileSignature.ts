@@ -1,9 +1,9 @@
-import type Uint8ArrayCursorReader from '../utilities/Uint8ArrayCursorReader';
+import type BufferReader from '../utilities/BufferReader';
 import type { KdbxSignature } from './types';
 import { findVersionFromSignature } from './versions';
 
 export default function parseFileSignature(
-  reader: Uint8ArrayCursorReader,
+  reader: BufferReader,
 ): KdbxSignature {
   const signature1 = reader.readUInt32LE();
   const signature2 = reader.readUInt32LE();

@@ -1,34 +1,25 @@
 import { describe, expect, it } from 'vitest';
 
-import Uint8ArrayCursorReader from './Uint8ArrayCursorReader';
+import BufferReader from './BufferReader';
 
-describe('Uint8ArrayCursorReader', () => {
+describe('BufferReader', () => {
   describe('read*', () => {
     type TestCase = {
-      offset: number;
       expected: number;
-      method: keyof Uint8ArrayCursorReader;
+      method: keyof BufferReader;
       args?: unknown[];
     };
 
     const cases = [
       // Bytes
       {
-        offset: 0,
         expected: 8,
         method: 'readBytes',
         args: [8],
       },
-      {
-        offset: 8,
-        expected: 10,
-        method: 'readBytes',
-        args: [2],
-      },
 
       // 8
       {
-        offset: 0,
         expected: 1,
         method: 'readInt8',
         args: [],
@@ -36,15 +27,13 @@ describe('Uint8ArrayCursorReader', () => {
 
       // 16
       {
-        offset: 0,
         expected: 2,
         method: 'readUInt16LE',
         args: [],
       },
 
-      // 16
+      // 32
       {
-        offset: 0,
         expected: 4,
         method: 'readUInt32LE',
         args: [],
@@ -53,10 +42,10 @@ describe('Uint8ArrayCursorReader', () => {
 
     it.each(cases)(
       'moves the cursor forward %s',
-      ({ args, method, offset, expected }) => {
+      ({ args, method, expected }) => {
         // Arrange
         const buffer = Array.from({ length: 10 }, () => 0x20);
-        const reader = new Uint8ArrayCursorReader(buffer, offset);
+        const reader = new BufferReader(buffer);
 
         // Act
         // @ts-expect-error - This is just for convenience
@@ -71,13 +60,33 @@ describe('Uint8ArrayCursorReader', () => {
   describe('processed', () => {
     it('returns the processed bytes', () => {
       // Arrange
-      const buffer = Array.from({ length: 20 }, () => 0x20);
+      const buffer = Array.from({ length: 20 }, (_, index) => index);
       const expected = Uint8Array.from(buffer.slice(0, 9));
-      const reader = new Uint8ArrayCursorReader(buffer, 8);
+      const reader = new BufferReader(buffer);
 
       // Act
       reader.readInt8();
+      reader.readUInt32LE();
+      reader.readUInt32LE();
       const result = reader.processed();
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('remaining', () => {
+    it('returns the remaining bytes', () => {
+      // Arrange
+      const buffer = Array.from({ length: 20 }, (_, index) => index);
+      const expected = Uint8Array.from(buffer.slice(9));
+      const reader = new BufferReader(buffer);
+
+      // Act
+      reader.readInt8();
+      reader.readUInt32LE();
+      reader.readUInt32LE();
+      const result = reader.remaining();
 
       // Assert
       expect(result).toEqual(expected);

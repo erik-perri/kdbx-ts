@@ -1,6 +1,6 @@
 import type CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import { isCompressionAlgorithm } from '../utilities/isCompressionAlgorithm';
-import Uint8ArrayReader from '../utilities/Uint8ArrayReader';
+import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 
 export default function validateCompressionFlags(
   data: Uint8Array,
@@ -11,7 +11,7 @@ export default function validateCompressionFlags(
     );
   }
 
-  const id = Uint8ArrayReader.toUInt32LE(data);
+  const id = Uint8ArrayHelper.toUInt32LE(data);
 
   if (!isCompressionAlgorithm(id)) {
     throw new Error(`Unsupported compression algorithm "${id}"`);
