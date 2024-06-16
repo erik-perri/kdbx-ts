@@ -7,6 +7,22 @@ import type {
 } from '../header/types';
 import type { CryptoImplementation } from './types';
 
+export default async function transformKdf(
+  crypto: CryptoImplementation,
+  parameters: KdfParameters,
+  key: Uint8Array,
+): Promise<Uint8Array> {
+  switch (parameters.uuid) {
+    case KdfUuid.Argon2d:
+    case KdfUuid.Argon2id:
+      return await transformKdfArgon2(crypto, key, parameters);
+
+    case KdfUuid.AesKdbx3:
+    case KdfUuid.AesKdbx4:
+      return await transformKdfAes(crypto, key, parameters);
+  }
+}
+
 async function transformKdfAes(
   crypto: CryptoImplementation,
   key: Uint8Array,
@@ -35,20 +51,4 @@ async function transformKdfArgon2(
     parameters.parallelism,
     parameters.iterations,
   );
-}
-
-export default async function transformKdf(
-  crypto: CryptoImplementation,
-  parameters: KdfParameters,
-  key: Uint8Array,
-): Promise<Uint8Array> {
-  switch (parameters.uuid) {
-    case KdfUuid.Argon2d:
-    case KdfUuid.Argon2id:
-      return await transformKdfArgon2(crypto, key, parameters);
-
-    case KdfUuid.AesKdbx3:
-    case KdfUuid.AesKdbx4:
-      return await transformKdfAes(crypto, key, parameters);
-  }
 }

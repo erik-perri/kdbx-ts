@@ -70,7 +70,7 @@ const DefaultIconNumber = Object.freeze({
   Money: 66,
   Certificate: 67,
   Smartphone: 68,
-});
+} as const);
 
 type DefaultIconNumber =
   (typeof DefaultIconNumber)[keyof typeof DefaultIconNumber];

@@ -3,44 +3,7 @@ import { KeePass2 } from '../header/versions';
 import BufferReader from '../utilities/BufferReader';
 import isVariantMapFieldType from '../utilities/isVariantMapFieldType';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
-
-export type VariantMapData =
-  | {
-      type: typeof VariantMapFieldType.End;
-      value: never;
-    }
-  | {
-      type: typeof VariantMapFieldType.Bool;
-      value: boolean;
-    }
-  | {
-      type: typeof VariantMapFieldType.Int32;
-      value: number;
-    }
-  | {
-      type: typeof VariantMapFieldType.UInt32;
-      value: number;
-    }
-  | {
-      type: typeof VariantMapFieldType.Int64;
-      value: bigint;
-    }
-  | {
-      type: typeof VariantMapFieldType.UInt64;
-      value: bigint;
-    }
-  | {
-      type: typeof VariantMapFieldType.String;
-      value: string;
-    }
-  | {
-      type: typeof VariantMapFieldType.ByteArray;
-      value: Uint8Array;
-    };
-
-export type VariantMap = {
-  [key: string]: VariantMapData | undefined;
-};
+import { type VariantMap } from './types';
 
 export default function parseVariantMap(data: Uint8Array): VariantMap {
   const reader = new BufferReader(data);

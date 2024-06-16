@@ -10,14 +10,6 @@ type RootTagParseResults = {
   deletedObjects: DeletedObject[];
 };
 
-function isRootTagParseResultsComplete(
-  results: Partial<RootTagParseResults>,
-): results is RootTagParseResults {
-  return (
-    results.rootGroup !== undefined && results.deletedObjects !== undefined
-  );
-}
-
 export default async function parseRootTag(
   reader: KdbxXmlReader,
   binaryPool: BinaryPool,
@@ -56,4 +48,12 @@ export default async function parseRootTag(
   }
 
   return result;
+}
+
+function isRootTagParseResultsComplete(
+  results: Partial<RootTagParseResults>,
+): results is RootTagParseResults {
+  return (
+    results.rootGroup !== undefined && results.deletedObjects !== undefined
+  );
 }

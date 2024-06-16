@@ -1,5 +1,4 @@
 import type Metadata from '../../structure/Metadata';
-import { isMetadataComplete } from '../../structure/utilities';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseCustomDataTag from './parseCustomDataTag';
 import parseCustomIconsTag from './parseCustomIconsTag';
@@ -134,4 +133,35 @@ export default async function parseMetaTag(
   }
 
   return metadata;
+}
+
+function isMetadataComplete(item: Partial<Metadata>): item is Metadata {
+  return (
+    item.color !== undefined &&
+    item.defaultUserName !== undefined &&
+    item.defaultUserNameChanged !== undefined &&
+    item.description !== undefined &&
+    item.descriptionChanged !== undefined &&
+    item.entryTemplatesGroup !== undefined &&
+    item.entryTemplatesGroupChanged !== undefined &&
+    item.generator !== undefined &&
+    item.historyMaxItems !== undefined &&
+    item.historyMaxSize !== undefined &&
+    item.lastSelectedGroup !== undefined &&
+    item.lastTopVisibleGroup !== undefined &&
+    item.maintenanceHistoryDays !== undefined &&
+    item.masterKeyChanged !== undefined &&
+    item.masterKeyChangeForce !== undefined &&
+    item.masterKeyChangeRec !== undefined &&
+    item.name !== undefined &&
+    item.nameChanged !== undefined &&
+    item.protectNotes !== undefined &&
+    item.protectPassword !== undefined &&
+    item.protectTitle !== undefined &&
+    item.protectURL !== undefined &&
+    item.protectUserName !== undefined &&
+    item.recycleBinChanged !== undefined &&
+    item.recycleBinUuid !== undefined &&
+    item.settingsChanged !== undefined
+  );
 }

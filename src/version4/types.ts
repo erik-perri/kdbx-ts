@@ -1,6 +1,7 @@
+import type SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import type VariantMapFieldType from '../enums/VariantMapFieldType';
 import type { KdbxHeader, KdbxSignature } from '../header/types';
 import type KdbxDatabase from '../structure/Database';
-import type { KdbxInnerHeaderFields } from './readInnerHeaderFields';
 
 export type KdbxDatabase4 = {
   database: KdbxDatabase;
@@ -9,4 +10,48 @@ export type KdbxDatabase4 = {
   signature: KdbxSignature;
 };
 
+export type KdbxInnerHeaderFields = {
+  innerRandomStreamMode: SymmetricCipherMode;
+  innerRandomStreamKey: Uint8Array;
+  binaryPool: BinaryPool;
+};
+
 export type BinaryPool = Record<string, Uint8Array | undefined>;
+
+export type VariantMapData =
+  | {
+      type: typeof VariantMapFieldType.End;
+      value: never;
+    }
+  | {
+      type: typeof VariantMapFieldType.Bool;
+      value: boolean;
+    }
+  | {
+      type: typeof VariantMapFieldType.Int32;
+      value: number;
+    }
+  | {
+      type: typeof VariantMapFieldType.UInt32;
+      value: number;
+    }
+  | {
+      type: typeof VariantMapFieldType.Int64;
+      value: bigint;
+    }
+  | {
+      type: typeof VariantMapFieldType.UInt64;
+      value: bigint;
+    }
+  | {
+      type: typeof VariantMapFieldType.String;
+      value: string;
+    }
+  | {
+      type: typeof VariantMapFieldType.ByteArray;
+      value: Uint8Array;
+    };
+
+export type VariantMap = {
+  [key: string]: VariantMapData | undefined;
+};

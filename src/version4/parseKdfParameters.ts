@@ -8,7 +8,71 @@ import validateVariantFieldBigInt from '../header/validateVariantFieldBigInt';
 import validateVariantFieldNumber from '../header/validateVariantFieldNumber';
 import validateVariantFieldUint8Array from '../header/validateVariantFieldUint8Array';
 import displayUuid from '../utilities/displayUuid';
-import type { VariantMap } from './parseVariantMap';
+import { type VariantMap } from './types';
+
+export default function parseKdfParameters(
+  variants: VariantMap,
+): KdfParameters {
+  const variantData = variants[KdfParameterKey.Uuid];
+
+  if (variantData === undefined) {
+    throw new Error('KDF UUID not found in variant map');
+  }
+
+  if (variantData.type !== VariantMapFieldType.ByteArray) {
+    throw new Error(
+      `Invalid KDF UUID data found. Expected ByteArray, got ${variantData.type}`,
+    );
+  }
+
+  const uuid = displayUuid(variantData.value);
+
+  switch (uuid) {
+    case KdfUuid.AesKdbx3:
+    case KdfUuid.AesKdbx4:
+      return {
+        // Upgrade Kdbx3 automatically to Kdbx4.
+        uuid: KdfUuid.AesKdbx4,
+        rounds: validateRounds(
+          validateVariantFieldBigInt(KdfParameterKey.AesRounds, variants),
+        ),
+        seed: validateSeed(
+          validateVariantFieldUint8Array(KdfParameterKey.AesSeed, variants),
+        ),
+      };
+    case KdfUuid.Argon2d:
+    case KdfUuid.Argon2id:
+      return {
+        iterations: validateRounds(
+          validateVariantFieldBigInt(
+            KdfParameterKey.Argon2Iterations,
+            variants,
+          ),
+        ),
+        memoryInKibibytes: validateArgonMemory(
+          validateVariantFieldBigInt(KdfParameterKey.Argon2Memory, variants),
+        ),
+        parallelism: validateArgonParallelism(
+          validateVariantFieldBigInt(
+            KdfParameterKey.Argon2Parallelism,
+            variants,
+            true,
+          ),
+        ),
+        seed: validateSeed(
+          validateVariantFieldUint8Array(KdfParameterKey.Argon2Salt, variants),
+        ),
+        type:
+          uuid === KdfUuid.Argon2d ? Argon2Type.Argon2d : Argon2Type.Argon2id,
+        uuid,
+        version: validateArgonVersion(
+          validateVariantFieldNumber(KdfParameterKey.Argon2Version, variants),
+        ),
+      };
+    default:
+      throw new Error(`Unknown KDF UUID encountered "${uuid}"`);
+  }
+}
 
 function validateArgonMemory(memoryBytes: bigint): bigint {
   const ARGON2_MEMORY_MIN = BigInt(8);
@@ -77,68 +141,4 @@ function validateSeed(seed: Uint8Array): Uint8Array {
   }
 
   return seed;
-}
-
-export default function processKdfParameters(
-  variants: VariantMap,
-): KdfParameters {
-  const variantData = variants[KdfParameterKey.Uuid];
-
-  if (variantData === undefined) {
-    throw new Error('KDF UUID not found in variant map');
-  }
-
-  if (variantData.type !== VariantMapFieldType.ByteArray) {
-    throw new Error(
-      `Invalid KDF UUID data found. Expected ByteArray, got ${variantData.type}`,
-    );
-  }
-
-  const uuid = displayUuid(variantData.value);
-
-  switch (uuid) {
-    case KdfUuid.AesKdbx3:
-    case KdfUuid.AesKdbx4:
-      return {
-        // Upgrade Kdbx3 automatically to Kdbx4.
-        uuid: KdfUuid.AesKdbx4,
-        rounds: validateRounds(
-          validateVariantFieldBigInt(KdfParameterKey.AesRounds, variants),
-        ),
-        seed: validateSeed(
-          validateVariantFieldUint8Array(KdfParameterKey.AesSeed, variants),
-        ),
-      };
-    case KdfUuid.Argon2d:
-    case KdfUuid.Argon2id:
-      return {
-        iterations: validateRounds(
-          validateVariantFieldBigInt(
-            KdfParameterKey.Argon2Iterations,
-            variants,
-          ),
-        ),
-        memoryInKibibytes: validateArgonMemory(
-          validateVariantFieldBigInt(KdfParameterKey.Argon2Memory, variants),
-        ),
-        parallelism: validateArgonParallelism(
-          validateVariantFieldBigInt(
-            KdfParameterKey.Argon2Parallelism,
-            variants,
-            true,
-          ),
-        ),
-        seed: validateSeed(
-          validateVariantFieldUint8Array(KdfParameterKey.Argon2Salt, variants),
-        ),
-        type:
-          uuid === KdfUuid.Argon2d ? Argon2Type.Argon2d : Argon2Type.Argon2id,
-        uuid,
-        version: validateArgonVersion(
-          validateVariantFieldNumber(KdfParameterKey.Argon2Version, variants),
-        ),
-      };
-    default:
-      throw new Error(`Unknown KDF UUID encountered "${uuid}"`);
-  }
 }

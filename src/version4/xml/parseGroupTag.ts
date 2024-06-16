@@ -1,5 +1,4 @@
 import type Group from '../../structure/Group';
-import { isGroupComplete } from '../../structure/utilities';
 import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import { type BinaryPool } from '../types';
@@ -51,7 +50,7 @@ export default async function parseGroupTag(
         group.customIcon = await reader.readUuidValue();
         break;
 
-      case 'Group': {
+      case 'Group':
         if (!group.children) {
           group.children = [];
         }
@@ -60,9 +59,8 @@ export default async function parseGroupTag(
           await parseGroupTag(reader.readFromCurrent(), binaryPool),
         );
         break;
-      }
 
-      case 'Entry': {
+      case 'Entry':
         if (!group.entries) {
           group.entries = [];
         }
@@ -71,7 +69,6 @@ export default async function parseGroupTag(
           await parseEntryTag(reader.readFromCurrent(), binaryPool),
         );
         break;
-      }
 
       case 'CustomData':
         group.customData = parseCustomDataTag(reader.readFromCurrent());
@@ -112,4 +109,19 @@ export default async function parseGroupTag(
   }
 
   return group;
+}
+
+function isGroupComplete(group: Partial<Group>): group is Group {
+  return (
+    group.defaultAutoTypeSequence !== undefined &&
+    group.enableAutoType !== undefined &&
+    group.enableSearching !== undefined &&
+    group.iconNumber !== undefined &&
+    group.isExpanded !== undefined &&
+    group.lastTopVisibleEntry !== undefined &&
+    group.name !== undefined &&
+    group.notes !== undefined &&
+    group.timeInfo !== undefined &&
+    group.uuid !== undefined
+  );
 }

@@ -1,4 +1,4 @@
-import type { VariantMap } from '../version4/parseVariantMap';
+import { type VariantMap } from '../version4/types';
 
 export default function validateVariantFieldNumber(
   key: string,

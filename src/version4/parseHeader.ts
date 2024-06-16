@@ -1,5 +1,4 @@
 import HeaderFieldId from '../enums/HeaderFieldId';
-import isHeaderComplete from '../header/isHeaderComplete';
 import type { KdbxHeader, KdbxHeaderField } from '../header/types';
 import validateCipherId from '../header/validateCipherId';
 import validateCompressionFlags from '../header/validateCompressionFlags';
@@ -7,37 +6,8 @@ import validateMasterSeed from '../header/validateMasterSeed';
 import type BufferReader from '../utilities/BufferReader';
 import displayKdbxHeaderFieldId from '../utilities/displayKdbxHeaderFieldId';
 import { isKdbxHeaderFieldId } from '../utilities/isKdbxHeaderFieldId';
+import parseKdfParameters from './parseKdfParameters';
 import parseVariantMap from './parseVariantMap';
-import processKdfParameters from './processKdfParameters';
-
-function readKdbxHeaderField(reader: BufferReader): KdbxHeaderField {
-  const fieldId = reader.readInt8();
-  if (!isKdbxHeaderFieldId(fieldId)) {
-    throw new Error(`Unknown header field ID encountered "${fieldId}"`);
-  }
-
-  const fieldLabel = displayKdbxHeaderFieldId(fieldId);
-  const fieldLength = reader.readUInt32LE();
-
-  if (!fieldLength) {
-    throw new Error(`Unknown header field length for ${fieldLabel}`);
-  }
-
-  let fieldData: Uint8Array = new Uint8Array(0);
-  if (fieldLength) {
-    fieldData = reader.readBytes(fieldLength);
-    if (fieldData.byteLength !== fieldLength) {
-      throw new Error(
-        `Invalid header data length for ${fieldLabel}. Expected ${fieldLength} bytes, got ${fieldData.byteLength}`,
-      );
-    }
-  }
-
-  return {
-    id: fieldId,
-    data: fieldData,
-  };
-}
 
 export default function parseHeader(reader: BufferReader): KdbxHeader {
   const header: Partial<KdbxHeader> = {};
@@ -74,9 +44,7 @@ export default function parseHeader(reader: BufferReader): KdbxHeader {
         break;
 
       case HeaderFieldId.KdfParameters:
-        header.kdfParameters = processKdfParameters(
-          parseVariantMap(field.data),
-        );
+        header.kdfParameters = parseKdfParameters(parseVariantMap(field.data));
         break;
 
       case HeaderFieldId.PublicCustomData:
@@ -98,4 +66,44 @@ export default function parseHeader(reader: BufferReader): KdbxHeader {
   }
 
   return header;
+}
+
+function readKdbxHeaderField(reader: BufferReader): KdbxHeaderField {
+  const fieldId = reader.readInt8();
+  if (!isKdbxHeaderFieldId(fieldId)) {
+    throw new Error(`Unknown header field ID encountered "${fieldId}"`);
+  }
+
+  const fieldLabel = displayKdbxHeaderFieldId(fieldId);
+  const fieldLength = reader.readUInt32LE();
+
+  if (!fieldLength) {
+    throw new Error(`Unknown header field length for ${fieldLabel}`);
+  }
+
+  let fieldData: Uint8Array = new Uint8Array(0);
+  if (fieldLength) {
+    fieldData = reader.readBytes(fieldLength);
+    if (fieldData.byteLength !== fieldLength) {
+      throw new Error(
+        `Invalid header data length for ${fieldLabel}. Expected ${fieldLength} bytes, got ${fieldData.byteLength}`,
+      );
+    }
+  }
+
+  return {
+    id: fieldId,
+    data: fieldData,
+  };
+}
+
+function isHeaderComplete(header: Partial<KdbxHeader>): header is KdbxHeader {
+  return (
+    header.cipherId !== undefined &&
+    header.cipherMode !== undefined &&
+    header.compressionAlgorithm !== undefined &&
+    header.encryptionIV !== undefined &&
+    header.kdfParameters !== undefined &&
+    header.masterSeed !== undefined
+  );
 }

@@ -1,5 +1,4 @@
 import type Icon from '../../structure/Icon';
-import { isIconComplete } from '../../structure/utilities';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default async function parseIconTag(
@@ -38,4 +37,13 @@ export default async function parseIconTag(
   }
 
   return icon;
+}
+
+function isIconComplete(icon: Partial<Icon>): icon is Icon {
+  return (
+    icon.data !== undefined &&
+    icon.lastModificationTime !== undefined &&
+    icon.name !== undefined &&
+    icon.uuid !== undefined
+  );
 }

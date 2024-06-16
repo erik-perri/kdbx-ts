@@ -5,12 +5,6 @@ type BinaryTagData = {
   ref: string;
 };
 
-function isBinaryTagDataComplete(
-  data: Partial<BinaryTagData>,
-): data is BinaryTagData {
-  return data.key !== undefined && data.ref !== undefined;
-}
-
 export default function parseEntryBinaryTag(
   reader: KdbxXmlReader,
 ): BinaryTagData {
@@ -43,4 +37,10 @@ export default function parseEntryBinaryTag(
   }
 
   return result;
+}
+
+function isBinaryTagDataComplete(
+  data: Partial<BinaryTagData>,
+): data is BinaryTagData {
+  return data.key !== undefined && data.ref !== undefined;
 }

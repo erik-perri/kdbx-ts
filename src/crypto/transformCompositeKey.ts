@@ -10,6 +10,23 @@ import {
 import transformKdf from './transformKdf';
 import type { CryptoImplementation } from './types';
 
+export default async function transformCompositeKey(
+  crypto: CryptoImplementation,
+  header: KdbxHeader,
+  keys: KdbxKey[],
+): Promise<Uint8Array> {
+  const processedKeys = keys.filter((key): key is KdbxProcessedKey =>
+    isKdbxProcessedKey(key),
+  );
+  const keyData: Uint8Array[] = processedKeys.map((key) => key.data);
+
+  keyData.push(await challengeKeys(crypto, header.kdfParameters.seed, keys));
+
+  const hash = await crypto.hash(HashAlgorithm.Sha256, keyData);
+
+  return await transformKdf(crypto, header.kdfParameters, hash);
+}
+
 async function challengeKeys(
   crypto: CryptoImplementation,
   seed: Uint8Array,
@@ -28,21 +45,4 @@ async function challengeKeys(
   }
 
   return await crypto.hash(HashAlgorithm.Sha256, responses);
-}
-
-export default async function transformCompositeKey(
-  crypto: CryptoImplementation,
-  header: KdbxHeader,
-  keys: KdbxKey[],
-): Promise<Uint8Array> {
-  const processedKeys = keys.filter((key): key is KdbxProcessedKey =>
-    isKdbxProcessedKey(key),
-  );
-  const keyData: Uint8Array[] = processedKeys.map((key) => key.data);
-
-  keyData.push(await challengeKeys(crypto, header.kdfParameters.seed, keys));
-
-  const hash = await crypto.hash(HashAlgorithm.Sha256, keyData);
-
-  return await transformKdf(crypto, header.kdfParameters, hash);
 }

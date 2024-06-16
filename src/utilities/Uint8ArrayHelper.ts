@@ -1,3 +1,6 @@
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
 const Uint8ArrayHelper = {
   areEqual(a: Uint8Array, b: Uint8Array): boolean {
     if (a.byteLength !== b.byteLength) {
@@ -35,15 +38,6 @@ const Uint8ArrayHelper = {
     return Uint8Array.from(Uint8Array.prototype.slice.call(buffer));
   },
   fromString(data: string): Uint8Array {
-    // const length = data.length;
-    // const result = new Uint8Array(length);
-    // for (let index = 0; index < length; index++) {
-    //   result[index] = data.charCodeAt(index);
-    // }
-    // return result;
-
-    const encoder = new TextEncoder();
-
     return encoder.encode(data);
   },
   fromUInt32LE(data: number): Uint8Array {
@@ -85,8 +79,6 @@ const Uint8ArrayHelper = {
     return buffer.readBigInt64LE(0);
   },
   toString(bytes: Uint8Array): string {
-    const decoder = new TextDecoder();
-
     return decoder.decode(bytes);
   },
   toUInt32LE(bytes: Uint8Array): number {

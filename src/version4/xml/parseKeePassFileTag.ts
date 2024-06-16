@@ -1,5 +1,4 @@
 import type Database from '../../structure/Database';
-import { isDatabaseComplete } from '../../structure/utilities';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import { type BinaryPool } from '../types';
 import parseMetaTag from './parseMetaTag';
@@ -17,7 +16,7 @@ export default async function parseKeePassFileTag(
     switch (reader.current.name) {
       case 'Meta':
         if (database.metadata) {
-          throw new Error('Multiple Meta elements');
+          throw new Error('Unexpected duplicate Meta element found');
         }
 
         database.metadata = await parseMetaTag(reader.readFromCurrent());
@@ -25,7 +24,7 @@ export default async function parseKeePassFileTag(
 
       case 'Root': {
         if (database.rootGroup) {
-          throw new Error('Multiple Root elements');
+          throw new Error('Unexpected duplicate Root element found');
         }
 
         const { rootGroup, deletedObjects } = await parseRootTag(
@@ -49,4 +48,12 @@ export default async function parseKeePassFileTag(
   }
 
   return database;
+}
+
+function isDatabaseComplete(database: Partial<Database>): database is Database {
+  return (
+    database.metadata !== undefined &&
+    database.rootGroup !== undefined &&
+    database.deletedObjects !== undefined
+  );
 }

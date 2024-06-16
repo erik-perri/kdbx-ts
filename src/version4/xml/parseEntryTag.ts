@@ -1,5 +1,4 @@
 import type Entry from '../../structure/Entry';
-import { isEntryComplete } from '../../structure/utilities';
 import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import type { BinaryPool } from '../types';
@@ -136,4 +135,21 @@ export default async function parseEntryTag(
   }
 
   return entry;
+}
+
+function isEntryComplete(entry: Partial<Entry>): entry is Entry {
+  return (
+    entry.attributes !== undefined &&
+    entry.autoTypeEnabled !== undefined &&
+    entry.autoTypeObfuscation !== undefined &&
+    entry.backgroundColor !== undefined &&
+    entry.defaultAutoTypeSequence !== undefined &&
+    entry.foregroundColor !== undefined &&
+    entry.iconNumber !== undefined &&
+    entry.overrideURL !== undefined &&
+    entry.protectedAttributes !== undefined &&
+    entry.tags !== undefined &&
+    entry.timeInfo !== undefined &&
+    entry.uuid !== undefined
+  );
 }

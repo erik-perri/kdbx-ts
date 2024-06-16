@@ -1,5 +1,4 @@
 import type AutoTypeAssociation from '../../structure/AutoTypeAssociation';
-import { isAutoTypeAssociationComplete } from '../../structure/utilities';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseAutoTypeAssociationTag(
@@ -30,4 +29,10 @@ export default function parseAutoTypeAssociationTag(
   }
 
   return association;
+}
+
+function isAutoTypeAssociationComplete(
+  association: Partial<AutoTypeAssociation>,
+): association is AutoTypeAssociation {
+  return association.window !== undefined && association.sequence !== undefined;
 }

@@ -1,54 +1,17 @@
 import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
-import type SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import ProtectedStreamAlgorithm from '../enums/ProtectedStreamAlgorithm';
+import SymmetricCipherMode from '../enums/SymmetricCipherMode';
 import type BufferReader from '../utilities/BufferReader';
 import displayInnerHeaderFieldId from '../utilities/displayInnerHeaderFieldId';
 import isInnerHeaderFieldId from '../utilities/isInnerHeaderFieldId';
-import processInnerRandomStreamId from './processInnerRandomStreamId';
-import { type BinaryPool } from './types';
-
-export type KdbxInnerHeaderFields = {
-  innerRandomStreamMode: SymmetricCipherMode;
-  innerRandomStreamKey: Uint8Array;
-  binaryPool: BinaryPool;
-};
-
-function isInnerHeaderFieldsComplete(
-  header: Partial<KdbxInnerHeaderFields>,
-): header is KdbxInnerHeaderFields {
-  return (
-    header.innerRandomStreamMode !== undefined &&
-    header.innerRandomStreamKey !== undefined &&
-    header.binaryPool !== undefined
-  );
-}
+import isProtectedStreamAlgorithm from '../utilities/isProtectedStreamAlgorithm';
+import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
+import { type KdbxInnerHeaderFields } from './types';
 
 type KdbxInnerHeaderField = {
   id: InnerHeaderFieldId;
   data: Uint8Array;
 };
-
-function readInnerHeaderField(reader: BufferReader): KdbxInnerHeaderField {
-  const id = reader.readInt8();
-  if (!isInnerHeaderFieldId(id)) {
-    throw new Error(`Invalid inner header field ID "${id}"`);
-  }
-
-  const fieldLength = reader.readUInt32LE();
-
-  if (id === InnerHeaderFieldId.End) {
-    return { id, data: Uint8Array.from([]) };
-  }
-
-  const data = reader.readBytes(fieldLength);
-
-  if (data.byteLength !== fieldLength) {
-    throw new Error(
-      `Invalid inner header data length for ${displayInnerHeaderFieldId(id)}. Expected ${fieldLength} bytes, got ${data.byteLength}`,
-    );
-  }
-
-  return { id, data };
-}
 
 export default function readInnerHeaderFields(
   reader: BufferReader,
@@ -67,7 +30,7 @@ export default function readInnerHeaderFields(
 
     switch (field.id) {
       case InnerHeaderFieldId.InnerRandomStreamID:
-        fields.innerRandomStreamMode = processInnerRandomStreamId(field.data);
+        fields.innerRandomStreamMode = validateInnerRandomStreamId(field.data);
         break;
 
       case InnerHeaderFieldId.InnerRandomStreamKey:
@@ -93,4 +56,64 @@ export default function readInnerHeaderFields(
   }
 
   return fields;
+}
+
+function readInnerHeaderField(reader: BufferReader): KdbxInnerHeaderField {
+  const id = reader.readInt8();
+  if (!isInnerHeaderFieldId(id)) {
+    throw new Error(`Invalid inner header field ID "${id}"`);
+  }
+
+  const fieldLength = reader.readUInt32LE();
+
+  if (id === InnerHeaderFieldId.End) {
+    return { id, data: Uint8Array.from([]) };
+  }
+
+  const data = reader.readBytes(fieldLength);
+
+  if (data.byteLength !== fieldLength) {
+    throw new Error(
+      `Invalid inner header data length for ${displayInnerHeaderFieldId(id)}. Expected ${fieldLength} bytes, got ${data.byteLength}`,
+    );
+  }
+
+  return { id, data };
+}
+
+function validateInnerRandomStreamId(data: Uint8Array): SymmetricCipherMode {
+  if (data.byteLength !== 4) {
+    throw new Error(
+      `Invalid random stream ID length. Expected 4 bytes, got ${data.byteLength}`,
+    );
+  }
+
+  const id = Uint8ArrayHelper.toUInt32LE(data);
+  const unsupportedAlgorithms: number[] = [
+    ProtectedStreamAlgorithm.Invalid,
+    ProtectedStreamAlgorithm.ArcFourVariant,
+  ];
+
+  if (!isProtectedStreamAlgorithm(id) || unsupportedAlgorithms.includes(id)) {
+    throw new Error(`Invalid inner random stream cipher ID "${id}"`);
+  }
+
+  switch (id) {
+    case ProtectedStreamAlgorithm.Salsa20:
+      return SymmetricCipherMode.Salsa20;
+    case ProtectedStreamAlgorithm.ChaCha20:
+      return SymmetricCipherMode.ChaCha20;
+    default:
+      throw new Error(`Unsupported inner random stream cipher ID "${id}"`);
+  }
+}
+
+function isInnerHeaderFieldsComplete(
+  header: Partial<KdbxInnerHeaderFields>,
+): header is KdbxInnerHeaderFields {
+  return (
+    header.innerRandomStreamMode !== undefined &&
+    header.innerRandomStreamKey !== undefined &&
+    header.binaryPool !== undefined
+  );
 }

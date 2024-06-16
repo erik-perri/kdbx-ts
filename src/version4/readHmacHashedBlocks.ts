@@ -27,7 +27,7 @@ export default async function readHmacHashedBlocks(
     }
 
     const blockLength = Uint8ArrayHelper.toInt32LE(blockLengthBytes);
-    if (blockLength < 0 || isNaN(blockLength)) {
+    if (blockLength < 0 || Number.isNaN(blockLength)) {
       throw new Error(
         'Invalid block size. Expected a number greater than or equal to 0',
       );
