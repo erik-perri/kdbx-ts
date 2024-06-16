@@ -23,8 +23,17 @@ export default async function readKdbxFile(
     throw new Error('Unknown database format');
   }
 
-  if (signature.formatVersion < KeePass2.fileVersion40) {
-    throw new Error('KeePass2 databases less than v4.0 are not supported');
+  switch (signature.formatVersion & KeePass2.fileVersionCriticalMask) {
+    case KeePass2.fileVersion20:
+      throw new Error('KeePass2 v2.x databases are not supported');
+    case KeePass2.fileVersion30:
+      throw new Error('KeePass2 v3.x databases are not supported');
+    case KeePass2.fileVersion40:
+      break;
+    default:
+      throw new Error(
+        `Unknown database format "0x${signature.formatVersion.toString(16)}"`,
+      );
   }
 
   return readDatabase(crypto, keys, reader, signature);
