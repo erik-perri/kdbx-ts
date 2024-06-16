@@ -54,7 +54,36 @@ type DatabaseInformation = {
   keyFactory: () => Promise<KdbxKey[]>;
 };
 
-export const sampleDatabases: Record<string, DatabaseInformation> = {
+export const sampleDatabasesKeePass2: Record<string, DatabaseInformation> = {
+  AesAesCompressed: {
+    file: readFileSync('fixtures/databases/keepass2-kdbx4-aes-kdf-aes.kdbx'),
+    expectedCipher: SymmetricCipherUuid.Aes256,
+    expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
+    expectedIvLength: 16,
+    expectedKdfParameters: {
+      uuid: KdfUuid.AesKdbx4,
+      rounds: BigInt(100),
+      seed: expect.any(Uint8Array) as Uint8Array,
+    },
+    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+  },
+  AesAesUncompressed: {
+    file: readFileSync(
+      'fixtures/databases/keepass2-kdbx4-aes-kdf-aes-uncompressed.kdbx',
+    ),
+    expectedCipher: SymmetricCipherUuid.Aes256,
+    expectedCompressionAlgorithm: CompressionAlgorithm.None,
+    expectedIvLength: 16,
+    expectedKdfParameters: {
+      uuid: KdfUuid.AesKdbx4,
+      rounds: BigInt(100),
+      seed: expect.any(Uint8Array) as Uint8Array,
+    },
+    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+  },
+};
+
+export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
   AesAesCompressed: {
     file: readFileSync('fixtures/databases/kdbx4-aes-kdf-aes.kdbx'),
     expectedCipher: SymmetricCipherUuid.Aes256,
@@ -157,9 +186,20 @@ export const sampleDatabases: Record<string, DatabaseInformation> = {
   },
 };
 
-export const sampleDatabaseCases = Object.entries(sampleDatabases).map(
-  ([name, information]): [string, DatabaseInformation] => [name, information],
-);
+export const sampleDatabaseCases = [
+  ...Object.entries(sampleDatabasesKeePassXC).map(
+    ([name, information]): [string, DatabaseInformation] => [
+      `${name} generated with KeePassXC`,
+      information,
+    ],
+  ),
+  ...Object.entries(sampleDatabasesKeePass2).map(
+    ([name, information]): [string, DatabaseInformation] => [
+      `${name} generated with KeePass2`,
+      information,
+    ],
+  ),
+];
 
 export const sampleDatabaseFeatures: Database = {
   metadata: {

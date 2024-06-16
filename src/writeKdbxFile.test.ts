@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import nodeCrypto from '../fixtures/crypto/nodeCrypto';
-import { sampleDatabases } from '../fixtures/databases';
+import { sampleDatabasesKeePassXC } from '../fixtures/databases';
 import { type AesKdfParameters } from './header/types';
 import createPasswordKey from './keys/createPasswordKey';
 import readKdbxFile from './readKdbxFile';
@@ -16,7 +16,7 @@ describe('writeKdbxFile', () => {
     const database = await readKdbxFile(
       nodeCrypto,
       keys,
-      sampleDatabases.AesAesCompressed.file,
+      sampleDatabasesKeePassXC.AesAesCompressed.file,
     );
 
     // Act
