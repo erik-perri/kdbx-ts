@@ -12,7 +12,7 @@ type Entry = {
   backgroundColor: string;
   customData?: Record<string, CustomDataItem | undefined>;
   customIcon?: Uuid;
-  defaultAutoTypeSequence: string;
+  defaultAutoTypeSequence?: string;
   foregroundColor: string;
   history?: Entry[];
   iconNumber: number;

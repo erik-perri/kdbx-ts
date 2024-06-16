@@ -143,7 +143,6 @@ function isEntryComplete(entry: Partial<Entry>): entry is Entry {
     entry.autoTypeEnabled !== undefined &&
     entry.autoTypeObfuscation !== undefined &&
     entry.backgroundColor !== undefined &&
-    entry.defaultAutoTypeSequence !== undefined &&
     entry.foregroundColor !== undefined &&
     entry.iconNumber !== undefined &&
     entry.overrideURL !== undefined &&
