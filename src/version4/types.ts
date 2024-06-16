@@ -11,8 +11,8 @@ export type KdbxDatabase4 = {
 };
 
 export type KdbxInnerHeaderFields = {
-  innerRandomStreamMode: SymmetricCipherMode;
-  innerRandomStreamKey: Uint8Array;
+  innerStreamMode: SymmetricCipherMode;
+  innerStreamKey: Uint8Array;
   binaryPool: BinaryPool;
 };
 

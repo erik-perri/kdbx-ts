@@ -2,8 +2,8 @@ import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
 
 const innerFieldDisplayMap: Record<InnerHeaderFieldId, string> = {
   [InnerHeaderFieldId.End]: 'End',
-  [InnerHeaderFieldId.InnerRandomStreamID]: 'InnerRandomStreamID',
-  [InnerHeaderFieldId.InnerRandomStreamKey]: 'InnerRandomStreamKey',
+  [InnerHeaderFieldId.InnerStreamMode]: 'InnerStreamMode',
+  [InnerHeaderFieldId.InnerStreamKey]: 'InnerStreamKey',
   [InnerHeaderFieldId.Binary]: 'Binary',
 };
 

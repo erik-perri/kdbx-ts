@@ -5,7 +5,7 @@ import { KeePass2 } from '../header/versions';
 import displaySymmetricCipherMode from '../utilities/displaySymmetricCipherMode';
 import type { CryptoCipher, CryptoImplementation } from './types';
 
-export default async function createRandomStreamCipher(
+export default async function createInnerStreamCipher(
   crypto: CryptoImplementation,
   mode: SymmetricCipherMode,
   key: Uint8Array,
@@ -19,18 +19,18 @@ export default async function createRandomStreamCipher(
         KeePass2.innerStreamSalsa20IV,
       );
     case SymmetricCipherMode.ChaCha20: {
-      const keyIv = await crypto.hash(HashAlgorithm.Sha512, [key]);
+      const keyIV = await crypto.hash(HashAlgorithm.Sha512, [key]);
 
       return crypto.createCipher(
         SymmetricCipherMode.ChaCha20,
         SymmetricCipherDirection.Encrypt,
-        keyIv.subarray(0, 32),
-        keyIv.subarray(32, 44),
+        keyIV.subarray(0, 32),
+        keyIV.subarray(32, 44),
       );
     }
     default:
       throw new Error(
-        `Invalid stream cipher mode ${displaySymmetricCipherMode(mode)}`,
+        `Invalid inner stream cipher mode ${displaySymmetricCipherMode(mode)}`,
       );
   }
 }

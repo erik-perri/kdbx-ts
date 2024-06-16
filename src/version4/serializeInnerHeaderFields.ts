@@ -12,13 +12,13 @@ export default function serializeInnerHeaderFields(
 
   writeInnerHeaderField(
     innerWriter,
-    InnerHeaderFieldId.InnerRandomStreamID,
+    InnerHeaderFieldId.InnerStreamMode,
     Uint8ArrayHelper.fromInt32LE(ProtectedStreamAlgorithm.ChaCha20),
   );
 
   writeInnerHeaderField(
     innerWriter,
-    InnerHeaderFieldId.InnerRandomStreamKey,
+    InnerHeaderFieldId.InnerStreamKey,
     protectedStreamKey,
   );
 

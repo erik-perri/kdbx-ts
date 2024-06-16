@@ -29,12 +29,12 @@ export default function readInnerHeaderFields(
     }
 
     switch (field.id) {
-      case InnerHeaderFieldId.InnerRandomStreamID:
-        fields.innerRandomStreamMode = validateInnerRandomStreamId(field.data);
+      case InnerHeaderFieldId.InnerStreamMode:
+        fields.innerStreamMode = validateInnerStreamMode(field.data);
         break;
 
-      case InnerHeaderFieldId.InnerRandomStreamKey:
-        fields.innerRandomStreamKey = field.data;
+      case InnerHeaderFieldId.InnerStreamKey:
+        fields.innerStreamKey = field.data;
         break;
 
       case InnerHeaderFieldId.Binary: {
@@ -81,7 +81,7 @@ function readInnerHeaderField(reader: BufferReader): KdbxInnerHeaderField {
   return { id, data };
 }
 
-function validateInnerRandomStreamId(data: Uint8Array): SymmetricCipherMode {
+function validateInnerStreamMode(data: Uint8Array): SymmetricCipherMode {
   if (data.byteLength !== 4) {
     throw new Error(
       `Invalid random stream ID length. Expected 4 bytes, got ${data.byteLength}`,
@@ -112,8 +112,8 @@ function isInnerHeaderFieldsComplete(
   header: Partial<KdbxInnerHeaderFields>,
 ): header is KdbxInnerHeaderFields {
   return (
-    header.innerRandomStreamMode !== undefined &&
-    header.innerRandomStreamKey !== undefined &&
+    header.innerStreamMode !== undefined &&
+    header.innerStreamKey !== undefined &&
     header.binaryPool !== undefined
   );
 }

@@ -8,13 +8,13 @@ import XmlReader from './XmlReader';
 export default class KdbxXmlReader extends XmlReader {
   constructor(
     contents: string,
-    private readonly randomStream: CryptoCipher,
+    private readonly cipher: CryptoCipher,
   ) {
     super(contents);
   }
 
   createChildReader(contents: string): XmlReader {
-    return new KdbxXmlReader(contents, this.randomStream);
+    return new KdbxXmlReader(contents, this.cipher);
   }
 
   isProtectedValue(): boolean {
@@ -26,7 +26,7 @@ export default class KdbxXmlReader extends XmlReader {
     let data = Uint8ArrayHelper.fromBase64(value);
 
     if (this.isProtectedValue()) {
-      data = await this.randomStream.process(data);
+      data = await this.cipher.process(data);
     }
 
     return data;
@@ -116,9 +116,7 @@ export default class KdbxXmlReader extends XmlReader {
       return [text, isProtected];
     }
 
-    const data = await this.randomStream.process(
-      Uint8ArrayHelper.fromBase64(text),
-    );
+    const data = await this.cipher.process(Uint8ArrayHelper.fromBase64(text));
     return [Uint8ArrayHelper.toString(data), isProtected];
   }
 

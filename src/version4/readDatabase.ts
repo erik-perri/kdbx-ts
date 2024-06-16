@@ -1,6 +1,6 @@
 import pako from 'pako';
 
-import createRandomStreamCipher from '../crypto/createRandomStreamCipher';
+import createInnerStreamCipher from '../crypto/createInnerStreamCipher';
 import getBlockHmacKey from '../crypto/getBlockHmacKey';
 import getKeepassHmacKey from '../crypto/getKeepassHmacKey';
 import transformCompositeKey from '../crypto/transformCompositeKey';
@@ -108,16 +108,16 @@ export default async function readDatabase(
 
   const innerHeaders = readInnerHeaderFields(innerBufferReader);
 
-  const randomStreamCipher = await createRandomStreamCipher(
+  const innerCipher = await createInnerStreamCipher(
     crypto,
-    innerHeaders.innerRandomStreamMode,
-    innerHeaders.innerRandomStreamKey,
+    innerHeaders.innerStreamMode,
+    innerHeaders.innerStreamKey,
   );
 
   const database = await parseDatabaseXml(
     innerBufferReader.remaining(),
     innerHeaders.binaryPool,
-    randomStreamCipher,
+    innerCipher,
   );
 
   return {
