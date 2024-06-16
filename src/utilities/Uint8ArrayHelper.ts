@@ -40,6 +40,13 @@ const Uint8ArrayHelper = {
   fromString(data: string): Uint8Array {
     return encoder.encode(data);
   },
+  fromUInt16LE(data: number): Uint8Array {
+    const buffer = Buffer.allocUnsafe(2);
+
+    buffer.writeUInt16LE(data, 0);
+
+    return Uint8Array.from(Uint8Array.prototype.slice.call(buffer));
+  },
   fromUInt32LE(data: number): Uint8Array {
     const buffer = Buffer.allocUnsafe(4);
 
