@@ -1,6 +1,13 @@
 import SymmetricCipherMode from '../enums/SymmetricCipherMode';
-import convertSymmetricCipherUuidToMode from '../utilities/convertSymmetricCipherUuidToMode';
+import SymmetricCipherUuid from '../enums/SymmetricCipherUuid';
 import displayUuid from '../utilities/displayUuid';
+
+const uuidToModeMapping: Record<string, SymmetricCipherMode | undefined> = {
+  [SymmetricCipherUuid.Aes128]: SymmetricCipherMode.Aes128_CBC,
+  [SymmetricCipherUuid.Aes256]: SymmetricCipherMode.Aes256_CBC,
+  [SymmetricCipherUuid.Twofish]: SymmetricCipherMode.Twofish_CBC,
+  [SymmetricCipherUuid.ChaCha20]: SymmetricCipherMode.ChaCha20,
+} as const;
 
 export default function validateCipherId(
   data: Uint8Array,
@@ -12,9 +19,9 @@ export default function validateCipherId(
   }
 
   const uuid = displayUuid(data);
-  const mode = convertSymmetricCipherUuidToMode(uuid);
+  const mode = uuidToModeMapping[uuid];
 
-  if (mode === SymmetricCipherMode.InvalidMode) {
+  if (!mode) {
     throw new Error(`Unsupported cipher "${uuid}"`);
   }
 
