@@ -112,16 +112,5 @@ export default async function parseGroupTag(
 }
 
 function isGroupComplete(group: Partial<Group>): group is Group {
-  return (
-    group.defaultAutoTypeSequence !== undefined &&
-    group.enableAutoType !== undefined &&
-    group.enableSearching !== undefined &&
-    group.iconNumber !== undefined &&
-    group.isExpanded !== undefined &&
-    group.lastTopVisibleEntry !== undefined &&
-    group.name !== undefined &&
-    group.notes !== undefined &&
-    group.timeInfo !== undefined &&
-    group.uuid !== undefined
-  );
+  return group.uuid !== undefined;
 }

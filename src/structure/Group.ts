@@ -8,18 +8,18 @@ type Group = {
   children?: Group[];
   customData?: Record<string, CustomDataItem | undefined>;
   customIcon?: Uuid;
-  defaultAutoTypeSequence: string;
-  enableAutoType: TriState;
-  enableSearching: TriState;
+  defaultAutoTypeSequence?: string;
+  enableAutoType?: TriState;
+  enableSearching?: TriState;
   entries?: Entry[];
-  iconNumber: number;
-  isExpanded: boolean;
-  lastTopVisibleEntry: Uuid;
-  name: string;
-  notes: string;
+  iconNumber?: number;
+  isExpanded?: boolean;
+  lastTopVisibleEntry?: Uuid;
+  name?: string;
+  notes?: string;
   previousParentGroup?: Uuid;
   tags?: string;
-  timeInfo: TimeInfo;
+  timeInfo?: TimeInfo;
   uuid: Uuid;
 };
 

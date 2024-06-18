@@ -1,31 +1,25 @@
-import type DeletedObject from '../../structure/DeletedObject';
-import type Group from '../../structure/Group';
+import type DatabaseRoot from '../../structure/DatabaseRoot';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import type { BinaryPool } from '../types';
 import parseDeletedObjectsTag from './parseDeletedObjectsTag';
 import parseGroupTag from './parseGroupTag';
 
-type RootTagParseResults = {
-  rootGroup: Group;
-  deletedObjects: DeletedObject[];
-};
-
 export default async function parseRootTag(
   reader: KdbxXmlReader,
   binaryPool: BinaryPool,
-): Promise<RootTagParseResults> {
+): Promise<DatabaseRoot> {
   reader.assertOpenedTagOf('Root');
 
-  const result: Partial<RootTagParseResults> = {};
+  const result: Partial<DatabaseRoot> = {};
 
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'Group':
-        if (result.rootGroup) {
+        if (result.group) {
           throw new Error('Multiple root group elements');
         }
 
-        result.rootGroup = await parseGroupTag(
+        result.group = await parseGroupTag(
           reader.readFromCurrent(),
           binaryPool,
         );
@@ -43,17 +37,15 @@ export default async function parseRootTag(
     }
   }
 
-  if (!isRootTagParseResultsComplete(result)) {
+  if (!isDatabaseRootComplete(result)) {
     throw new Error('Incomplete "Root" element found');
   }
 
   return result;
 }
 
-function isRootTagParseResultsComplete(
-  results: Partial<RootTagParseResults>,
-): results is RootTagParseResults {
-  return (
-    results.rootGroup !== undefined && results.deletedObjects !== undefined
-  );
+function isDatabaseRootComplete(
+  results: Partial<DatabaseRoot>,
+): results is DatabaseRoot {
+  return results.group !== undefined;
 }

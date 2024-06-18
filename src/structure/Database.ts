@@ -1,11 +1,9 @@
-import type DeletedObject from './DeletedObject';
-import type Group from './Group';
+import type DatabaseRoot from './DatabaseRoot';
 import type Metadata from './Metadata';
 
 type Database = {
   metadata: Metadata;
-  rootGroup: Group;
-  deletedObjects: DeletedObject[];
+  root: DatabaseRoot;
 };
 
 export default Database;

@@ -94,11 +94,11 @@ describe('readKdbxFile', () => {
 
       // Assert
       expect(parsed.database.metadata.name).toEqual('Passwords');
-      expect(parsed.database.rootGroup.entries?.[0].attributes.Title).toEqual(
+      expect(parsed.database.root.group.entries?.[0].attributes?.Title).toEqual(
         'Sample Entry',
       );
       expect(
-        parsed.database.rootGroup.entries?.[0].attributes.Password,
+        parsed.database.root.group.entries?.[0].attributes?.Password,
       ).toEqual('winking-unicycle-ecology-decimal');
     },
   );

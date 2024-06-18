@@ -2,12 +2,12 @@ import type Entry from '../../structure/Entry';
 import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import type { BinaryPool } from '../types';
+import parseAutoTypeTag from './parseAutoTypeTag';
 import parseCustomDataTag from './parseCustomDataTag';
 import parseEntryBinaryTag from './parseEntryBinaryTag';
 import parseEntryHistoryTag from './parseEntryHistoryTag';
 import parseEntryStringTag from './parseEntryStringTag';
 import parseTimesTag from './parseTimesTag';
-import processAutoTypeTag from './processAutoTypeTag';
 
 export default async function parseEntryTag(
   reader: KdbxXmlReader,
@@ -117,7 +117,7 @@ export default async function parseEntryTag(
       }
 
       case 'AutoType':
-        processAutoTypeTag(reader.readFromCurrent(), entry);
+        entry.autoType = parseAutoTypeTag(reader.readFromCurrent());
         break;
 
       case 'PreviousParentGroup':
@@ -138,17 +138,5 @@ export default async function parseEntryTag(
 }
 
 function isEntryComplete(entry: Partial<Entry>): entry is Entry {
-  return (
-    entry.attributes !== undefined &&
-    entry.autoTypeEnabled !== undefined &&
-    entry.autoTypeObfuscation !== undefined &&
-    entry.backgroundColor !== undefined &&
-    entry.foregroundColor !== undefined &&
-    entry.iconNumber !== undefined &&
-    entry.overrideURL !== undefined &&
-    entry.protectedAttributes !== undefined &&
-    entry.tags !== undefined &&
-    entry.timeInfo !== undefined &&
-    entry.uuid !== undefined
-  );
+  return entry.uuid !== undefined;
 }

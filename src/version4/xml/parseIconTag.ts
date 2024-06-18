@@ -40,10 +40,5 @@ export default async function parseIconTag(
 }
 
 function isIconComplete(icon: Partial<Icon>): icon is Icon {
-  return (
-    icon.data !== undefined &&
-    icon.lastModificationTime !== undefined &&
-    icon.name !== undefined &&
-    icon.uuid !== undefined
-  );
+  return icon.data !== undefined && icon.uuid !== undefined;
 }

@@ -23,17 +23,14 @@ export default async function parseKeePassFileTag(
         break;
 
       case 'Root': {
-        if (database.rootGroup) {
+        if (database.root) {
           throw new Error('Unexpected duplicate Root element found');
         }
 
-        const { rootGroup, deletedObjects } = await parseRootTag(
+        database.root = await parseRootTag(
           reader.readFromCurrent(),
           binaryPool,
         );
-
-        database.rootGroup = rootGroup;
-        database.deletedObjects = deletedObjects;
         break;
       }
 
@@ -51,9 +48,5 @@ export default async function parseKeePassFileTag(
 }
 
 function isDatabaseComplete(database: Partial<Database>): database is Database {
-  return (
-    database.metadata !== undefined &&
-    database.rootGroup !== undefined &&
-    database.deletedObjects !== undefined
-  );
+  return database.metadata !== undefined && database.root !== undefined;
 }

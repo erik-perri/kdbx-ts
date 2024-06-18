@@ -2,14 +2,14 @@ import type Metadata from '../../structure/Metadata';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseCustomDataTag from './parseCustomDataTag';
 import parseCustomIconsTag from './parseCustomIconsTag';
-import processMemoryProtectionTag from './processMemoryProtectionTag';
+import parseMemoryProtectionTag from './parseMemoryProtectionTag';
 
 export default async function parseMetaTag(
   reader: KdbxXmlReader,
 ): Promise<Metadata> {
   reader.assertOpenedTagOf('Meta');
 
-  const metadata: Partial<Metadata> = {};
+  const metadata: Metadata = {};
 
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
@@ -66,7 +66,9 @@ export default async function parseMetaTag(
         break;
 
       case 'MemoryProtection':
-        processMemoryProtectionTag(reader.readFromCurrent(), metadata);
+        metadata.memoryProtection = parseMemoryProtectionTag(
+          reader.readFromCurrent(),
+        );
         break;
 
       case 'CustomIcons':
@@ -128,40 +130,5 @@ export default async function parseMetaTag(
     }
   }
 
-  if (!isMetadataComplete(metadata)) {
-    throw new Error('Metadata is incomplete');
-  }
-
   return metadata;
-}
-
-function isMetadataComplete(item: Partial<Metadata>): item is Metadata {
-  return (
-    item.color !== undefined &&
-    item.defaultUserName !== undefined &&
-    item.defaultUserNameChanged !== undefined &&
-    item.description !== undefined &&
-    item.descriptionChanged !== undefined &&
-    item.entryTemplatesGroup !== undefined &&
-    item.entryTemplatesGroupChanged !== undefined &&
-    item.generator !== undefined &&
-    item.historyMaxItems !== undefined &&
-    item.historyMaxSize !== undefined &&
-    item.lastSelectedGroup !== undefined &&
-    item.lastTopVisibleGroup !== undefined &&
-    item.maintenanceHistoryDays !== undefined &&
-    item.masterKeyChanged !== undefined &&
-    item.masterKeyChangeForce !== undefined &&
-    item.masterKeyChangeRec !== undefined &&
-    item.name !== undefined &&
-    item.nameChanged !== undefined &&
-    item.protectNotes !== undefined &&
-    item.protectPassword !== undefined &&
-    item.protectTitle !== undefined &&
-    item.protectURL !== undefined &&
-    item.protectUserName !== undefined &&
-    item.recycleBinChanged !== undefined &&
-    item.recycleBinUuid !== undefined &&
-    item.settingsChanged !== undefined
-  );
 }
