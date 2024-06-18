@@ -81,7 +81,7 @@ export default async function writeDatabase(
 
   const encryptedData = await cipher.finish(
     database.header.compressionAlgorithm === CompressionAlgorithm.GZip
-      ? pako.deflate(innerData)
+      ? pako.gzip(innerData)
       : innerData,
   );
 
