@@ -70,9 +70,13 @@ export default class KdbxXmlReader extends XmlReader {
     const value = this.readStringValue();
 
     if (!isBase64(value)) {
-      throw new Error('Non-encoded dates not implemented');
+      return this.readDateTimeFromIsoString(value, true);
     }
 
+    return this.readDateTimeFromBase64(value);
+  }
+
+  private readDateTimeFromBase64(value: string): Date {
     const data = Uint8ArrayHelper.leftJustify(
       Uint8ArrayHelper.fromBase64(value),
       8,
@@ -96,6 +100,22 @@ export default class KdbxXmlReader extends XmlReader {
     date.setUTCHours(0, 0, 0, 0);
     date.setUTCSeconds(julianSecondsAsNumber);
     return date;
+  }
+
+  private readDateTimeFromIsoString(input: string, strictMode: boolean): Date {
+    const date = new Date(input);
+
+    if (!isNaN(date.getTime())) {
+      return date;
+    }
+
+    if (strictMode) {
+      throw new Error(
+        `Unexpected date format. Expected ISO 8601 date string, got "${input}"`,
+      );
+    }
+
+    return new Date();
   }
 
   readNumberValue(radix: number = 10): number {
