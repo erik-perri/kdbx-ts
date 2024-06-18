@@ -106,11 +106,11 @@ export default async function parseMetaTag(
         break;
 
       case 'HistoryMaxItems':
-        metadata.historyMaxItems = reader.readUnsignedNumberValue();
+        metadata.historyMaxItems = reader.readNumberValue();
         break;
 
       case 'HistoryMaxSize':
-        metadata.historyMaxSize = reader.readUnsignedNumberValue();
+        metadata.historyMaxSize = reader.readNumberValue();
         break;
 
       case 'Binaries':
