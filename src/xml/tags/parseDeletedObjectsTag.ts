@@ -20,8 +20,9 @@ export default async function parseDeletedObjectsTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "DeletedObjects"`,
+        );
     }
   }
 
@@ -46,13 +47,14 @@ async function parseDeletedObjectTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "DeletedObject"`,
+        );
     }
   }
 
   if (!isDeletedObjectComplete(deleted)) {
-    throw new Error('Deleted object is incomplete');
+    throw new Error('Found "DeletedObject" tag with incomplete data');
   }
 
   return deleted;

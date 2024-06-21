@@ -27,13 +27,14 @@ export default async function parseEntryStringTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "String"`,
+        );
     }
   }
 
   if (key === undefined || value === undefined) {
-    throw new Error('Entry string key or value missing');
+    throw new Error('Found "String" tag with incomplete data');
   }
 
   return {

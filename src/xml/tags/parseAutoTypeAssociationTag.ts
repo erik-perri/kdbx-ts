@@ -19,13 +19,14 @@ export default function parseAutoTypeAssociationTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "Association"`,
+        );
     }
   }
 
   if (!isAutoTypeAssociationComplete(association)) {
-    throw new Error('Auto-type association window or sequence missing');
+    throw new Error('Found "Association" tag with incomplete data');
   }
 
   return association;

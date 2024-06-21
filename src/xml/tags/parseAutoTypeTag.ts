@@ -32,8 +32,9 @@ export default function parseAutoTypeTag(reader: KdbxXmlReader): AutoType {
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "AutoType"`,
+        );
     }
   }
 

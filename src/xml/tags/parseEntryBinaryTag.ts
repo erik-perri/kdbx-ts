@@ -27,13 +27,14 @@ export default function parseEntryBinaryTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "Binary"`,
+        );
     }
   }
 
   if (!isBinaryTagDataComplete(result)) {
-    throw new Error('Binary tag data is incomplete');
+    throw new Error('Found "Binary" tag with incomplete data');
   }
 
   return result;

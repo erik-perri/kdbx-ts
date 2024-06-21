@@ -27,13 +27,14 @@ export default async function parseRootTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "Root"`,
+        );
     }
   }
 
   if (!isDatabaseRootComplete(result)) {
-    throw new Error('Incomplete "Root" element found');
+    throw new Error('Found "Root" tag with incomplete data');
   }
 
   return result;

@@ -22,8 +22,9 @@ export default function parseCustomDataTag(
       }
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "CustomData"`,
+        );
     }
   }
 
@@ -50,13 +51,14 @@ function parseCustomDataItemTag(reader: KdbxXmlReader): CustomDataItem {
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "Item"`,
+        );
     }
   }
 
   if (!isCustomDataItemComplete(customData)) {
-    throw new Error('Custom data item is incomplete');
+    throw new Error('Found "Item" tag with incomplete data');
   }
 
   return customData;

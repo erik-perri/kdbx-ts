@@ -125,8 +125,9 @@ export default async function parseMetaTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "Meta"`,
+        );
     }
   }
 

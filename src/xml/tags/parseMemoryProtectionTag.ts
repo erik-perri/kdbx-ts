@@ -31,8 +31,9 @@ export default function parseMemoryProtectionTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "MemoryProtection"`,
+        );
     }
   }
 

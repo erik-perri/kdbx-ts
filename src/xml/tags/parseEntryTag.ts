@@ -116,13 +116,14 @@ export default async function parseEntryTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "Entry"`,
+        );
     }
   }
 
   if (!isEntryComplete(entry)) {
-    throw new Error('Entry is incomplete');
+    throw new Error('Found "Entry" tag with incomplete data');
   }
 
   return entry;

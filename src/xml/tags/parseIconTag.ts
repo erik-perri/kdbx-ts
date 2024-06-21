@@ -27,13 +27,14 @@ export default async function parseIconTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "Icon"`,
+        );
     }
   }
 
   if (!isIconComplete(icon)) {
-    throw new Error('Icon is incomplete');
+    throw new Error('Found "Icon" tag with incomplete data');
   }
 
   return icon;

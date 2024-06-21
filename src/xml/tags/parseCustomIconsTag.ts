@@ -20,8 +20,9 @@ export default async function parseCustomIconsTag(
       }
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "CustomIcons"`,
+        );
     }
   }
 

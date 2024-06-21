@@ -30,13 +30,14 @@ export default async function parseKeePassFileTag(
       }
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "KeePassFile"`,
+        );
     }
   }
 
   if (!isDatabaseComplete(database)) {
-    throw new Error('Failed to parse a complete database from the XML data');
+    throw new Error('Found "KeePassFile" tag with incomplete data');
   }
 
   return database;

@@ -16,8 +16,9 @@ export default async function parseEntryHistoryTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "History"`,
+        );
     }
   }
 

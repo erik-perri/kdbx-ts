@@ -93,13 +93,14 @@ export default async function parseGroupTag(
         break;
 
       default:
-        reader.skipCurrentElement();
-        break;
+        throw new Error(
+          `Unexpected tag "${reader.current.name}" while parsing "Group"`,
+        );
     }
   }
 
   if (!isGroupComplete(group)) {
-    throw new Error('Group is incomplete');
+    throw new Error('Found "Group" tag with incomplete data');
   }
 
   return group;
