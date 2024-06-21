@@ -33,9 +33,9 @@ describe('writeDatabase', () => {
     const header = readHeaderFields(reader);
 
     // Assert
-    expect(header.cipherId).toEqual(originalFile.header.cipherId);
-    expect(header.compressionFlags).toEqual(
-      originalFile.header.compressionFlags,
+    expect(header.cipherAlgorithm).toEqual(originalFile.header.cipherAlgorithm);
+    expect(header.compressionAlgorithm).toEqual(
+      originalFile.header.compressionAlgorithm,
     );
     expect(header.endOfHeader).toEqual(originalFile.header.endOfHeader);
     expect((header.kdfParameters as KdbxAesKdfParameters).rounds).toEqual(

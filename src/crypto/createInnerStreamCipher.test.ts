@@ -2,9 +2,9 @@ import { describe, expect, it, vitest } from 'vitest';
 
 import nodeCrypto from '../../fixtures/crypto/nodeCrypto';
 import HashAlgorithm from '../enums/HashAlgorithm';
+import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
-import SymmetricCipherMode from '../enums/SymmetricCipherMode';
-import displaySymmetricCipherMode from '../utilities/displaySymmetricCipherMode';
+import displaySymmetricCipherAlgorithm from '../utilities/displaySymmetricCipherAlgorithm';
 import createInnerStreamCipher from './createInnerStreamCipher';
 
 describe('createInnerStreamCipher', () => {
@@ -25,12 +25,16 @@ describe('createInnerStreamCipher', () => {
       });
 
     // Act
-    await createInnerStreamCipher(nodeCrypto, SymmetricCipherMode.Salsa20, key);
+    await createInnerStreamCipher(
+      nodeCrypto,
+      SymmetricCipherAlgorithm.Salsa20,
+      key,
+    );
 
     // Assert
     expect(createCipherSpy).toHaveBeenCalledTimes(1);
     expect(createCipherSpy).toHaveBeenCalledWith(
-      SymmetricCipherMode.Salsa20,
+      SymmetricCipherAlgorithm.Salsa20,
       SymmetricCipherDirection.Encrypt,
       await nodeCrypto.hash(HashAlgorithm.Sha256, [key]),
       Uint8Array.from([0xe8, 0x30, 0x09, 0x4b, 0x97, 0x20, 0x5d, 0x2a]),
@@ -58,14 +62,14 @@ describe('createInnerStreamCipher', () => {
     // Act
     await createInnerStreamCipher(
       nodeCrypto,
-      SymmetricCipherMode.ChaCha20,
+      SymmetricCipherAlgorithm.ChaCha20,
       key,
     );
 
     // Assert
     expect(createCipherSpy).toHaveBeenCalledTimes(1);
     expect(createCipherSpy).toHaveBeenCalledWith(
-      SymmetricCipherMode.ChaCha20,
+      SymmetricCipherAlgorithm.ChaCha20,
       SymmetricCipherDirection.Encrypt,
       keyHash.subarray(0, 32),
       keyHash.subarray(32, 44),
@@ -73,10 +77,10 @@ describe('createInnerStreamCipher', () => {
   });
 
   it.each([
-    [SymmetricCipherMode.Aes128_CBC],
-    [SymmetricCipherMode.Aes256_CBC],
-    [SymmetricCipherMode.Twofish_CBC],
-  ])(`should throw an error when using %s`, async (mode) => {
+    [SymmetricCipherAlgorithm.Aes128_CBC],
+    [SymmetricCipherAlgorithm.Aes256_CBC],
+    [SymmetricCipherAlgorithm.Twofish_CBC],
+  ])(`should throw an error when using %s`, async (algorithm) => {
     // Arrange
     const key = Uint8Array.from(
       Array.from({ length: 64 }, (_, index) => index),
@@ -84,9 +88,9 @@ describe('createInnerStreamCipher', () => {
 
     // Act
     await expect(
-      createInnerStreamCipher(nodeCrypto, mode, key),
+      createInnerStreamCipher(nodeCrypto, algorithm, key),
     ).rejects.toThrow(
-      `Invalid inner stream cipher mode ${displaySymmetricCipherMode(mode)}`,
+      `Invalid inner stream cipher algorithm ${displaySymmetricCipherAlgorithm(algorithm)}`,
     );
 
     // Assert

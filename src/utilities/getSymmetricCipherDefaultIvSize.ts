@@ -1,15 +1,15 @@
-import SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 
 export default function getSymmetricCipherDefaultIvSize(
-  mode: SymmetricCipherMode,
+  algorithm: SymmetricCipherAlgorithm,
 ): number {
-  switch (mode) {
-    case SymmetricCipherMode.Aes128_CBC:
-    case SymmetricCipherMode.Aes256_CBC:
-    case SymmetricCipherMode.Twofish_CBC:
+  switch (algorithm) {
+    case SymmetricCipherAlgorithm.Aes128_CBC:
+    case SymmetricCipherAlgorithm.Aes256_CBC:
+    case SymmetricCipherAlgorithm.Twofish_CBC:
       return 16;
-    case SymmetricCipherMode.Salsa20:
-    case SymmetricCipherMode.ChaCha20:
+    case SymmetricCipherAlgorithm.Salsa20:
+    case SymmetricCipherAlgorithm.ChaCha20:
       return 12;
   }
 }

@@ -4,7 +4,7 @@ import CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import HeaderFieldId from '../enums/HeaderFieldId';
 import KdfParameterKey from '../enums/KdfParameterKey';
 import KdfUuid from '../enums/KdfUuid';
-import SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherUuid from '../enums/SymmetricCipherUuid';
 import VariantMapFieldType from '../enums/VariantMapFieldType';
 import { type KdbxOuterHeader } from '../types';
@@ -16,8 +16,8 @@ describe('serializeHeaderFields', () => {
   it('serializes header fields', () => {
     // Arrange
     const header: KdbxOuterHeader = {
-      cipherId: SymmetricCipherMode.Aes256_CBC,
-      compressionFlags: CompressionAlgorithm.GZip,
+      cipherAlgorithm: SymmetricCipherAlgorithm.Aes256_CBC,
+      compressionAlgorithm: CompressionAlgorithm.GZip,
       encryptionIV: Uint8ArrayHelper.fromString('IV'.repeat(8)),
       endOfHeader: Uint8ArrayHelper.fromString('\r\n\r\n'),
       kdfParameters: {
@@ -40,13 +40,13 @@ describe('serializeHeaderFields', () => {
 
     const expectedResult = Uint8Array.from(
       Buffer.concat([
-        // CipherID
-        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CipherID),
+        // CipherAlgorithm
+        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CipherAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(16),
         Uint8ArrayHelper.fromUuid(SymmetricCipherUuid.Aes256),
 
-        // CompressionFlags
-        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CompressionFlags),
+        // CompressionAlgorithm
+        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CompressionAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(4),
         Uint8ArrayHelper.fromUInt32LE(CompressionAlgorithm.GZip),
 
@@ -115,8 +115,8 @@ describe('serializeHeaderFields', () => {
   it('serializes header fields without custom data', () => {
     // Arrange
     const header: KdbxOuterHeader = {
-      cipherId: SymmetricCipherMode.Aes256_CBC,
-      compressionFlags: CompressionAlgorithm.GZip,
+      cipherAlgorithm: SymmetricCipherAlgorithm.Aes256_CBC,
+      compressionAlgorithm: CompressionAlgorithm.GZip,
       encryptionIV: Uint8ArrayHelper.fromString('IV'.repeat(8)),
       endOfHeader: Uint8ArrayHelper.fromString('\r\n\r\n'),
       kdfParameters: {
@@ -131,13 +131,13 @@ describe('serializeHeaderFields', () => {
 
     const expectedResult = Uint8Array.from(
       Buffer.concat([
-        // CipherID
-        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CipherID),
+        // CipherAlgorithm
+        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CipherAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(16),
         Uint8ArrayHelper.fromUuid(SymmetricCipherUuid.Aes256),
 
-        // CompressionFlags
-        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CompressionFlags),
+        // CompressionAlgorithm
+        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CompressionAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(4),
         Uint8ArrayHelper.fromUInt32LE(CompressionAlgorithm.GZip),
 

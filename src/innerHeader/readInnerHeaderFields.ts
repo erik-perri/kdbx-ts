@@ -6,7 +6,7 @@ import isInnerHeaderFieldId from '../utilities/isInnerHeaderFieldId';
 import joinWithConjunction from '../utilities/joinWithConjunction';
 import deserializeBinaryValue from './fields/deserializeBinaryValue';
 import deserializeEndOfHeaderValue from './fields/deserializeEndOfHeaderValue';
-import deserializeStreamCipherIdValue from './fields/deserializeStreamCipherIdValue';
+import deserializeStreamCipherAlgorithmValue from './fields/deserializeStreamCipherAlgorithmValue';
 import deserializeStreamKeyValue from './fields/deserializeStreamKeyValue';
 
 export default function readInnerHeaderFields(
@@ -19,22 +19,23 @@ export default function readInnerHeaderFields(
     const fieldData = readInnerHeaderFieldData(buffer, fieldId);
 
     switch (fieldId) {
-      case InnerHeaderFieldId.InnerStreamMode:
-        header.streamCipherId = deserializeStreamCipherIdValue(fieldData);
+      case InnerHeaderFieldId.InnerEncryptionAlgorithm:
+        header.innerEncryptionAlgorithm =
+          deserializeStreamCipherAlgorithmValue(fieldData);
 
         // If we got the key first, reprocess it to check the length now that we have the ID
-        if (header.streamKey) {
-          header.streamKey = deserializeStreamKeyValue(
+        if (header.innerEncryptionKey) {
+          header.innerEncryptionKey = deserializeStreamKeyValue(
             fieldData,
-            header.streamCipherId,
+            header.innerEncryptionAlgorithm,
           );
         }
         break;
 
-      case InnerHeaderFieldId.InnerStreamKey:
-        header.streamKey = deserializeStreamKeyValue(
+      case InnerHeaderFieldId.InnerEncryptionKey:
+        header.innerEncryptionKey = deserializeStreamKeyValue(
           fieldData,
-          header.streamCipherId,
+          header.innerEncryptionAlgorithm,
         );
         break;
 
@@ -72,12 +73,12 @@ function validateInnerHeader(
   ): header is KdbxInnerHeader {
     missingFields.length = 0;
 
-    if (header.streamCipherId === undefined) {
-      missingFields.push(InnerHeaderFieldId.InnerStreamMode);
+    if (header.innerEncryptionAlgorithm === undefined) {
+      missingFields.push(InnerHeaderFieldId.InnerEncryptionAlgorithm);
     }
 
-    if (header.streamKey === undefined) {
-      missingFields.push(InnerHeaderFieldId.InnerStreamKey);
+    if (header.innerEncryptionKey === undefined) {
+      missingFields.push(InnerHeaderFieldId.InnerEncryptionKey);
     }
 
     if (header.endOfHeader === undefined) {
@@ -100,8 +101,8 @@ function validateInnerHeader(
   return {
     binaryPool: header.binaryPool,
     endOfHeader: header.endOfHeader,
-    streamCipherId: header.streamCipherId,
-    streamKey: header.streamKey,
+    innerEncryptionAlgorithm: header.innerEncryptionAlgorithm,
+    innerEncryptionKey: header.innerEncryptionKey,
   };
 }
 

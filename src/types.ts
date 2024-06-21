@@ -2,15 +2,15 @@ import type Argon2Type from './enums/Argon2Type';
 import type Argon2Version from './enums/Argon2Version';
 import type CompressionAlgorithm from './enums/CompressionAlgorithm';
 import type KdfUuid from './enums/KdfUuid';
-import type SymmetricCipherMode from './enums/SymmetricCipherMode';
+import type SymmetricCipherAlgorithm from './enums/SymmetricCipherAlgorithm';
 import type VariantMapFieldType from './enums/VariantMapFieldType';
 import type Database from './structure/Database';
 
 export type KdbxFile = {
-  signature: KdbxSignature;
+  database: Database;
   header: KdbxOuterHeader;
   innerHeader: KdbxInnerHeader;
-  database: Database;
+  signature: KdbxSignature;
 };
 
 export type KdbxSignature = {
@@ -21,8 +21,8 @@ export type KdbxSignature = {
 };
 
 export type KdbxOuterHeader = {
-  cipherId: SymmetricCipherMode;
-  compressionFlags: CompressionAlgorithm;
+  cipherAlgorithm: SymmetricCipherAlgorithm;
+  compressionAlgorithm: CompressionAlgorithm;
   encryptionIV: Uint8Array;
   endOfHeader: Uint8Array;
   kdfParameters: KdbxKdfParameters;
@@ -99,8 +99,8 @@ export type KdbxArgon2KdfParameters = {
   seed: Uint8Array;
   type: Argon2Type;
   uuid: typeof KdfUuid.Argon2d | typeof KdfUuid.Argon2id;
-  version: Argon2Version;
   variantMapVersion: number;
+  version: Argon2Version;
 };
 
 export type KdbxKdfParameters = KdbxAesKdfParameters | KdbxArgon2KdfParameters;
@@ -114,6 +114,6 @@ export type KdbxBinaryPoolValue = {
 export type KdbxInnerHeader = {
   binaryPool?: KdbxBinaryPoolValue[];
   endOfHeader: Uint8Array;
-  streamCipherId: SymmetricCipherMode;
-  streamKey: Uint8Array;
+  innerEncryptionAlgorithm: SymmetricCipherAlgorithm;
+  innerEncryptionKey: Uint8Array;
 };

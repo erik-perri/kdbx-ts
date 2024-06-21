@@ -1,8 +1,8 @@
 import type Argon2Type from '../enums/Argon2Type';
 import type Argon2Version from '../enums/Argon2Version';
 import type HashAlgorithm from '../enums/HashAlgorithm';
+import type SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import type SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
-import type SymmetricCipherMode from '../enums/SymmetricCipherMode';
 
 export type CryptoCipher = {
   process(data: Uint8Array): Promise<Uint8Array>;
@@ -15,7 +15,7 @@ export type CryptoCipher = {
 
 export type CryptoImplementation = {
   createCipher(
-    mode: SymmetricCipherMode,
+    algorithm: SymmetricCipherAlgorithm,
     direction: SymmetricCipherDirection,
     key: Uint8Array,
     iv: Uint8Array,

@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import SymmetricCipherMode from '../../enums/SymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../../enums/SymmetricCipherAlgorithm';
 import Uint8ArrayHelper from '../../utilities/Uint8ArrayHelper';
 import deserializeStreamKeyValue from './deserializeStreamKeyValue';
 
 describe('deserializeStreamKeyValue', () => {
-  it('allows any size when mode is unknown', () => {
+  it('allows any size when algorithm is unknown', () => {
     // Arrange
     const data = Uint8ArrayHelper.fromUInt32LE(1);
 
@@ -20,23 +20,23 @@ describe('deserializeStreamKeyValue', () => {
     [
       'ChaCha20',
       {
-        mode: SymmetricCipherMode.ChaCha20,
+        algorithm: SymmetricCipherAlgorithm.ChaCha20,
         value: Uint8ArrayHelper.fromString('Test'.repeat(16)),
       },
     ],
     [
       'Salsa20',
       {
-        mode: SymmetricCipherMode.Salsa20,
+        algorithm: SymmetricCipherAlgorithm.Salsa20,
         value: Uint8ArrayHelper.fromString('Test'.repeat(8)),
       },
     ],
-  ])('does not modify data for %s', (_, { mode, value }) => {
+  ])('does not modify data for %s', (_, { algorithm, value }) => {
     // Arrange
     // Nothing to arrange.
 
     // Act
-    const result = deserializeStreamKeyValue(value, mode);
+    const result = deserializeStreamKeyValue(value, algorithm);
 
     // Assert
     expect(result).toEqual(value);
@@ -46,25 +46,25 @@ describe('deserializeStreamKeyValue', () => {
     [
       'ChaCha20',
       {
+        algorithm: SymmetricCipherAlgorithm.ChaCha20,
         expected: 'Invalid ChaCha20 key length. Expected 64 bytes, got 4',
-        mode: SymmetricCipherMode.ChaCha20,
       },
     ],
     [
       'Salsa20',
       {
+        algorithm: SymmetricCipherAlgorithm.Salsa20,
         expected: 'Invalid Salsa20 key length. Expected 32 bytes, got 4',
-        mode: SymmetricCipherMode.Salsa20,
       },
     ],
   ])(
     'throws error when %s type is used with incorrect size',
-    (_, { expected, mode }) => {
+    (_, { algorithm, expected }) => {
       // Arrange
       const data = Uint8ArrayHelper.fromUInt32LE(1);
 
       // Act
-      expect(() => deserializeStreamKeyValue(data, mode)).toThrowError(
+      expect(() => deserializeStreamKeyValue(data, algorithm)).toThrowError(
         expected,
       );
 
@@ -79,8 +79,8 @@ describe('deserializeStreamKeyValue', () => {
 
     // Act
     expect(() =>
-      deserializeStreamKeyValue(data, SymmetricCipherMode.Aes128_CBC),
-    ).toThrowError('Unsupported symmetric cipher mode "AES-128-CBC"');
+      deserializeStreamKeyValue(data, SymmetricCipherAlgorithm.Aes128_CBC),
+    ).toThrowError('Unsupported symmetric cipher algorithm "AES-128-CBC"');
 
     // Assert
     // Nothing to assert.

@@ -115,8 +115,8 @@ export default async function readDatabase(
   const database = await readDatabaseXml(
     crypto,
     innerHeader.binaryPool,
-    innerHeader.streamCipherId,
-    innerHeader.streamKey,
+    innerHeader.innerEncryptionAlgorithm,
+    innerHeader.innerEncryptionKey,
     databaseXml,
   );
 

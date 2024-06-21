@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import HeaderFieldId from '../enums/HeaderFieldId';
 import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
 import ProtectedStreamAlgorithm from '../enums/ProtectedStreamAlgorithm';
-import SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import { type KdbxInnerHeader } from '../types';
 import BufferReader from '../utilities/BufferReader';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
@@ -14,13 +14,13 @@ describe('readInnerHeaderFields', () => {
     // Arrange
     const data = Uint8Array.from(
       Buffer.concat([
-        // InnerStreamMode
-        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerStreamMode),
+        // InnerEncryptionAlgorithm
+        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerEncryptionAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(4),
         Uint8ArrayHelper.fromUInt32LE(ProtectedStreamAlgorithm.Salsa20),
 
-        // InnerStreamKey
-        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerStreamKey),
+        // InnerEncryptionKey
+        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerEncryptionKey),
         Uint8ArrayHelper.fromUInt32LE(32),
         Uint8ArrayHelper.fromString('Test'.repeat(8)),
 
@@ -72,22 +72,24 @@ describe('readInnerHeaderFields', () => {
         },
       ],
       endOfHeader: Uint8Array.from([]),
-      streamCipherId: SymmetricCipherMode.Salsa20,
-      streamKey: Uint8Array.from(Uint8ArrayHelper.fromString('Test'.repeat(8))),
+      innerEncryptionAlgorithm: SymmetricCipherAlgorithm.Salsa20,
+      innerEncryptionKey: Uint8Array.from(
+        Uint8ArrayHelper.fromString('Test'.repeat(8)),
+      ),
     } satisfies KdbxInnerHeader);
   });
 
-  it('validates stream key length when mode is provided second', () => {
+  it('validates stream key length when algorithm is provided second', () => {
     // Arrange
     const data = Uint8Array.from(
       Buffer.concat([
-        // InnerStreamKey
-        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerStreamKey),
+        // InnerEncryptionKey
+        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerEncryptionKey),
         Uint8ArrayHelper.fromUInt32LE(28),
         Uint8ArrayHelper.fromString('Test'.repeat(7)),
 
-        // InnerStreamMode
-        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerStreamMode),
+        // InnerEncryptionAlgorithm
+        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerEncryptionAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(4),
         Uint8ArrayHelper.fromUInt32LE(ProtectedStreamAlgorithm.Salsa20),
 
@@ -110,19 +112,19 @@ describe('readInnerHeaderFields', () => {
 
   it.each([
     [
-      'InnerStreamMode',
+      'InnerEncryptionAlgorithm',
       {
-        field: InnerHeaderFieldId.InnerStreamMode,
+        field: InnerHeaderFieldId.InnerEncryptionAlgorithm,
         error:
-          'Unexpected empty inner header field length for "InnerStreamMode"',
+          'Unexpected empty inner header field length for "InnerEncryptionAlgorithm"',
       },
     ],
     [
-      'InnerStreamKey',
+      'InnerEncryptionKey',
       {
-        field: InnerHeaderFieldId.InnerStreamKey,
+        field: InnerHeaderFieldId.InnerEncryptionKey,
         error:
-          'Unexpected empty inner header field length for "InnerStreamKey"',
+          'Unexpected empty inner header field length for "InnerEncryptionKey"',
       },
     ],
     [
@@ -186,7 +188,7 @@ describe('readInnerHeaderFields', () => {
 
     // Act
     expect(() => readInnerHeaderFields(reader)).toThrowError(
-      'Missing required inner header fields: "InnerStreamMode" and "InnerStreamKey"',
+      'Missing required inner header fields: "InnerEncryptionAlgorithm" and "InnerEncryptionKey"',
     );
 
     // Assert

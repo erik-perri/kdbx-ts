@@ -4,9 +4,10 @@ import CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import HeaderFieldId from '../enums/HeaderFieldId';
 import KdfParameterKey from '../enums/KdfParameterKey';
 import KdfUuid from '../enums/KdfUuid';
-import SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherUuid from '../enums/SymmetricCipherUuid';
 import VariantMapFieldType from '../enums/VariantMapFieldType';
+import { type KdbxOuterHeader } from '../types';
 import BufferReader from '../utilities/BufferReader';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import { KeePass2 } from '../versions';
@@ -17,13 +18,13 @@ describe('readHeaderFields', () => {
     // Arrange
     const data = Uint8Array.from(
       Buffer.concat([
-        // CipherID
-        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CipherID),
+        // CipherAlgorithm
+        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CipherAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(16),
         Uint8ArrayHelper.fromUuid(SymmetricCipherUuid.Aes256),
 
-        // CompressionFlags
-        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CompressionFlags),
+        // CompressionAlgorithm
+        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CompressionAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(4),
         Uint8ArrayHelper.fromUInt32LE(CompressionAlgorithm.GZip),
 
@@ -89,8 +90,8 @@ describe('readHeaderFields', () => {
 
     // Assert
     expect(result).toEqual({
-      cipherId: SymmetricCipherMode.Aes256_CBC,
-      compressionFlags: CompressionAlgorithm.GZip,
+      cipherAlgorithm: SymmetricCipherAlgorithm.Aes256_CBC,
+      compressionAlgorithm: CompressionAlgorithm.GZip,
       encryptionIV: Uint8ArrayHelper.fromString('IV'.repeat(8)),
       endOfHeader: Uint8ArrayHelper.fromString('\r\n\r\n'),
       kdfParameters: {
@@ -109,7 +110,7 @@ describe('readHeaderFields', () => {
         },
         version: KeePass2.variantMapVersion,
       },
-    });
+    } satisfies KdbxOuterHeader);
   });
 
   it.each([
@@ -208,7 +209,7 @@ describe('readHeaderFields', () => {
     // Arrange
     const data = Uint8Array.from(
       Buffer.concat([
-        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CipherID),
+        Uint8ArrayHelper.fromUInt8(HeaderFieldId.CipherAlgorithm),
         Uint8ArrayHelper.fromInt32LE(0),
       ]),
     );
@@ -217,7 +218,7 @@ describe('readHeaderFields', () => {
 
     // Act
     expect(() => readHeaderFields(reader)).toThrowError(
-      'Unexpected empty header field length for CipherID',
+      'Unexpected empty header field length for CipherAlgorithm',
     );
 
     // Assert
@@ -238,7 +239,7 @@ describe('readHeaderFields', () => {
 
     // Act
     expect(() => readHeaderFields(reader)).toThrowError(
-      'Missing required header fields: "CipherID", "CompressionFlags", "MasterSeed", "EncryptionIV", and "KdfParameters"',
+      'Missing required header fields: "CipherAlgorithm", "CompressionAlgorithm", "MasterSeed", "EncryptionIV", and "KdfParameters"',
     );
 
     // Assert

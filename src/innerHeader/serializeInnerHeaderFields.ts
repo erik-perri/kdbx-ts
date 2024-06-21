@@ -3,7 +3,7 @@ import { type KdbxInnerHeader } from '../types';
 import BufferWriter from '../utilities/BufferWriter';
 import serializeBinaryValue from './fields/serializeBinaryValue';
 import serializeEndOfHeaderValue from './fields/serializeEndOfHeaderValue';
-import serializeStreamCipherIdValue from './fields/serializeStreamCipherIdValue';
+import serializeStreamCipherAlgorithmValue from './fields/serializeStreamCipherAlgorithmValue';
 import serializeStreamKeyValue from './fields/serializeStreamKeyValue';
 
 export default function serializeInnerHeaderFields(
@@ -15,12 +15,17 @@ export default function serializeInnerHeaderFields(
 
   const fields = [
     {
-      id: InnerHeaderFieldId.InnerStreamMode,
-      data: serializeStreamCipherIdValue(header.streamCipherId),
+      id: InnerHeaderFieldId.InnerEncryptionAlgorithm,
+      data: serializeStreamCipherAlgorithmValue(
+        header.innerEncryptionAlgorithm,
+      ),
     },
     {
-      id: InnerHeaderFieldId.InnerStreamKey,
-      data: serializeStreamKeyValue(header.streamKey, header.streamCipherId),
+      id: InnerHeaderFieldId.InnerEncryptionKey,
+      data: serializeStreamKeyValue(
+        header.innerEncryptionKey,
+        header.innerEncryptionAlgorithm,
+      ),
     },
     ...binaryPool.map((value) => ({
       id: InnerHeaderFieldId.Binary,

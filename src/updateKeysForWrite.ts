@@ -24,7 +24,7 @@ export default async function updateKeysForWrite(
   const header: KdbxOuterHeader = {
     ...file.header,
     encryptionIV: await crypto.randomBytes(
-      getSymmetricCipherDefaultIvSize(file.header.cipherId),
+      getSymmetricCipherDefaultIvSize(file.header.cipherAlgorithm),
     ),
     kdfParameters,
     masterSeed: await crypto.randomBytes(32),
@@ -32,8 +32,8 @@ export default async function updateKeysForWrite(
 
   const innerHeader: KdbxInnerHeader = {
     ...file.innerHeader,
-    streamKey: await crypto.randomBytes(
-      getSymmetricCipherKeySize(file.innerHeader.streamCipherId),
+    innerEncryptionKey: await crypto.randomBytes(
+      getSymmetricCipherKeySize(file.innerHeader.innerEncryptionAlgorithm),
     ),
   };
 

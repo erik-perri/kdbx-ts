@@ -3,8 +3,8 @@ import HeaderFieldId from '../enums/HeaderFieldId';
 const headerFieldDisplayMap: Record<HeaderFieldId, string> = {
   [HeaderFieldId.EndOfHeader]: 'EndOfHeader',
   [HeaderFieldId.Comment]: 'Comment',
-  [HeaderFieldId.CipherID]: 'CipherID',
-  [HeaderFieldId.CompressionFlags]: 'CompressionFlags',
+  [HeaderFieldId.CipherAlgorithm]: 'CipherAlgorithm',
+  [HeaderFieldId.CompressionAlgorithm]: 'CompressionAlgorithm',
   [HeaderFieldId.MasterSeed]: 'MasterSeed',
   [HeaderFieldId.TransformSeed]: 'TransformSeed',
   [HeaderFieldId.TransformRounds]: 'TransformRounds',

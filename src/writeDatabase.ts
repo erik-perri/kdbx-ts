@@ -58,7 +58,7 @@ export default async function writeDatabase(
     '<KeePassFile>';
 
   const cipher = await crypto.createCipher(
-    file.header.cipherId,
+    file.header.cipherAlgorithm,
     SymmetricCipherDirection.Encrypt,
     finalKey,
     file.header.encryptionIV,
@@ -70,7 +70,7 @@ export default async function writeDatabase(
   ]);
 
   const encryptedData = await cipher.finish(
-    file.header.compressionFlags === CompressionAlgorithm.GZip
+    file.header.compressionAlgorithm === CompressionAlgorithm.GZip
       ? pako.gzip(innerData)
       : innerData,
   );

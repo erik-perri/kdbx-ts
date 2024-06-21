@@ -1,7 +1,7 @@
 import HeaderFieldId from '../enums/HeaderFieldId';
 import { type KdbxOuterHeader } from '../types';
 import BufferWriter from '../utilities/BufferWriter';
-import serializeCipherIdValue from './fields/serializeCipherIdValue';
+import serializeCipherAlgorithmValue from './fields/serializeCipherAlgorithmValue';
 import serializeCompressionAlgorithmValue from './fields/serializeCompressionAlgorithmValue';
 import serializeEncryptionIvValue from './fields/serializeEncryptionIvValue';
 import serializeEndOfHeaderValue from './fields/serializeEndOfHeaderValue';
@@ -16,12 +16,12 @@ export default function serializeHeaderFields(
 
   const fieldsToWrite = [
     {
-      id: HeaderFieldId.CipherID,
-      data: serializeCipherIdValue(header.cipherId),
+      id: HeaderFieldId.CipherAlgorithm,
+      data: serializeCipherAlgorithmValue(header.cipherAlgorithm),
     },
     {
-      id: HeaderFieldId.CompressionFlags,
-      data: serializeCompressionAlgorithmValue(header.compressionFlags),
+      id: HeaderFieldId.CompressionAlgorithm,
+      data: serializeCompressionAlgorithmValue(header.compressionAlgorithm),
     },
     {
       id: HeaderFieldId.MasterSeed,

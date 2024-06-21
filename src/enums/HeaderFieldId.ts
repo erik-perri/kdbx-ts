@@ -1,8 +1,8 @@
 const HeaderFieldId = Object.freeze({
   EndOfHeader: 0,
   Comment: 1,
-  CipherID: 2,
-  CompressionFlags: 3,
+  CipherAlgorithm: 2,
+  CompressionAlgorithm: 3,
   MasterSeed: 4,
   TransformSeed: 5,
   TransformRounds: 6,

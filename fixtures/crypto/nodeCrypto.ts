@@ -5,9 +5,9 @@ import type {
   CryptoCipher,
   CryptoImplementation,
 } from '../../src/crypto/types';
+import SymmetricCipherAlgorithm from '../../src/enums/SymmetricCipherAlgorithm';
 import type SymmetricCipherDirection from '../../src/enums/SymmetricCipherDirection';
-import SymmetricCipherMode from '../../src/enums/SymmetricCipherMode';
-import displaySymmetricCipherMode from '../../src/utilities/displaySymmetricCipherMode';
+import displaySymmetricCipherAlgorithm from '../../src/utilities/displaySymmetricCipherAlgorithm';
 import createAes256CbcCipher from './createAes256CbcCipher';
 import createChaCha20Cipher from './createChaCha20Cipher';
 import createTwofishCbcCipher from './createTwofishCbcCipher';
@@ -19,17 +19,19 @@ type CipherFactory = (
 ) => CryptoCipher;
 
 const nodeCrypto: CryptoImplementation = {
-  createCipher(mode, direction, key, iv): Promise<CryptoCipher> {
+  createCipher(algorithm, direction, key, iv): Promise<CryptoCipher> {
     const cipherMap: Record<string, CipherFactory | undefined> = {
-      [SymmetricCipherMode.Aes256_CBC]: createAes256CbcCipher,
-      [SymmetricCipherMode.ChaCha20]: createChaCha20Cipher,
-      [SymmetricCipherMode.Twofish_CBC]: createTwofishCbcCipher,
+      [SymmetricCipherAlgorithm.Aes256_CBC]: createAes256CbcCipher,
+      [SymmetricCipherAlgorithm.ChaCha20]: createChaCha20Cipher,
+      [SymmetricCipherAlgorithm.Twofish_CBC]: createTwofishCbcCipher,
     };
 
-    const cipherFactory = cipherMap[mode];
+    const cipherFactory = cipherMap[algorithm];
 
     if (!cipherFactory) {
-      throw new Error(`Cipher ${displaySymmetricCipherMode(mode)} not mocked`);
+      throw new Error(
+        `Cipher ${displaySymmetricCipherAlgorithm(algorithm)} not available`,
+      );
     }
 
     return Promise.resolve(cipherFactory(direction, key, iv));

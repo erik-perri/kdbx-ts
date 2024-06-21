@@ -1,17 +1,17 @@
-import SymmetricCipherMode from '../enums/SymmetricCipherMode';
-import displaySymmetricCipherMode from './displaySymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
+import displaySymmetricCipherAlgorithm from './displaySymmetricCipherAlgorithm';
 
 export default function getSymmetricCipherKeySize(
-  mode: SymmetricCipherMode,
+  algorithm: SymmetricCipherAlgorithm,
 ): number {
-  switch (mode) {
-    case SymmetricCipherMode.ChaCha20:
+  switch (algorithm) {
+    case SymmetricCipherAlgorithm.ChaCha20:
       return 64;
-    case SymmetricCipherMode.Salsa20:
+    case SymmetricCipherAlgorithm.Salsa20:
       return 32;
     default:
       throw new Error(
-        `Unknown expected key size for cipher mode "${displaySymmetricCipherMode(mode)}"`,
+        `Unknown expected key size for cipher algorithm "${displaySymmetricCipherAlgorithm(algorithm)}"`,
       );
   }
 }

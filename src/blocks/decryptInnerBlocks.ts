@@ -18,7 +18,7 @@ export default async function decryptInnerBlocks(
   ]);
 
   const cipher = await crypto.createCipher(
-    header.cipherId,
+    header.cipherAlgorithm,
     SymmetricCipherDirection.Decrypt,
     finalKey,
     header.encryptionIV,
@@ -31,7 +31,7 @@ export default async function decryptInnerBlocks(
     ),
   );
 
-  return header.compressionFlags === CompressionAlgorithm.GZip
+  return header.compressionAlgorithm === CompressionAlgorithm.GZip
     ? pako.inflate(processedBytes)
     : processedBytes;
 }

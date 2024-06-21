@@ -4,7 +4,7 @@ import type BufferReader from '../utilities/BufferReader';
 import displayHeaderFieldId from '../utilities/displayHeaderFieldId';
 import { isHeaderFieldId } from '../utilities/isHeaderFieldId';
 import joinWithConjunction from '../utilities/joinWithConjunction';
-import deserializeCipherIdValue from './fields/deserializeCipherIdValue';
+import deserializeCipherAlgorithmValue from './fields/deserializeCipherAlgorithmValue';
 import deserializeCompressionAlgorithmValue from './fields/deserializeCompressionAlgorithmValue';
 import deserializeEncryptionIvValue from './fields/deserializeEncryptionIvValue';
 import deserializeEndOfHeaderValue from './fields/deserializeEndOfHeaderValue';
@@ -32,12 +32,12 @@ export default function readHeaderFields(
           `Unsupported header field ID encountered "${displayHeaderFieldId(fieldId)}" with ${buffer.byteLength} bytes of data`,
         );
 
-      case HeaderFieldId.CipherID:
-        header.cipherId = deserializeCipherIdValue(fieldData);
+      case HeaderFieldId.CipherAlgorithm:
+        header.cipherAlgorithm = deserializeCipherAlgorithmValue(fieldData);
         break;
 
-      case HeaderFieldId.CompressionFlags:
-        header.compressionFlags =
+      case HeaderFieldId.CompressionAlgorithm:
+        header.compressionAlgorithm =
           deserializeCompressionAlgorithmValue(fieldData);
         break;
 
@@ -74,12 +74,12 @@ function validateOuterHeader(
   ): header is KdbxOuterHeader {
     missingFields.length = 0;
 
-    if (header.cipherId === undefined) {
-      missingFields.push(HeaderFieldId.CipherID);
+    if (header.cipherAlgorithm === undefined) {
+      missingFields.push(HeaderFieldId.CipherAlgorithm);
     }
 
-    if (header.compressionFlags === undefined) {
-      missingFields.push(HeaderFieldId.CompressionFlags);
+    if (header.compressionAlgorithm === undefined) {
+      missingFields.push(HeaderFieldId.CompressionAlgorithm);
     }
 
     if (header.masterSeed === undefined) {
@@ -108,8 +108,8 @@ function validateOuterHeader(
   }
 
   return {
-    cipherId: header.cipherId,
-    compressionFlags: header.compressionFlags,
+    cipherAlgorithm: header.cipherAlgorithm,
+    compressionAlgorithm: header.compressionAlgorithm,
     encryptionIV: header.encryptionIV,
     endOfHeader: header.endOfHeader,
     kdfParameters: header.kdfParameters,

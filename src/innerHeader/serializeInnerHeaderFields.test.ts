@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
 import ProtectedStreamAlgorithm from '../enums/ProtectedStreamAlgorithm';
-import SymmetricCipherMode from '../enums/SymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import { type KdbxInnerHeader } from '../types';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import serializeInnerHeaderFields from './serializeInnerHeaderFields';
@@ -29,19 +29,21 @@ describe('serializeInnerHeaderFields', () => {
         },
       ],
       endOfHeader: Uint8Array.from([]),
-      streamCipherId: SymmetricCipherMode.Salsa20,
-      streamKey: Uint8Array.from(Uint8ArrayHelper.fromString('Test'.repeat(8))),
+      innerEncryptionAlgorithm: SymmetricCipherAlgorithm.Salsa20,
+      innerEncryptionKey: Uint8Array.from(
+        Uint8ArrayHelper.fromString('Test'.repeat(8)),
+      ),
     };
 
     const expectedResult = Uint8Array.from(
       Buffer.concat([
-        // InnerStreamMode
-        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerStreamMode),
+        // InnerEncryptionAlgorithm
+        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerEncryptionAlgorithm),
         Uint8ArrayHelper.fromUInt32LE(4),
         Uint8ArrayHelper.fromUInt32LE(ProtectedStreamAlgorithm.Salsa20),
 
-        // InnerStreamKey
-        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerStreamKey),
+        // InnerEncryptionKey
+        Uint8ArrayHelper.fromUInt8(InnerHeaderFieldId.InnerEncryptionKey),
         Uint8ArrayHelper.fromUInt32LE(32),
         Uint8ArrayHelper.fromString('Test'.repeat(8)),
 

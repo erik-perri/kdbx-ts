@@ -1,7 +1,7 @@
 const InnerHeaderFieldId = Object.freeze({
   EndOfHeader: 0,
-  InnerStreamMode: 1,
-  InnerStreamKey: 2,
+  InnerEncryptionAlgorithm: 1,
+  InnerEncryptionKey: 2,
   Binary: 3,
 } as const);
 

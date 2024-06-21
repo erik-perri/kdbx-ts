@@ -1,25 +1,25 @@
-import SymmetricCipherMode from '../../enums/SymmetricCipherMode';
-import displaySymmetricCipherMode from '../../utilities/displaySymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../../enums/SymmetricCipherAlgorithm';
+import displaySymmetricCipherAlgorithm from '../../utilities/displaySymmetricCipherAlgorithm';
 import getSymmetricCipherKeySize from '../../utilities/getSymmetricCipherKeySize';
 
 export default function deserializeStreamKeyValue(
   data: Uint8Array,
-  type?: SymmetricCipherMode,
+  algorithm?: SymmetricCipherAlgorithm,
 ): Uint8Array {
-  if (type !== undefined) {
+  if (algorithm !== undefined) {
     if (
-      type !== SymmetricCipherMode.Salsa20 &&
-      type !== SymmetricCipherMode.ChaCha20
+      algorithm !== SymmetricCipherAlgorithm.Salsa20 &&
+      algorithm !== SymmetricCipherAlgorithm.ChaCha20
     ) {
       throw new Error(
-        `Unsupported symmetric cipher mode "${displaySymmetricCipherMode(type)}"`,
+        `Unsupported symmetric cipher algorithm "${displaySymmetricCipherAlgorithm(algorithm)}"`,
       );
     }
 
-    const expectedBytes = getSymmetricCipherKeySize(type);
+    const expectedBytes = getSymmetricCipherKeySize(algorithm);
     if (data.byteLength !== expectedBytes) {
       throw new Error(
-        `Invalid ${displaySymmetricCipherMode(type)} key length. Expected ${expectedBytes} bytes, got ${data.byteLength}`,
+        `Invalid ${displaySymmetricCipherAlgorithm(algorithm)} key length. Expected ${expectedBytes} bytes, got ${data.byteLength}`,
       );
     }
   }

@@ -1,48 +1,48 @@
 import { describe, expect, it } from 'vitest';
 
-import SymmetricCipherMode from '../../enums/SymmetricCipherMode';
+import SymmetricCipherAlgorithm from '../../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherUuid from '../../enums/SymmetricCipherUuid';
 import Uint8ArrayHelper from '../../utilities/Uint8ArrayHelper';
-import deserializeCipherIdValue from './deserializeCipherIdValue';
+import deserializeCipherAlgorithmValue from './deserializeCipherAlgorithmValue';
 
-describe('deserializeCipherIdValue', () => {
+describe('deserializeCipherAlgorithmValue', () => {
   it.each([
     [
       'Aes128',
       {
-        expected: SymmetricCipherMode.Aes128_CBC,
+        expected: SymmetricCipherAlgorithm.Aes128_CBC,
         uuid: SymmetricCipherUuid.Aes128,
       },
     ],
     [
       'Aes256',
       {
-        expected: SymmetricCipherMode.Aes256_CBC,
+        expected: SymmetricCipherAlgorithm.Aes256_CBC,
         uuid: SymmetricCipherUuid.Aes256,
       },
     ],
     [
       'Twofish',
       {
-        expected: SymmetricCipherMode.Twofish_CBC,
+        expected: SymmetricCipherAlgorithm.Twofish_CBC,
         uuid: SymmetricCipherUuid.Twofish,
       },
     ],
     [
       'ChaCha20',
       {
-        expected: SymmetricCipherMode.ChaCha20,
+        expected: SymmetricCipherAlgorithm.ChaCha20,
         uuid: SymmetricCipherUuid.ChaCha20,
       },
     ],
   ])(
-    'converts algorithm %s UUID to cipher mode during deserialize',
+    'converts algorithm %s UUID to cipher algorithm during deserialize',
     (_, { expected, uuid }) => {
       // Arrange
       const data = Uint8ArrayHelper.fromUuid(uuid);
 
       // Act
-      const result = deserializeCipherIdValue(data);
+      const result = deserializeCipherAlgorithmValue(data);
 
       // Assert
       expect(result).toEqual(expected);
@@ -54,15 +54,15 @@ describe('deserializeCipherIdValue', () => {
     const data = Uint8ArrayHelper.fromUInt8(1);
 
     // Act
-    expect(() => deserializeCipherIdValue(data)).toThrowError(
-      'Invalid cipher ID length. Expected 16 bytes, got 1',
+    expect(() => deserializeCipherAlgorithmValue(data)).toThrowError(
+      'Invalid cipher algorithm length. Expected 16 bytes, got 1',
     );
 
     // Assert
     // Nothing to assert.
   });
 
-  it('throws error when the cipher ID is invalid', () => {
+  it('throws error when the cipher algorithm is invalid', () => {
     // Arrange
     const data = Uint8ArrayHelper.fromUuid(
       '00000000-0000-0000-0000-000000000000',
@@ -70,7 +70,7 @@ describe('deserializeCipherIdValue', () => {
     );
 
     // Act
-    expect(() => deserializeCipherIdValue(data)).toThrowError(
+    expect(() => deserializeCipherAlgorithmValue(data)).toThrowError(
       'Unsupported cipher "00000000-0000-0000-0000-000000000000"',
     );
 

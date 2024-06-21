@@ -1,16 +1,16 @@
-import type SymmetricCipherMode from '../../enums/SymmetricCipherMode';
-import displaySymmetricCipherMode from '../../utilities/displaySymmetricCipherMode';
+import type SymmetricCipherAlgorithm from '../../enums/SymmetricCipherAlgorithm';
+import displaySymmetricCipherAlgorithm from '../../utilities/displaySymmetricCipherAlgorithm';
 import getSymmetricCipherKeySize from '../../utilities/getSymmetricCipherKeySize';
 
 export default function serializeStreamKeyValue(
   data: Uint8Array,
-  mode: SymmetricCipherMode,
+  algorithm: SymmetricCipherAlgorithm,
 ): Uint8Array {
-  const expectedLength = getSymmetricCipherKeySize(mode);
+  const expectedLength = getSymmetricCipherKeySize(algorithm);
 
   if (data.byteLength !== expectedLength) {
     throw new Error(
-      `Invalid ${displaySymmetricCipherMode(mode)} key length. Expected ${expectedLength} bytes, got ${data.byteLength}`,
+      `Invalid ${displaySymmetricCipherAlgorithm(algorithm)} key length. Expected ${expectedLength} bytes, got ${data.byteLength}`,
     );
   }
 
