@@ -13,7 +13,6 @@ import { type KdbxKey } from './keys/types';
 import serializeHeaderFields from './outerHeader/serializeHeaderFields';
 import serializeSignature from './outerHeader/serializeSignature';
 import { type KdbxFile } from './types';
-import getSymmetricCipherDefaultIvSize from './utilities/getSymmetricCipherDefaultIvSize';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 
 export default async function writeDatabase(
@@ -23,20 +22,6 @@ export default async function writeDatabase(
 ): Promise<Uint8Array> {
   const signature = serializeSignature(file.signature);
 
-  const ivSize = getSymmetricCipherDefaultIvSize(file.header.cipherId);
-
-  const masterSeed = await crypto.randomBytes(32);
-  const encryptionIV = await crypto.randomBytes(ivSize);
-  const protectedStreamKey = await crypto.randomBytes(64);
-
-  // TODO Clone database instead of modifying
-  file.header.encryptionIV = encryptionIV;
-  file.header.kdfParameters.seed = await crypto.randomBytes(
-    file.header.kdfParameters.seed.byteLength,
-  );
-  file.header.masterSeed = masterSeed;
-  file.innerHeader.streamKey = protectedStreamKey;
-
   const compositeKey = await transformCompositeKey(
     crypto,
     file.header.kdfParameters,
@@ -44,7 +29,7 @@ export default async function writeDatabase(
   );
 
   const finalKey = await crypto.hash(HashAlgorithm.Sha256, [
-    masterSeed,
+    file.header.masterSeed,
     compositeKey,
   ]);
 
@@ -55,7 +40,7 @@ export default async function writeDatabase(
   ]);
   const outerHeaderHmacKey = await generateHmacKeySeed(
     crypto,
-    masterSeed,
+    file.header.masterSeed,
     compositeKey,
   );
 
@@ -76,7 +61,7 @@ export default async function writeDatabase(
     file.header.cipherId,
     SymmetricCipherDirection.Encrypt,
     finalKey,
-    encryptionIV,
+    file.header.encryptionIV,
   );
 
   const innerData = Buffer.concat([

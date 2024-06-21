@@ -1,31 +1,17 @@
-import SymmetricCipherMode from '../../enums/SymmetricCipherMode';
+import type SymmetricCipherMode from '../../enums/SymmetricCipherMode';
 import displaySymmetricCipherMode from '../../utilities/displaySymmetricCipherMode';
+import getSymmetricCipherKeySize from '../../utilities/getSymmetricCipherKeySize';
 
 export default function serializeStreamKeyValue(
   data: Uint8Array,
-  type: SymmetricCipherMode,
+  mode: SymmetricCipherMode,
 ): Uint8Array {
-  switch (type) {
-    case SymmetricCipherMode.Salsa20:
-      if (data.byteLength !== 32) {
-        throw new Error(
-          `Invalid Salsa20 key length. Expected 32 bytes, got ${data.byteLength}`,
-        );
-      }
-      break;
+  const expectedLength = getSymmetricCipherKeySize(mode);
 
-    case SymmetricCipherMode.ChaCha20:
-      if (data.byteLength !== 64) {
-        throw new Error(
-          `Invalid ChaCha20 key length. Expected 64 bytes, got ${data.byteLength}`,
-        );
-      }
-      break;
-
-    default:
-      throw new Error(
-        `Invalid stream cipher mode "${displaySymmetricCipherMode(type)}"`,
-      );
+  if (data.byteLength !== expectedLength) {
+    throw new Error(
+      `Invalid ${displaySymmetricCipherMode(mode)} key length. Expected ${expectedLength} bytes, got ${data.byteLength}`,
+    );
   }
 
   return data;
