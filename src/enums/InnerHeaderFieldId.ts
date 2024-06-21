@@ -1,5 +1,5 @@
 const InnerHeaderFieldId = Object.freeze({
-  End: 0,
+  EndOfHeader: 0,
   InnerStreamMode: 1,
   InnerStreamKey: 2,
   Binary: 3,

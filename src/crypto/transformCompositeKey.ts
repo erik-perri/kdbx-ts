@@ -1,5 +1,4 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
-import type { KdbxHeader } from '../header/types';
 import {
   isChallengeResponseKey,
   isKdbxProcessedKey,
@@ -7,12 +6,13 @@ import {
   type KdbxKey,
   type KdbxProcessedKey,
 } from '../keys/types';
+import { type KdbxKdfParameters } from '../types';
 import transformKdf from './transformKdf';
 import type { CryptoImplementation } from './types';
 
 export default async function transformCompositeKey(
   crypto: CryptoImplementation,
-  header: KdbxHeader,
+  kdfParameters: KdbxKdfParameters,
   keys: KdbxKey[],
 ): Promise<Uint8Array> {
   const processedKeys = keys.filter((key): key is KdbxProcessedKey =>
@@ -20,11 +20,11 @@ export default async function transformCompositeKey(
   );
   const keyData: Uint8Array[] = processedKeys.map((key) => key.data);
 
-  keyData.push(await challengeKeys(crypto, header.kdfParameters.seed, keys));
+  keyData.push(await challengeKeys(crypto, kdfParameters.seed, keys));
 
   const hash = await crypto.hash(HashAlgorithm.Sha256, keyData);
 
-  return await transformKdf(crypto, header.kdfParameters, hash);
+  return await transformKdf(crypto, kdfParameters, hash);
 }
 
 async function challengeKeys(

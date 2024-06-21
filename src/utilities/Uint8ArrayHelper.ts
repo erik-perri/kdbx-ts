@@ -20,9 +20,6 @@ const Uint8ArrayHelper = {
       Uint8Array.prototype.slice.call(Buffer.from(data, 'base64')),
     );
   },
-  fromInt8(data: number): Uint8Array {
-    return new Uint8Array([data]);
-  },
   fromInt32LE(data: number): Uint8Array {
     const buffer = Buffer.allocUnsafe(4);
 
@@ -39,6 +36,13 @@ const Uint8ArrayHelper = {
   },
   fromString(data: string): Uint8Array {
     return encoder.encode(data);
+  },
+  fromUInt8(data: number): Uint8Array {
+    const buffer = Buffer.allocUnsafe(1);
+
+    buffer.writeUInt8(data, 0);
+
+    return Uint8Array.from(Uint8Array.prototype.slice.call(buffer));
   },
   fromUInt16LE(data: number): Uint8Array {
     const buffer = Buffer.allocUnsafe(2);

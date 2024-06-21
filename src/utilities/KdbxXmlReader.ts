@@ -1,5 +1,6 @@
 import type { CryptoCipher } from '../crypto/types';
 import TriState from '../enums/TriState';
+import type { KdbxBinaryPoolValue } from '../types';
 import displayUuid from './displayUuid';
 import isBase64 from './isBase64';
 import Uint8ArrayHelper from './Uint8ArrayHelper';
@@ -9,16 +10,27 @@ export default class KdbxXmlReader extends XmlReader {
   constructor(
     contents: string,
     private readonly cipher: CryptoCipher,
+    private readonly binaryPool: KdbxBinaryPoolValue[],
   ) {
     super(contents);
   }
 
   createChildReader(contents: string): XmlReader {
-    return new KdbxXmlReader(contents, this.cipher);
+    return new KdbxXmlReader(contents, this.cipher, this.binaryPool);
   }
 
   isProtectedValue(): boolean {
     return this.current.attributes.Protected?.toLowerCase() === 'true';
+  }
+
+  readBinaryPoolData(index: string): Uint8Array {
+    const poolValue = this.binaryPool.find((value) => value.index === index);
+
+    if (!poolValue) {
+      throw new Error(`Binary pool value not found for index "${index}"`);
+    }
+
+    return poolValue.data;
   }
 
   async readBinaryValue(): Promise<Uint8Array> {

@@ -23,12 +23,12 @@ export default class BufferWriter {
     return this.length;
   }
 
-  writeInt8(number: number): number {
-    return this.writeBytes(Uint8ArrayHelper.fromInt8(number));
-  }
-
   writeInt32LE(number: number): number {
     return this.writeBytes(Uint8ArrayHelper.fromInt32LE(number));
+  }
+
+  writeUInt8(number: number): number {
+    return this.writeBytes(Uint8ArrayHelper.fromUInt8(number));
   }
 
   writeUInt16LE(data: number): number {

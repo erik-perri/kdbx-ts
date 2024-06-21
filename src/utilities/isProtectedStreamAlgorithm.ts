@@ -5,5 +5,5 @@ export default function isProtectedStreamAlgorithm(
 ): type is ProtectedStreamAlgorithm {
   const values: number[] = Object.values(ProtectedStreamAlgorithm);
 
-  return values.includes(type) && type !== ProtectedStreamAlgorithm.Invalid;
+  return values.includes(type);
 }

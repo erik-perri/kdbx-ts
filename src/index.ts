@@ -1,3 +1,3 @@
-import readKdbxFile from './readKdbxFile';
+import readDatabase from './readDatabase';
 
-export { readKdbxFile };
+export { readDatabase };

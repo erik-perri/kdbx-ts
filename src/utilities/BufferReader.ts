@@ -6,6 +6,10 @@ export default class BufferReader {
     this.buffer = Buffer.isBuffer(input) ? input : Buffer.from(input);
   }
 
+  get byteLength(): number {
+    return this.buffer.byteLength - this.cursor;
+  }
+
   get offset(): number {
     return this.cursor;
   }
@@ -24,10 +28,10 @@ export default class BufferReader {
     return Uint8Array.from(bytes);
   }
 
-  readInt8(): number {
+  readUInt8(): number {
     this.assertRemaining(1);
 
-    const result = this.buffer.readInt8(this.offset);
+    const result = this.buffer.readUInt8(this.offset);
 
     this.cursor += 1;
 
@@ -68,7 +72,9 @@ export default class BufferReader {
 
   private assertRemaining(length: number): void {
     if (this.offset + length > this.buffer.length) {
-      throw new Error('Unexpected end of file');
+      throw new Error(
+        `Unexpected end of file. Expected at least ${length} bytes remaining, have ${this.buffer.length - this.offset}`,
+      );
     }
   }
 }

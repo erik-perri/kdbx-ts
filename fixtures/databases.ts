@@ -8,13 +8,14 @@ import DefaultIconNumber from '../src/enums/DefaultIconNumber';
 import KdfUuid from '../src/enums/KdfUuid';
 import SymmetricCipherUuid from '../src/enums/SymmetricCipherUuid';
 import TriState from '../src/enums/TriState';
-import type { KdfParameters } from '../src/header/types';
 import createChallengeResponseKey from '../src/keys/createChallengeResponseKey';
 import createFileKey from '../src/keys/createFileKey';
 import createPasswordKey from '../src/keys/createPasswordKey';
 import { type KdbxKey } from '../src/keys/types';
 import type Database from '../src/structure/Database';
+import { type KdbxKdfParameters } from '../src/types';
 import Uint8ArrayHelper from '../src/utilities/Uint8ArrayHelper';
+import { KeePass2 } from '../src/versions';
 import jsIcon from './attachments/js-icon';
 import nodeCrypto from './crypto/nodeCrypto';
 
@@ -50,7 +51,7 @@ type DatabaseInformation = {
   expectedCipher: SymmetricCipherUuid;
   expectedCompressionAlgorithm: CompressionAlgorithm;
   expectedIvLength: number;
-  expectedKdfParameters: KdfParameters;
+  expectedKdfParameters: KdbxKdfParameters;
   keyFactory: () => Promise<KdbxKey[]>;
 };
 
@@ -61,9 +62,10 @@ export const sampleDatabasesKeePass2: Record<string, DatabaseInformation> = {
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
     expectedIvLength: 16,
     expectedKdfParameters: {
-      uuid: KdfUuid.AesKdbx4,
       rounds: BigInt(100),
       seed: expect.any(Uint8Array) as Uint8Array,
+      uuid: KdfUuid.AesKdbx4,
+      variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
   },
@@ -75,9 +77,10 @@ export const sampleDatabasesKeePass2: Record<string, DatabaseInformation> = {
     expectedCompressionAlgorithm: CompressionAlgorithm.None,
     expectedIvLength: 16,
     expectedKdfParameters: {
-      uuid: KdfUuid.AesKdbx4,
       rounds: BigInt(100),
       seed: expect.any(Uint8Array) as Uint8Array,
+      uuid: KdfUuid.AesKdbx4,
+      variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
   },
@@ -90,9 +93,10 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
     expectedIvLength: 16,
     expectedKdfParameters: {
-      uuid: KdfUuid.AesKdbx4,
       rounds: BigInt(100),
       seed: expect.any(Uint8Array) as Uint8Array,
+      uuid: KdfUuid.AesKdbx4,
+      variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
   },
@@ -104,9 +108,10 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
     expectedCompressionAlgorithm: CompressionAlgorithm.None,
     expectedIvLength: 16,
     expectedKdfParameters: {
-      uuid: KdfUuid.AesKdbx4,
       rounds: BigInt(100),
       seed: expect.any(Uint8Array) as Uint8Array,
+      uuid: KdfUuid.AesKdbx4,
+      variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
   },
@@ -118,9 +123,10 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
     expectedIvLength: 16,
     expectedKdfParameters: {
-      uuid: KdfUuid.AesKdbx4,
       rounds: BigInt(100),
       seed: expect.any(Uint8Array) as Uint8Array,
+      uuid: KdfUuid.AesKdbx4,
+      variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [
       await createPasswordKey(nodeCrypto, 'password'),
@@ -135,9 +141,10 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
     expectedIvLength: 16,
     expectedKdfParameters: {
-      uuid: KdfUuid.AesKdbx4,
       rounds: BigInt(100),
       seed: expect.any(Uint8Array) as Uint8Array,
+      uuid: KdfUuid.AesKdbx4,
+      variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [
       await createPasswordKey(nodeCrypto, 'password'),
@@ -150,9 +157,10 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
     expectedIvLength: 12,
     expectedKdfParameters: {
-      uuid: KdfUuid.AesKdbx4,
       rounds: BigInt(100),
       seed: expect.any(Uint8Array) as Uint8Array,
+      uuid: KdfUuid.AesKdbx4,
+      variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
   },
@@ -162,9 +170,10 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
     expectedIvLength: 16,
     expectedKdfParameters: {
-      uuid: KdfUuid.AesKdbx4,
       rounds: BigInt(100),
       seed: expect.any(Uint8Array) as Uint8Array,
+      uuid: KdfUuid.AesKdbx4,
+      variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
   },
@@ -175,11 +184,12 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
     expectedIvLength: 16,
     expectedKdfParameters: {
       iterations: BigInt(2),
-      memoryInKibibytes: BigInt(1024),
+      memoryInBytes: BigInt(1024),
       parallelism: BigInt(1),
       seed: expect.any(Uint8Array) as Uint8Array,
       type: Argon2Type.Argon2d,
       uuid: KdfUuid.Argon2d,
+      variantMapVersion: KeePass2.variantMapVersion,
       version: Argon2Version.V13,
     },
     keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],

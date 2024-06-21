@@ -1,8 +1,8 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 import SymmetricCipherMode from '../enums/SymmetricCipherMode';
-import { KeePass2 } from '../header/versions';
 import displaySymmetricCipherMode from '../utilities/displaySymmetricCipherMode';
+import { KeePass2 } from '../versions';
 import type { CryptoCipher, CryptoImplementation } from './types';
 
 export default async function createInnerStreamCipher(

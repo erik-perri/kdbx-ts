@@ -77,13 +77,13 @@ const nodeCrypto: CryptoImplementation = {
     salt,
     version,
     type,
-    memory,
+    memoryInKibibytes,
     parallelism,
     iterations,
   ) {
     return Uint8Array.from(
       await argon2.hash(Buffer.from(key), {
-        memoryCost: Number(memory),
+        memoryCost: Number(memoryInKibibytes),
         parallelism: Number(parallelism),
         salt,
         timeCost: Number(iterations),

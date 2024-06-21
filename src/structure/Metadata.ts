@@ -4,6 +4,7 @@ import type MemoryProtection from './MemoryProtection';
 import { type Uuid } from './Uuid';
 
 type Metadata = {
+  binaries?: Record<string, Uint8Array | undefined>;
   color?: string;
   customData?: Record<string, CustomDataItem | undefined>;
   customIcons?: Record<Uuid, Icon | undefined>;

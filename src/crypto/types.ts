@@ -42,7 +42,7 @@ export type CryptoImplementation = {
     salt: Uint8Array,
     version: Argon2Version,
     type: Argon2Type,
-    memory: bigint,
+    memoryInKibibytes: bigint,
     parallelism: bigint,
     iterations: bigint,
   ): Promise<Uint8Array>;

@@ -1,11 +1,11 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
 import KdfUuid from '../enums/KdfUuid';
-import type { KdfParameters } from '../header/types';
+import { type KdbxKdfParameters } from '../types';
 import type { CryptoImplementation } from './types';
 
 export default async function transformKdf(
   crypto: CryptoImplementation,
-  parameters: KdfParameters,
+  parameters: KdbxKdfParameters,
   key: Uint8Array,
 ): Promise<Uint8Array> {
   switch (parameters.uuid) {
@@ -16,7 +16,7 @@ export default async function transformKdf(
         parameters.seed,
         parameters.version,
         parameters.type,
-        parameters.memoryInKibibytes,
+        parameters.memoryInBytes / BigInt(1024),
         parameters.parallelism,
         parameters.iterations,
       );

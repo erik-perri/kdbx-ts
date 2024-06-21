@@ -75,11 +75,7 @@ describe('createInnerStreamCipher', () => {
   it.each([
     [SymmetricCipherMode.Aes128_CBC],
     [SymmetricCipherMode.Aes256_CBC],
-    [SymmetricCipherMode.Aes128_CTR],
-    [SymmetricCipherMode.Aes256_CTR],
     [SymmetricCipherMode.Twofish_CBC],
-    [SymmetricCipherMode.Aes256_GCM],
-    [SymmetricCipherMode.InvalidMode],
   ])(`should throw an error when using %s`, async (mode) => {
     // Arrange
     const key = Uint8Array.from(

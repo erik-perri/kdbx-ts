@@ -21,7 +21,7 @@ describe('BufferReader', () => {
       // 8
       {
         expected: 1,
-        method: 'readInt8',
+        method: 'readUInt8',
         args: [],
       },
 
@@ -65,7 +65,7 @@ describe('BufferReader', () => {
       const reader = new BufferReader(buffer);
 
       // Act
-      reader.readInt8();
+      reader.readUInt8();
       reader.readUInt32LE();
       reader.readUInt32LE();
       const result = reader.processed();
@@ -83,7 +83,7 @@ describe('BufferReader', () => {
       const reader = new BufferReader(buffer);
 
       // Act
-      reader.readInt8();
+      reader.readUInt8();
       reader.readUInt32LE();
       reader.readUInt32LE();
       const result = reader.remaining();
