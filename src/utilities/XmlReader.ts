@@ -55,7 +55,7 @@ export default class XmlReader {
       this.contents.slice(this.currentElement.position[0], endTag.position[1]),
     );
 
-    this.skipCurrentElement();
+    this.currentElement = endTag;
 
     // @ts-expect-error - Child classes are expected to override createChildReader
     //                    for this to work correctly.

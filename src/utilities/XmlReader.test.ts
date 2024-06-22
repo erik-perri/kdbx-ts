@@ -293,4 +293,37 @@ describe('XmlReader', () => {
       }).toThrow(/Unable to find end "ElementOne" element/);
     });
   });
+
+  describe('readFromCurrent', () => {
+    it('leaves the cursor on the final element to allow next start iteration parsing', () => {
+      // Arrange
+      const reader = new XmlReader(
+        '<Meta>\n' +
+          '\t<CustomIcons/>\n' +
+          '\t<RecycleBinEnabled>True</RecycleBinEnabled>\n' +
+          '</Meta>',
+      );
+
+      // Act
+      const result: Record<string, unknown> = {};
+
+      while (reader.readNextStartElement()) {
+        switch (reader.current.name) {
+          case 'CustomIcons':
+            result['customIcons'] = reader.readFromCurrent().readElementText();
+            break;
+
+          case 'RecycleBinEnabled':
+            result['recycleBinEnabled'] = reader.readElementText();
+            break;
+        }
+      }
+
+      // Assert
+      expect(result).toEqual({
+        customIcons: '',
+        recycleBinEnabled: 'True',
+      });
+    });
+  });
 });
