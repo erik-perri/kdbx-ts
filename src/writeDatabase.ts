@@ -35,6 +35,7 @@ export default async function writeDatabase(
     signature,
     outerHeader,
   ]);
+
   const outerHeaderHmacKey = await generateHmacKeySeed(
     crypto,
     file.header.masterSeed,

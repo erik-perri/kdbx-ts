@@ -7,7 +7,6 @@ export default function serializeStreamKeyValue(
   algorithm: SymmetricCipherAlgorithm,
 ): Uint8Array {
   const expectedLength = getSymmetricCipherKeySize(algorithm);
-
   if (data.byteLength !== expectedLength) {
     throw new Error(
       `Invalid ${displaySymmetricCipherAlgorithm(algorithm)} key length. Expected ${expectedLength} bytes, got ${data.byteLength}`,

@@ -73,7 +73,7 @@ export default class BufferReader {
   private assertRemaining(length: number): void {
     if (this.offset + length > this.buffer.length) {
       throw new Error(
-        `Unexpected end of file. Expected at least ${length} bytes remaining, have ${this.buffer.length - this.offset}`,
+        `Unexpected end of buffer. Expected at least ${length} bytes remaining, have ${this.buffer.length - this.offset}`,
       );
     }
   }
