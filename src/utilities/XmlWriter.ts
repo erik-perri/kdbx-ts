@@ -54,7 +54,7 @@ export default class XmlWriter {
     }
   }
 
-  writeEndElement(): void {
+  writeEndElement(withStartLine: boolean = true): void {
     if (this.currentElementStartedAt === this.buffer.length) {
       this.finishEmptyElement();
 
@@ -69,7 +69,7 @@ export default class XmlWriter {
       throw new Error('No element started to close');
     }
 
-    this.buffer += `${this.startLine()}</${name}>`;
+    this.buffer += `${withStartLine ? this.startLine() : ''}</${name}>`;
   }
 
   writeStartDocument(version: string, standalone: boolean): void {

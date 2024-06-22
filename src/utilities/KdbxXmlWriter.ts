@@ -76,7 +76,7 @@ export default class KdbxXmlWriter extends XmlWriter {
       this.writeCharacters(encryptedValueAsBase64);
     }
 
-    this.writeEndElement();
+    this.writeEndElement(false);
   }
 
   writeString(name: string, value: string): void {
