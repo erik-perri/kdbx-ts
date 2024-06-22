@@ -1,6 +1,6 @@
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 
-export default function getSymmetricCipherDefaultIvSize(
+export default function getSymmetricCipherIvSize(
   algorithm: SymmetricCipherAlgorithm,
 ): number {
   switch (algorithm) {

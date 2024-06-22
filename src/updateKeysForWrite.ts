@@ -5,7 +5,7 @@ import {
   type KdbxKdfParameters,
   type KdbxOuterHeader,
 } from './types';
-import getSymmetricCipherDefaultIvSize from './utilities/getSymmetricCipherDefaultIvSize';
+import getSymmetricCipherIvSize from './utilities/getSymmetricCipherIvSize';
 import getSymmetricCipherKeySize from './utilities/getSymmetricCipherKeySize';
 
 export default async function updateKeysForWrite(
@@ -24,7 +24,7 @@ export default async function updateKeysForWrite(
   const header: KdbxOuterHeader = {
     ...file.header,
     encryptionIV: await crypto.randomBytes(
-      getSymmetricCipherDefaultIvSize(file.header.cipherAlgorithm),
+      getSymmetricCipherIvSize(file.header.cipherAlgorithm),
     ),
     kdfParameters,
     masterSeed: await crypto.randomBytes(32),
