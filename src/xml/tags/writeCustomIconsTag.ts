@@ -1,8 +1,8 @@
 import { type MetadataCustomIcons } from '../../structure/Metadata';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
-import serializeIconTag from './serializeIconTag';
+import writeIconTag from './writeIconTag';
 
-export default function serializeCustomIconsTag(
+export default function writeCustomIconsTag(
   writer: KdbxXmlWriter,
   customIcons: MetadataCustomIcons,
 ): void {
@@ -17,7 +17,7 @@ export default function serializeCustomIconsTag(
       continue;
     }
 
-    serializeIconTag(writer, icon);
+    writeIconTag(writer, icon);
   }
 
   writer.writeEndElement();

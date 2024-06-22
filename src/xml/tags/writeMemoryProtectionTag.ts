@@ -1,7 +1,7 @@
 import type MemoryProtection from '../../structure/MemoryProtection';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
-export default function serializeMemoryProtectionTag(
+export default function writeMemoryProtectionTag(
   writer: KdbxXmlWriter,
   memoryProtection: MemoryProtection,
 ): void {

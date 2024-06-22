@@ -2,7 +2,7 @@ import type { CryptoCipher } from '../crypto/types';
 import type Database from '../structure/Database';
 import type { KdbxBinaryPoolValue } from '../types';
 import KdbxXmlWriter from '../utilities/KdbxXmlWriter';
-import serializeKeePassFileTag from './tags/serializeKeePassFileTag';
+import writeKeePassFileTag from './tags/writeKeePassFileTag';
 
 export default async function serializeDatabaseXml(
   database: Database,
@@ -13,7 +13,7 @@ export default async function serializeDatabaseXml(
 
   writer.writeStartDocument('1.0', true);
 
-  await serializeKeePassFileTag(writer, database);
+  await writeKeePassFileTag(writer, database);
 
   writer.writeEndDocument();
 

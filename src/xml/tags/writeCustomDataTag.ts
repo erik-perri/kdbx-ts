@@ -2,7 +2,7 @@ import type CustomData from '../../structure/CustomData';
 import type CustomDataWithTimes from '../../structure/CustomDataWithTimes';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
-export default function serializeCustomDataTag(
+export default function writeCustomDataTag(
   writer: KdbxXmlWriter,
   data: Record<string, CustomData | CustomDataWithTimes | undefined>,
   withTimes: boolean,

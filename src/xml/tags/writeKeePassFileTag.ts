@@ -1,17 +1,17 @@
 import type Database from '../../structure/Database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
-import serializeMetaTag from './serializeMetaTag';
+import writeMetaTag from './writeMetaTag';
 
-export default async function serializeKeePassFileTag(
+export default async function writeKeePassFileTag(
   writer: KdbxXmlWriter,
   database: Database,
 ): Promise<void> {
   writer.writeStartElement('KeePassFile');
 
-  serializeMetaTag(writer, database.metadata);
+  writeMetaTag(writer, database.metadata);
 
   // TODO
-  // serializeRootTag(writer, database.root);
+  // writeRootTag(writer, database.root);
 
   writer.writeEndElement();
 

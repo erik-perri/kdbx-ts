@@ -1,10 +1,10 @@
 import type Metadata from '../../structure/Metadata';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
-import serializeCustomDataTag from './serializeCustomDataTag';
-import serializeCustomIconsTag from './serializeCustomIconsTag';
-import serializeMemoryProtectionTag from './serializeMemoryProtectionTag';
+import writeCustomDataTag from './writeCustomDataTag';
+import writeCustomIconsTag from './writeCustomIconsTag';
+import writeMemoryProtectionTag from './writeMemoryProtectionTag';
 
-export default function serializeMetaTag(
+export default function writeMetaTag(
   writer: KdbxXmlWriter,
   metadata: Metadata,
 ): void {
@@ -76,11 +76,11 @@ export default function serializeMetaTag(
   }
 
   if (metadata.memoryProtection !== undefined) {
-    serializeMemoryProtectionTag(writer, metadata.memoryProtection);
+    writeMemoryProtectionTag(writer, metadata.memoryProtection);
   }
 
   if (metadata.customIcons !== undefined) {
-    serializeCustomIconsTag(writer, metadata.customIcons);
+    writeCustomIconsTag(writer, metadata.customIcons);
   }
 
   if (metadata.recycleBinEnabled !== undefined) {
@@ -136,7 +136,7 @@ export default function serializeMetaTag(
   }
 
   if (metadata.customData !== undefined) {
-    serializeCustomDataTag(writer, metadata.customData, true);
+    writeCustomDataTag(writer, metadata.customData, true);
   }
 
   if (metadata.settingsChanged !== undefined) {

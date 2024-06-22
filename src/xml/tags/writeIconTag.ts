@@ -1,10 +1,7 @@
 import type Icon from '../../structure/Icon';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
-export default function serializeIconTag(
-  writer: KdbxXmlWriter,
-  icon: Icon,
-): void {
+export default function writeIconTag(writer: KdbxXmlWriter, icon: Icon): void {
   writer.writeStartElement('Icon');
 
   writer.writeUuid('UUID', icon.uuid, true);
