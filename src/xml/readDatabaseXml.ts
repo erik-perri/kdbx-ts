@@ -1,24 +1,14 @@
-import createInnerStreamCipher from '../crypto/createInnerStreamCipher';
-import { type CryptoImplementation } from '../crypto/types';
-import type SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
+import { type CryptoCipher } from '../crypto/types';
 import type Database from '../structure/Database';
 import { type KdbxBinaryPoolValue } from '../types';
 import KdbxXmlReader from '../utilities/KdbxXmlReader';
 import parseKeePassFileTag from './tags/parseKeePassFileTag';
 
 export default async function readDatabaseXml(
-  crypto: CryptoImplementation,
-  binaryPool: KdbxBinaryPoolValue[] | undefined,
-  streamAlgorithm: SymmetricCipherAlgorithm,
-  streamKey: Uint8Array,
   contents: string,
+  binaryPool: KdbxBinaryPoolValue[] | undefined,
+  streamCipher: CryptoCipher,
 ): Promise<Database> {
-  const streamCipher = await createInnerStreamCipher(
-    crypto,
-    streamAlgorithm,
-    streamKey,
-  );
-
   const reader = new KdbxXmlReader(contents, streamCipher, binaryPool ?? []);
 
   if (!reader.current.isMeta) {

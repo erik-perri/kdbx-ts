@@ -1,5 +1,6 @@
 import readHmacHashedBlocks from './blocks/readHmacHashedBlocks';
 import decompressInnerData from './compression/decompressInnerData';
+import createInnerStreamCipher from './crypto/createInnerStreamCipher';
 import cryptInnerData from './crypto/cryptInnerData';
 import generateBlockHmacKey from './crypto/generateBlockHmacKey';
 import generateHmacKeySeed from './crypto/generateHmacKeySeed';
@@ -117,12 +118,16 @@ export default async function readDatabase(
 
   const databaseXml = Uint8ArrayHelper.toString(innerReader.remaining());
 
-  const database = await readDatabaseXml(
+  const streamCipher = await createInnerStreamCipher(
     crypto,
-    innerHeader.binaryPool,
     innerHeader.innerEncryptionAlgorithm,
     innerHeader.innerEncryptionKey,
+  );
+
+  const database = await readDatabaseXml(
     databaseXml,
+    innerHeader.binaryPool,
+    streamCipher,
   );
 
   return { signature, header, innerHeader, database };
