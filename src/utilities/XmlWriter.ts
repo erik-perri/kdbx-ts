@@ -4,8 +4,8 @@ export default class XmlWriter {
   private currentElementStartedAt: number = -1;
 
   constructor(
-    private readonly indentString: string = '  ',
-    private readonly lineSeparator: string = '\n',
+    public readonly indentString: string = '  ',
+    public readonly lineSeparator: string = '\n',
   ) {
     //
   }

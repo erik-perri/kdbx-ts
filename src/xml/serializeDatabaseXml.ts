@@ -17,5 +17,5 @@ export default async function serializeDatabaseXml(
 
   writer.writeEndDocument();
 
-  return writer.contents;
+  return writer.contents + writer.lineSeparator;
 }
