@@ -32,6 +32,7 @@ export default async function writeDatabase(
   const outerHeader = serializeHeaderFields(file.header);
 
   const outerHeaderHash = await crypto.hash(HashAlgorithm.Sha256, [
+    signature,
     outerHeader,
   ]);
   const outerHeaderHmacKey = await generateHmacKeySeed(
@@ -43,7 +44,7 @@ export default async function writeDatabase(
   const outerHeaderHmac = await crypto.hmac(
     HashAlgorithm.Sha256,
     await generateBlockHmacKey(crypto, null, outerHeaderHmacKey),
-    [outerHeader],
+    [signature, outerHeader],
   );
 
   const innerHeader = serializeInnerHeaderFields(file.innerHeader);
@@ -65,22 +66,22 @@ export default async function writeDatabase(
     Uint8ArrayHelper.fromString(xml),
   ]);
 
+  const compressedData = compressInnerData(
+    file.header.compressionAlgorithm,
+    innerData,
+  );
+
   const encryptedData = await cryptInnerData(
     crypto,
     file.header,
     compositeKey,
     SymmetricCipherDirection.Encrypt,
-    innerData,
-  );
-
-  const compressedData = compressInnerData(
-    file.header.compressionAlgorithm,
-    encryptedData,
+    compressedData,
   );
 
   const blocks = await serializeHmacHashedBlocks(
     crypto,
-    compressedData,
+    encryptedData,
     outerHeaderHmacKey,
   );
 
