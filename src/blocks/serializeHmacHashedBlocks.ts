@@ -30,7 +30,7 @@ export default async function serializeHmacHashedBlocks(
     buffers.push(chunk);
   }
 
-  return Buffer.concat(buffers);
+  return Uint8Array.from(Buffer.concat(buffers));
 }
 
 function chunkData(data: Uint8Array, chunkSize: number): Uint8Array[] {
