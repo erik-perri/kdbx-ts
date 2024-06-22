@@ -6,7 +6,6 @@ const uuidToAlgorithmMapping: Record<
   string,
   SymmetricCipherAlgorithm | undefined
 > = Object.freeze({
-  [SymmetricCipherUuid.Aes128]: SymmetricCipherAlgorithm.Aes128_CBC,
   [SymmetricCipherUuid.Aes256]: SymmetricCipherAlgorithm.Aes256_CBC,
   [SymmetricCipherUuid.Twofish]: SymmetricCipherAlgorithm.Twofish_CBC,
   [SymmetricCipherUuid.ChaCha20]: SymmetricCipherAlgorithm.ChaCha20,

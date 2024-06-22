@@ -77,7 +77,6 @@ describe('createInnerStreamCipher', () => {
   });
 
   it.each([
-    [SymmetricCipherAlgorithm.Aes128_CBC],
     [SymmetricCipherAlgorithm.Aes256_CBC],
     [SymmetricCipherAlgorithm.Twofish_CBC],
   ])(`should throw an error when using %s`, async (algorithm) => {

@@ -1,7 +1,6 @@
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 
 const algorithmDisplayMap: Record<SymmetricCipherAlgorithm, string> = {
-  [SymmetricCipherAlgorithm.Aes128_CBC]: 'AES-128-CBC',
   [SymmetricCipherAlgorithm.Aes256_CBC]: 'AES-256-CBC',
   [SymmetricCipherAlgorithm.ChaCha20]: 'ChaCha20',
   [SymmetricCipherAlgorithm.Salsa20]: 'Salsa20',

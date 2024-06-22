@@ -5,7 +5,6 @@ import Uint8ArrayHelper from '../../utilities/Uint8ArrayHelper';
 const algorithmToUuidMapping: Partial<
   Record<SymmetricCipherAlgorithm, SymmetricCipherUuid>
 > = Object.freeze({
-  [SymmetricCipherAlgorithm.Aes128_CBC]: SymmetricCipherUuid.Aes128,
   [SymmetricCipherAlgorithm.Aes256_CBC]: SymmetricCipherUuid.Aes256,
   [SymmetricCipherAlgorithm.Twofish_CBC]: SymmetricCipherUuid.Twofish,
   [SymmetricCipherAlgorithm.ChaCha20]: SymmetricCipherUuid.ChaCha20,

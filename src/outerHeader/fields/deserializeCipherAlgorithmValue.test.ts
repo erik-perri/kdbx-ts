@@ -8,13 +8,6 @@ import deserializeCipherAlgorithmValue from './deserializeCipherAlgorithmValue';
 describe('deserializeCipherAlgorithmValue', () => {
   it.each([
     [
-      'Aes128',
-      {
-        expected: SymmetricCipherAlgorithm.Aes128_CBC,
-        uuid: SymmetricCipherUuid.Aes128,
-      },
-    ],
-    [
       'Aes256',
       {
         expected: SymmetricCipherAlgorithm.Aes256_CBC,

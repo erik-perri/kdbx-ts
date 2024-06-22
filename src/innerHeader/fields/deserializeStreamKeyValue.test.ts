@@ -79,8 +79,8 @@ describe('deserializeStreamKeyValue', () => {
 
     // Act
     expect(() =>
-      deserializeStreamKeyValue(data, SymmetricCipherAlgorithm.Aes128_CBC),
-    ).toThrowError('Unsupported symmetric cipher algorithm "AES-128-CBC"');
+      deserializeStreamKeyValue(data, SymmetricCipherAlgorithm.Twofish_CBC),
+    ).toThrowError('Unsupported symmetric cipher algorithm "Twofish-CBC"');
 
     // Assert
     // Nothing to assert.
