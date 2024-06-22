@@ -65,7 +65,7 @@ export default async function parseGroupTag(
         break;
 
       case 'CustomData':
-        group.customData = parseCustomDataTag(reader.readFromCurrent());
+        group.customData = parseCustomDataTag(reader.readFromCurrent(), false);
         break;
 
       case 'IsExpanded':

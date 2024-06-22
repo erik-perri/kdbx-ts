@@ -117,7 +117,10 @@ export default async function parseMetaTag(
         throw new Error('"Binaries" not implemented');
 
       case 'CustomData':
-        metadata.customData = parseCustomDataTag(reader.readFromCurrent());
+        metadata.customData = parseCustomDataTag(
+          reader.readFromCurrent(),
+          true,
+        );
         break;
 
       case 'SettingsChanged':

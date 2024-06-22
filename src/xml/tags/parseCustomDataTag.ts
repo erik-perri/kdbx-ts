@@ -1,17 +1,32 @@
-import type CustomDataItem from '../../structure/CustomDateTime';
+import type CustomData from '../../structure/CustomData';
+import type CustomDataWithTimes from '../../structure/CustomDataWithTimes';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseCustomDataTag(
   reader: KdbxXmlReader,
-): Record<string, CustomDataItem | undefined> {
+  withTimes: true,
+): Record<string, CustomDataWithTimes | undefined>;
+
+export default function parseCustomDataTag(
+  reader: KdbxXmlReader,
+  withTimes: false,
+): Record<string, CustomData | undefined>;
+
+export default function parseCustomDataTag(
+  reader: KdbxXmlReader,
+  withTimes: boolean,
+): Record<string, CustomData | CustomDataWithTimes | undefined> {
   reader.assertOpenedTagOf('CustomData');
 
-  const customData: Record<string, CustomDataItem | undefined> = {};
+  const customData: Record<string, CustomData | undefined> = {};
 
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
       case 'Item': {
-        const item = parseCustomDataItemTag(reader.readFromCurrent());
+        const item = parseCustomDataItemTag(
+          reader.readFromCurrent(),
+          withTimes,
+        );
 
         if (!item.key || !item.value) {
           throw new Error('Missing custom data key or value');
@@ -31,10 +46,13 @@ export default function parseCustomDataTag(
   return customData;
 }
 
-function parseCustomDataItemTag(reader: KdbxXmlReader): CustomDataItem {
+function parseCustomDataItemTag(
+  reader: KdbxXmlReader,
+  withTimes: boolean,
+): CustomData | CustomDataWithTimes {
   reader.assertOpenedTagOf('Item');
 
-  const customData: Partial<CustomDataItem> = {};
+  const customData: Partial<CustomDataWithTimes> = {};
 
   while (reader.readNextStartElement()) {
     switch (reader.current.name) {
@@ -47,6 +65,11 @@ function parseCustomDataItemTag(reader: KdbxXmlReader): CustomDataItem {
         break;
 
       case 'LastModificationTime':
+        if (!withTimes) {
+          throw new Error(
+            'Unexpected "LastModificationTime" tag in custom data item',
+          );
+        }
         customData.lastModified = reader.readDateTimeValue();
         break;
 
@@ -65,7 +88,7 @@ function parseCustomDataItemTag(reader: KdbxXmlReader): CustomDataItem {
 }
 
 function isCustomDataItemComplete(
-  item: Partial<CustomDataItem>,
-): item is CustomDataItem {
+  item: Partial<CustomData | CustomDataWithTimes>,
+): item is CustomData | CustomDataWithTimes {
   return item.key !== undefined && item.value !== undefined;
 }

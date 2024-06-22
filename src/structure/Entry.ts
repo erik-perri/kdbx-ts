@@ -1,5 +1,5 @@
 import type AutoType from './AutoType';
-import type CustomDataItem from './CustomDateTime';
+import type CustomData from './CustomData';
 import type TimeInfo from './TimeInfo';
 import { type Uuid } from './Uuid';
 
@@ -8,7 +8,7 @@ type Entry = {
   attributes?: Record<string, string | undefined>;
   autoType?: AutoType;
   backgroundColor?: string;
-  customData?: Record<string, CustomDataItem | undefined>;
+  customData?: Record<string, CustomData | undefined>;
   customIcon?: Uuid;
   foregroundColor?: string;
   history?: Entry[];

@@ -1,12 +1,12 @@
 import type TriState from '../enums/TriState';
-import type CustomDataItem from './CustomDateTime';
+import type CustomData from './CustomData';
 import type Entry from './Entry';
 import type TimeInfo from './TimeInfo';
 import { type Uuid } from './Uuid';
 
 type Group = {
   children?: Group[];
-  customData?: Record<string, CustomDataItem | undefined>;
+  customData?: Record<string, CustomData | undefined>;
   customIcon?: Uuid;
   defaultAutoTypeSequence?: string;
   enableAutoType?: TriState;

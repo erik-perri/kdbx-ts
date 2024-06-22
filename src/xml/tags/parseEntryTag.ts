@@ -58,7 +58,7 @@ export default async function parseEntryTag(
         break;
 
       case 'CustomData':
-        entry.customData = parseCustomDataTag(reader.readFromCurrent());
+        entry.customData = parseCustomDataTag(reader.readFromCurrent(), false);
         break;
 
       case 'IconID':

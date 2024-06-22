@@ -1,4 +1,4 @@
-import type CustomDataItem from './CustomDateTime';
+import type CustomDataWithTimes from './CustomDataWithTimes';
 import type Icon from './Icon';
 import type MemoryProtection from './MemoryProtection';
 import { type Uuid } from './Uuid';
@@ -6,7 +6,7 @@ import { type Uuid } from './Uuid';
 type Metadata = {
   binaries?: Record<string, Uint8Array | undefined>;
   color?: string;
-  customData?: Record<string, CustomDataItem | undefined>;
+  customData?: Record<string, CustomDataWithTimes | undefined>;
   customIcons?: Record<Uuid, Icon | undefined>;
   defaultUserName?: string;
   defaultUserNameChanged?: Date;
