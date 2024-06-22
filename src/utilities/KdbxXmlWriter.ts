@@ -12,14 +12,6 @@ export default class KdbxXmlWriter extends XmlWriter {
     super('\t');
   }
 
-  writeString(name: string, value: string): void {
-    if (value.length === 0) {
-      this.writeEmptyElement(name);
-    } else {
-      this.writeTextElement(name, value);
-    }
-  }
-
   writeBinary(name: string, value: Uint8Array): void {
     const valueAsBase64 = Buffer.from(value).toString('base64');
 
@@ -47,6 +39,14 @@ export default class KdbxXmlWriter extends XmlWriter {
 
   writeNumber(name: string, value: number): void {
     this.writeString(name, value.toString());
+  }
+
+  writeString(name: string, value: string): void {
+    if (value.length === 0) {
+      this.writeEmptyElement(name);
+    } else {
+      this.writeTextElement(name, value);
+    }
   }
 
   writeUuid(name: string, value: string, ensureCompliance: boolean): void {
