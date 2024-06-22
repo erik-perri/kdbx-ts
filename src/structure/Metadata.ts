@@ -4,10 +4,10 @@ import type MemoryProtection from './MemoryProtection';
 import { type Uuid } from './Uuid';
 
 type Metadata = {
-  binaries?: Record<string, Uint8Array | undefined>;
+  binaries?: MetadataBinaries;
   color?: string;
-  customData?: Record<string, CustomDataWithTimes | undefined>;
-  customIcons?: Record<Uuid, Icon | undefined>;
+  customData?: MetadataCustomData;
+  customIcons?: MetadataCustomIcons;
   defaultUserName?: string;
   defaultUserNameChanged?: Date;
   description?: string;
@@ -22,7 +22,7 @@ type Metadata = {
   lastTopVisibleGroup?: Uuid;
   maintenanceHistoryDays?: number;
   masterKeyChangeForce?: number;
-  //masterKetChangeForceOnce?: boolean;
+  //masterKeyChangeForceOnce?: boolean;
   masterKeyChangeRec?: number;
   masterKeyChanged?: Date;
   memoryProtection?: MemoryProtection;
@@ -33,5 +33,14 @@ type Metadata = {
   recycleBinUuid?: Uuid;
   settingsChanged?: Date;
 };
+
+export type MetadataBinaries = Record<string, Uint8Array | undefined>;
+
+export type MetadataCustomData = Record<
+  string,
+  CustomDataWithTimes | undefined
+>;
+
+export type MetadataCustomIcons = Record<Uuid, Icon | undefined>;
 
 export default Metadata;

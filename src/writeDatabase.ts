@@ -1,5 +1,6 @@
 import serializeHmacHashedBlocks from './blocks/serializeHmacHashedBlocks';
 import compressInnerData from './compression/compressInnerData';
+import createInnerStreamCipher from './crypto/createInnerStreamCipher';
 import cryptInnerData from './crypto/cryptInnerData';
 import generateBlockHmacKey from './crypto/generateBlockHmacKey';
 import generateHmacKeySeed from './crypto/generateHmacKeySeed';
@@ -13,6 +14,7 @@ import serializeHeaderFields from './outerHeader/serializeHeaderFields';
 import serializeSignature from './outerHeader/serializeSignature';
 import { type KdbxFile } from './types';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
+import serializeDatabaseXml from './xml/serializeDatabaseXml';
 
 export default async function writeDatabase(
   crypto: CryptoImplementation,
@@ -46,10 +48,17 @@ export default async function writeDatabase(
 
   const innerHeader = serializeInnerHeaderFields(file.innerHeader);
 
-  // TODO Generate XML
-  const xml =
-    '<?xml version="1.0" encoding="utf-8" standalone="yes"?>\n' +
-    '<KeePassFile>';
+  const streamCipher = await createInnerStreamCipher(
+    crypto,
+    file.innerHeader.innerEncryptionAlgorithm,
+    file.innerHeader.innerEncryptionKey,
+  );
+
+  const xml = await serializeDatabaseXml(
+    file.database,
+    file.innerHeader.binaryPool,
+    streamCipher,
+  );
 
   const innerData = Buffer.concat([
     innerHeader,
