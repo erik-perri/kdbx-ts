@@ -6,10 +6,6 @@ export default function writeCustomIconsTag(
   writer: KdbxXmlWriter,
   customIcons: MetadataCustomIcons,
 ): void {
-  if (isEmpty(customIcons)) {
-    return;
-  }
-
   writer.writeStartElement('CustomIcons');
 
   for (const icon of Object.values(customIcons)) {
@@ -21,8 +17,4 @@ export default function writeCustomIconsTag(
   }
 
   writer.writeEndElement();
-}
-
-function isEmpty(customIcons: MetadataCustomIcons): boolean {
-  return Object.keys(customIcons).length === 0;
 }
