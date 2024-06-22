@@ -18,8 +18,8 @@ import serializeDatabaseXml from './xml/serializeDatabaseXml';
 
 export default async function writeDatabase(
   crypto: CryptoImplementation,
-  file: KdbxFile,
   keys: KdbxKey[],
+  file: KdbxFile,
 ): Promise<Uint8Array> {
   const signature = serializeSignature(file.signature);
 

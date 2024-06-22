@@ -24,7 +24,7 @@ describe('writeDatabase', () => {
     const file = await updateKeysForWrite(nodeCrypto, originalFile);
 
     // Act
-    const result = await writeDatabase(nodeCrypto, file, keys);
+    const result = await writeDatabase(nodeCrypto, keys, file);
 
     const reader = new BufferReader(result);
 

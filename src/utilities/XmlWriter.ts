@@ -1,7 +1,7 @@
 export default class XmlWriter {
   private buffer: string = '';
   private currentOpenElements: string[] = [];
-  private currentElementStartTagClosed: boolean = true;
+  private currentElementStartedAt: number = -1;
 
   constructor(
     private readonly indentString: string = '  ',
@@ -15,7 +15,7 @@ export default class XmlWriter {
   }
 
   writeAttribute(name: string, value: string): void {
-    if (this.currentElementStartTagClosed) {
+    if (this.currentElementStartedAt === -1) {
       throw new Error('Cannot write attribute after element has been closed');
     }
 
@@ -54,6 +54,12 @@ export default class XmlWriter {
   }
 
   writeEndElement(): void {
+    if (this.currentElementStartedAt === this.buffer.length) {
+      this.finishEmptyElement();
+
+      return;
+    }
+
     this.finishStartElement();
 
     const name = this.currentOpenElements.pop();
@@ -77,7 +83,7 @@ export default class XmlWriter {
     this.finishStartElement();
 
     this.buffer += `${this.startLine()}<${name}`;
-    this.currentElementStartTagClosed = false;
+    this.currentElementStartedAt = this.buffer.length;
     this.currentOpenElements.push(name);
   }
 
@@ -87,13 +93,23 @@ export default class XmlWriter {
     this.buffer += `${this.startLine()}<${qualifiedName}>${this.escape(text)}</${qualifiedName}>`;
   }
 
+  private finishEmptyElement(): void {
+    if (this.currentElementStartedAt === -1) {
+      throw new Error('No element started to finish');
+    }
+
+    this.buffer += '/>';
+    this.currentOpenElements.pop();
+    this.currentElementStartedAt = -1;
+  }
+
   private finishStartElement(): boolean {
-    if (this.currentElementStartTagClosed) {
+    if (this.currentElementStartedAt === -1) {
       return false;
     }
 
-    this.buffer += `>`;
-    this.currentElementStartTagClosed = true;
+    this.buffer += '>';
+    this.currentElementStartedAt = -1;
 
     return true;
   }
