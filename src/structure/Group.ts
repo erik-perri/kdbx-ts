@@ -1,4 +1,4 @@
-import type TriState from '../enums/TriState';
+import type NullableBoolean from '../enums/NullableBoolean';
 import type CustomData from './CustomData';
 import type Entry from './Entry';
 import type TimeInfo from './TimeInfo';
@@ -9,8 +9,8 @@ type Group = {
   customData?: Record<string, CustomData | undefined>;
   customIcon?: Uuid;
   defaultAutoTypeSequence?: string;
-  enableAutoType?: TriState;
-  enableSearching?: TriState;
+  enableAutoType?: NullableBoolean;
+  enableSearching?: NullableBoolean;
   entries?: Entry[];
   iconNumber?: number;
   isExpanded?: boolean;

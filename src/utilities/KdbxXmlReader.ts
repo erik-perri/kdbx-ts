@@ -1,5 +1,5 @@
 import type { CryptoCipher } from '../crypto/types';
-import TriState from '../enums/TriState';
+import NullableBoolean from '../enums/NullableBoolean';
 import type { KdbxBinaryPoolValue } from '../types';
 import displayUuid from './displayUuid';
 import isBase64 from './isBase64';
@@ -160,17 +160,17 @@ export default class KdbxXmlReader extends XmlReader {
     return this.readElementText();
   }
 
-  readTriStateValue(): TriState {
+  readNullableBoolean(): NullableBoolean {
     const value = this.readStringValue().toLowerCase();
     if (value === 'null') {
-      return TriState.Inherit;
+      return NullableBoolean.Inherit;
     } else if (value === 'true') {
-      return TriState.Enable;
+      return NullableBoolean.True;
     } else if (value === 'false') {
-      return TriState.Disable;
+      return NullableBoolean.False;
     }
 
-    throw new Error(`Invalid TriState value "${value}"`);
+    throw new Error(`Invalid NullableBoolean value "${value}"`);
   }
 
   readUnsignedNumberValue(radix: number = 10): number {

@@ -6,8 +6,8 @@ import Argon2Version from '../src/enums/Argon2Version';
 import CompressionAlgorithm from '../src/enums/CompressionAlgorithm';
 import DefaultIconNumber from '../src/enums/DefaultIconNumber';
 import KdfUuid from '../src/enums/KdfUuid';
+import NullableBoolean from '../src/enums/NullableBoolean';
 import SymmetricCipherUuid from '../src/enums/SymmetricCipherUuid';
-import TriState from '../src/enums/TriState';
 import createChallengeResponseKey from '../src/keys/createChallengeResponseKey';
 import createFileKey from '../src/keys/createFileKey';
 import createPasswordKey from '../src/keys/createPasswordKey';
@@ -268,8 +268,8 @@ export const sampleDatabaseFeatures: Database = {
       },
       isExpanded: true,
       defaultAutoTypeSequence: '',
-      enableAutoType: TriState.Inherit,
-      enableSearching: TriState.Inherit,
+      enableAutoType: NullableBoolean.Inherit,
+      enableSearching: NullableBoolean.Inherit,
       lastTopVisibleEntry: '00000000-0000-0000-0000-000000000000',
       entries: [
         {
@@ -470,8 +470,8 @@ export const sampleDatabaseFeatures: Database = {
           },
           isExpanded: true,
           defaultAutoTypeSequence: '{USERNAME}{TAB}{PASSWORD}{ENTER}',
-          enableAutoType: TriState.Enable,
-          enableSearching: TriState.Disable,
+          enableAutoType: NullableBoolean.True,
+          enableSearching: NullableBoolean.False,
           lastTopVisibleEntry: '00000000-0000-0000-0000-000000000000',
           customData: {
             _LAST_MODIFIED: {
@@ -634,8 +634,8 @@ export const sampleDatabaseFeatures: Database = {
           },
           isExpanded: false,
           defaultAutoTypeSequence: '',
-          enableAutoType: TriState.Inherit,
-          enableSearching: TriState.Inherit,
+          enableAutoType: NullableBoolean.Inherit,
+          enableSearching: NullableBoolean.Inherit,
           lastTopVisibleEntry: '00000000-0000-0000-0000-000000000000',
           previousParentGroup: 'cf4f46af-280d-4f96-b69d-f5f009847c29',
           children: [
@@ -655,8 +655,8 @@ export const sampleDatabaseFeatures: Database = {
               },
               isExpanded: true,
               defaultAutoTypeSequence: '',
-              enableAutoType: TriState.Inherit,
-              enableSearching: TriState.Inherit,
+              enableAutoType: NullableBoolean.Inherit,
+              enableSearching: NullableBoolean.Inherit,
               lastTopVisibleEntry: '00000000-0000-0000-0000-000000000000',
             },
           ],
@@ -677,8 +677,8 @@ export const sampleDatabaseFeatures: Database = {
           },
           isExpanded: true,
           defaultAutoTypeSequence: '',
-          enableAutoType: TriState.Disable,
-          enableSearching: TriState.Disable,
+          enableAutoType: NullableBoolean.False,
+          enableSearching: NullableBoolean.False,
           lastTopVisibleEntry: '00000000-0000-0000-0000-000000000000',
           entries: [
             {
@@ -753,8 +753,8 @@ export const sampleDatabaseFeatures: Database = {
               },
               isExpanded: true,
               defaultAutoTypeSequence: '',
-              enableAutoType: TriState.Inherit,
-              enableSearching: TriState.Inherit,
+              enableAutoType: NullableBoolean.Inherit,
+              enableSearching: NullableBoolean.Inherit,
               lastTopVisibleEntry: '00000000-0000-0000-0000-000000000000',
               previousParentGroup: '9ad8b63f-e8b9-4b32-9980-97967a9e00ae',
               entries: [

@@ -77,11 +77,11 @@ export default async function parseGroupTag(
         break;
 
       case 'EnableAutoType':
-        group.enableAutoType = reader.readTriStateValue();
+        group.enableAutoType = reader.readNullableBoolean();
         break;
 
       case 'EnableSearching':
-        group.enableSearching = reader.readTriStateValue();
+        group.enableSearching = reader.readNullableBoolean();
         break;
 
       case 'LastTopVisibleEntry':
