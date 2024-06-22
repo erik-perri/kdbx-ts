@@ -1,8 +1,8 @@
-const NullableBoolean = {
+const NullableBoolean = Object.freeze({
   Inherit: -1,
   False: 0,
   True: 1,
-} as const;
+} as const);
 
 type NullableBoolean = (typeof NullableBoolean)[keyof typeof NullableBoolean];
 
