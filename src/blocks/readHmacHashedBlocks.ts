@@ -8,7 +8,7 @@ export default async function readHmacHashedBlocks(
   crypto: CryptoImplementation,
   reader: BufferReader,
   key: Uint8Array,
-): Promise<Uint8Array[]> {
+): Promise<Uint8Array> {
   const blocks: Uint8Array[] = [];
 
   for (let blockIndex = 0; ; blockIndex++) {
@@ -59,5 +59,5 @@ export default async function readHmacHashedBlocks(
     }
   }
 
-  return blocks;
+  return Uint8Array.from(Buffer.concat(blocks));
 }

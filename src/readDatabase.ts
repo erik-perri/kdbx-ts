@@ -1,11 +1,13 @@
-import decryptInnerBlocks from './blocks/decryptInnerBlocks';
 import readHmacHashedBlocks from './blocks/readHmacHashedBlocks';
+import decompressInnerData from './compression/decompressInnerData';
+import cryptInnerData from './crypto/cryptInnerData';
 import generateBlockHmacKey from './crypto/generateBlockHmacKey';
 import generateHmacKeySeed from './crypto/generateHmacKeySeed';
 import transformCompositeKey from './crypto/transformCompositeKey';
 import { type CryptoImplementation } from './crypto/types';
 import HashAlgorithm from './enums/HashAlgorithm';
 import KeePassVersion from './enums/KeePassVersion';
+import SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import readInnerHeaderFields from './innerHeader/readInnerHeaderFields';
 import type { KdbxKey } from './keys/types';
 import readHeaderFields from './outerHeader/readHeaderFields';
@@ -94,22 +96,25 @@ export default async function readDatabase(
     throw new Error('HMAC mismatch');
   }
 
-  // Read and decrypt the inner blocks
-  const blocks = await readHmacHashedBlocks(crypto, reader, hmacKey);
+  const innerData = await readHmacHashedBlocks(crypto, reader, hmacKey);
 
-  const innerBytes = await decryptInnerBlocks(
+  const decryptedData = await cryptInnerData(
     crypto,
     header,
     compositeKey,
-    blocks,
+    SymmetricCipherDirection.Decrypt,
+    innerData,
   );
 
-  const innerReader = new BufferReader(innerBytes);
+  const decompressedData = decompressInnerData(
+    header.compressionAlgorithm,
+    decryptedData,
+  );
 
-  // Read the inner header
+  const innerReader = new BufferReader(decompressedData);
+
   const innerHeader = readInnerHeaderFields(innerReader);
 
-  // Anything remaining after the inner header is the decrypted database XML
   const databaseXml = Uint8ArrayHelper.toString(innerReader.remaining());
 
   const database = await readDatabaseXml(

@@ -1,11 +1,10 @@
-import pako from 'pako';
-
 import serializeHmacHashedBlocks from './blocks/serializeHmacHashedBlocks';
+import compressInnerData from './compression/compressInnerData';
+import cryptInnerData from './crypto/cryptInnerData';
 import generateBlockHmacKey from './crypto/generateBlockHmacKey';
 import generateHmacKeySeed from './crypto/generateHmacKeySeed';
 import transformCompositeKey from './crypto/transformCompositeKey';
 import { type CryptoImplementation } from './crypto/types';
-import CompressionAlgorithm from './enums/CompressionAlgorithm';
 import HashAlgorithm from './enums/HashAlgorithm';
 import SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import serializeInnerHeaderFields from './innerHeader/serializeInnerHeaderFields';
@@ -27,11 +26,6 @@ export default async function writeDatabase(
     file.header.kdfParameters,
     keys,
   );
-
-  const finalKey = await crypto.hash(HashAlgorithm.Sha256, [
-    file.header.masterSeed,
-    compositeKey,
-  ]);
 
   const outerHeader = serializeHeaderFields(file.header);
 
@@ -57,27 +51,27 @@ export default async function writeDatabase(
     '<?xml version="1.0" encoding="utf-8" standalone="yes"?>\n' +
     '<KeePassFile>';
 
-  const cipher = await crypto.createCipher(
-    file.header.cipherAlgorithm,
-    SymmetricCipherDirection.Encrypt,
-    finalKey,
-    file.header.encryptionIV,
-  );
-
   const innerData = Buffer.concat([
     innerHeader,
     Uint8ArrayHelper.fromString(xml),
   ]);
 
-  const encryptedData = await cipher.finish(
-    file.header.compressionAlgorithm === CompressionAlgorithm.GZip
-      ? pako.gzip(innerData)
-      : innerData,
+  const encryptedData = await cryptInnerData(
+    crypto,
+    file.header,
+    compositeKey,
+    SymmetricCipherDirection.Encrypt,
+    innerData,
+  );
+
+  const compressedData = compressInnerData(
+    file.header.compressionAlgorithm,
+    encryptedData,
   );
 
   const blocks = await serializeHmacHashedBlocks(
     crypto,
-    encryptedData,
+    compressedData,
     outerHeaderHmacKey,
   );
 
