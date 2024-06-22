@@ -289,13 +289,32 @@ export const sampleDatabaseFeatures: Database = {
             locationChanged: new Date('2024-06-13T00:43:03.000Z'),
           },
           attributes: {
-            Notes: '',
-            Password: 'winking-unicycle-ecology-decimal',
-            Title: 'Sample Entry',
-            URL: '',
-            UserName: 'user@example.com',
+            Notes: {
+              isProtected: false,
+              key: 'Notes',
+              value: '',
+            },
+            Password: {
+              isProtected: true,
+              key: 'Password',
+              value: 'winking-unicycle-ecology-decimal',
+            },
+            Title: {
+              isProtected: false,
+              key: 'Title',
+              value: 'Sample Entry',
+            },
+            URL: {
+              isProtected: false,
+              key: 'URL',
+              value: '',
+            },
+            UserName: {
+              isProtected: false,
+              key: 'UserName',
+              value: 'user@example.com',
+            },
           },
-          protectedAttributes: ['Password'],
           autoType: {
             enabled: true,
             dataTransferObfuscation: 0,
@@ -321,14 +340,38 @@ export const sampleDatabaseFeatures: Database = {
           },
           qualityCheck: false,
           attributes: {
-            Notes: '',
-            Password: '',
-            Title: 'TOTP Entry',
-            URL: '',
-            UserName: '',
-            otp: 'otpauth://totp/TOTP%20Entry:none?secret=DEADBEEF&period=30&digits=6&issuer=TOTP%20Entry',
+            Notes: {
+              isProtected: false,
+              key: 'Notes',
+              value: '',
+            },
+            Password: {
+              isProtected: true,
+              key: 'Password',
+              value: '',
+            },
+            Title: {
+              isProtected: false,
+              key: 'Title',
+              value: 'TOTP Entry',
+            },
+            URL: {
+              isProtected: false,
+              key: 'URL',
+              value: '',
+            },
+            UserName: {
+              isProtected: false,
+              key: 'UserName',
+              value: '',
+            },
+            otp: {
+              isProtected: true,
+              key: 'otp',
+              value:
+                'otpauth://totp/TOTP%20Entry:none?secret=DEADBEEF&period=30&digits=6&issuer=TOTP%20Entry',
+            },
           },
-          protectedAttributes: ['Password', 'otp'],
           autoType: {
             enabled: true,
             dataTransferObfuscation: 0,
@@ -374,13 +417,32 @@ export const sampleDatabaseFeatures: Database = {
                 locationChanged: new Date('2024-06-15T05:49:13.000Z'),
               },
               attributes: {
-                Notes: '',
-                Password: '',
-                Title: 'TOTP Entry',
-                URL: '',
-                UserName: '',
+                Notes: {
+                  isProtected: false,
+                  key: 'Notes',
+                  value: '',
+                },
+                Password: {
+                  isProtected: true,
+                  key: 'Password',
+                  value: '',
+                },
+                Title: {
+                  isProtected: false,
+                  key: 'Title',
+                  value: 'TOTP Entry',
+                },
+                URL: {
+                  isProtected: false,
+                  key: 'URL',
+                  value: '',
+                },
+                UserName: {
+                  isProtected: false,
+                  key: 'UserName',
+                  value: '',
+                },
               },
-              protectedAttributes: ['Password'],
               autoType: {
                 enabled: true,
                 dataTransferObfuscation: 0,
@@ -404,14 +466,38 @@ export const sampleDatabaseFeatures: Database = {
                 locationChanged: new Date('2024-06-15T05:49:13.000Z'),
               },
               attributes: {
-                Notes: '',
-                Password: '',
-                Title: 'TOTP Entry',
-                URL: '',
-                UserName: '',
-                otp: 'otpauth://totp/TOTP%20Entry:none?secret=SECRET&period=30&digits=6&issuer=TOTP%20Entry',
+                Notes: {
+                  isProtected: false,
+                  key: 'Notes',
+                  value: '',
+                },
+                Password: {
+                  isProtected: true,
+                  key: 'Password',
+                  value: '',
+                },
+                Title: {
+                  isProtected: false,
+                  key: 'Title',
+                  value: 'TOTP Entry',
+                },
+                URL: {
+                  isProtected: false,
+                  key: 'URL',
+                  value: '',
+                },
+                UserName: {
+                  isProtected: false,
+                  key: 'UserName',
+                  value: '',
+                },
+                otp: {
+                  isProtected: true,
+                  key: 'otp',
+                  value:
+                    'otpauth://totp/TOTP%20Entry:none?secret=SECRET&period=30&digits=6&issuer=TOTP%20Entry',
+                },
               },
-              protectedAttributes: ['Password', 'otp'],
               autoType: {
                 enabled: true,
                 dataTransferObfuscation: 0,
@@ -435,14 +521,38 @@ export const sampleDatabaseFeatures: Database = {
                 locationChanged: new Date('2024-06-15T05:49:13.000Z'),
               },
               attributes: {
-                Notes: '',
-                Password: '',
-                Title: 'TOTP Entry',
-                URL: '',
-                UserName: '',
-                otp: 'otpauth://totp/TOTP%20Entry:none?secret=DEADBEEF&period=30&digits=6&issuer=TOTP%20Entry',
+                Notes: {
+                  isProtected: false,
+                  key: 'Notes',
+                  value: '',
+                },
+                Password: {
+                  isProtected: true,
+                  key: 'Password',
+                  value: '',
+                },
+                Title: {
+                  isProtected: false,
+                  key: 'Title',
+                  value: 'TOTP Entry',
+                },
+                URL: {
+                  isProtected: false,
+                  key: 'URL',
+                  value: '',
+                },
+                UserName: {
+                  isProtected: false,
+                  key: 'UserName',
+                  value: '',
+                },
+                otp: {
+                  isProtected: true,
+                  key: 'otp',
+                  value:
+                    'otpauth://totp/TOTP%20Entry:none?secret=DEADBEEF&period=30&digits=6&issuer=TOTP%20Entry',
+                },
               },
-              protectedAttributes: ['Password', 'otp'],
               autoType: {
                 enabled: true,
                 dataTransferObfuscation: 0,
@@ -513,23 +623,62 @@ export const sampleDatabaseFeatures: Database = {
                 locationChanged: new Date('2024-06-15T05:47:56.000Z'),
               },
               attributes: {
-                'Attribute A': 'Not protected',
-                'Attribute B': 'Protected',
-                KP2A_URL: 'https://another.example.com',
-                Notes: 'Has notes',
-                Password: 'password',
-                Title: 'Item',
-                URL: 'https://www.example.com',
-                UserName: 'username',
+                'Attribute A': {
+                  isProtected: false,
+                  key: 'Attribute A',
+                  value: 'Not protected',
+                },
+                'Attribute B': {
+                  isProtected: true,
+                  key: 'Attribute B',
+                  value: 'Protected',
+                },
+                KP2A_URL: {
+                  isProtected: false,
+                  key: 'KP2A_URL',
+                  value: 'https://another.example.com',
+                },
+                Notes: {
+                  isProtected: false,
+                  key: 'Notes',
+                  value: 'Has notes',
+                },
+                Password: {
+                  isProtected: true,
+                  key: 'Password',
+                  value: 'password',
+                },
+                Title: {
+                  isProtected: false,
+                  key: 'Title',
+                  value: 'Item',
+                },
+                URL: {
+                  isProtected: false,
+                  key: 'URL',
+                  value: 'https://www.example.com',
+                },
+                UserName: {
+                  isProtected: false,
+                  key: 'UserName',
+                  value: 'username',
+                },
               },
-              protectedAttributes: ['Attribute B', 'Password'],
               attachments: {
-                'KeeAgent.settings': Uint8Array.from(
-                  readFileSync('fixtures/attachments/KeeAgent.settings.bin'),
-                ),
-                'attachment.txt': Uint8Array.from([
-                  97, 116, 116, 97, 99, 104, 109, 101, 110, 116,
-                ]),
+                'KeeAgent.settings': {
+                  data: Uint8Array.from(
+                    readFileSync('fixtures/attachments/KeeAgent.settings.bin'),
+                  ),
+                  ref: '0',
+                  key: 'KeeAgent.settings',
+                },
+                'attachment.txt': {
+                  data: Uint8Array.from([
+                    97, 116, 116, 97, 99, 104, 109, 101, 110, 116,
+                  ]),
+                  ref: '1',
+                  key: 'attachment.txt',
+                },
               },
               autoType: {
                 enabled: true,
@@ -582,25 +731,64 @@ export const sampleDatabaseFeatures: Database = {
                     locationChanged: new Date('2024-06-15T05:47:56.000Z'),
                   },
                   attributes: {
-                    'Attribute A': 'Not protected',
-                    'Attribute B': 'Protected',
-                    KP2A_URL: 'https://another.example.com',
-                    Notes: 'Has notes',
-                    Password: 'password',
-                    Title: 'Item',
-                    URL: 'https://www.example.com',
-                    UserName: 'username',
+                    'Attribute A': {
+                      isProtected: false,
+                      key: 'Attribute A',
+                      value: 'Not protected',
+                    },
+                    'Attribute B': {
+                      isProtected: true,
+                      key: 'Attribute B',
+                      value: 'Protected',
+                    },
+                    KP2A_URL: {
+                      isProtected: false,
+                      key: 'KP2A_URL',
+                      value: 'https://another.example.com',
+                    },
+                    Notes: {
+                      isProtected: false,
+                      key: 'Notes',
+                      value: 'Has notes',
+                    },
+                    Password: {
+                      isProtected: true,
+                      key: 'Password',
+                      value: 'password',
+                    },
+                    Title: {
+                      isProtected: false,
+                      key: 'Title',
+                      value: 'Item',
+                    },
+                    URL: {
+                      isProtected: false,
+                      key: 'URL',
+                      value: 'https://www.example.com',
+                    },
+                    UserName: {
+                      isProtected: false,
+                      key: 'UserName',
+                      value: 'username',
+                    },
                   },
-                  protectedAttributes: ['Attribute B', 'Password'],
                   attachments: {
-                    'KeeAgent.settings': Uint8Array.from(
-                      readFileSync(
-                        'fixtures/attachments/KeeAgent.settings.bin',
+                    'KeeAgent.settings': {
+                      data: Uint8Array.from(
+                        readFileSync(
+                          'fixtures/attachments/KeeAgent.settings.bin',
+                        ),
                       ),
-                    ),
-                    'attachment.txt': Uint8Array.from([
-                      97, 116, 116, 97, 99, 104, 109, 101, 110, 116,
-                    ]),
+                      ref: '0',
+                      key: 'KeeAgent.settings',
+                    },
+                    'attachment.txt': {
+                      data: Uint8Array.from([
+                        97, 116, 116, 97, 99, 104, 109, 101, 110, 116,
+                      ]),
+                      ref: '1',
+                      key: 'attachment.txt',
+                    },
                   },
                   autoType: {
                     enabled: true,
@@ -699,13 +887,32 @@ export const sampleDatabaseFeatures: Database = {
               },
               previousParentGroup: '9ad8b63f-e8b9-4b32-9980-97967a9e00ae',
               attributes: {
-                Notes: '',
-                Password: '',
-                Title: 'Deleted A',
-                URL: '',
-                UserName: 'user@example.com',
+                Notes: {
+                  isProtected: false,
+                  key: 'Notes',
+                  value: '',
+                },
+                Password: {
+                  isProtected: true,
+                  key: 'Password',
+                  value: '',
+                },
+                Title: {
+                  isProtected: false,
+                  key: 'Title',
+                  value: 'Deleted A',
+                },
+                URL: {
+                  isProtected: false,
+                  key: 'URL',
+                  value: '',
+                },
+                UserName: {
+                  isProtected: false,
+                  key: 'UserName',
+                  value: 'user@example.com',
+                },
               },
-              protectedAttributes: ['Password'],
               autoType: {
                 enabled: true,
                 dataTransferObfuscation: 0,
@@ -776,13 +983,32 @@ export const sampleDatabaseFeatures: Database = {
                   },
                   previousParentGroup: 'cf4fa281-5c0b-463e-b411-b0221d5bfb22',
                   attributes: {
-                    Notes: '',
-                    Password: 'deleted',
-                    Title: 'Item in Deleted Group',
-                    URL: '',
-                    UserName: 'item',
+                    Notes: {
+                      isProtected: false,
+                      key: 'Notes',
+                      value: '',
+                    },
+                    Password: {
+                      isProtected: true,
+                      key: 'Password',
+                      value: 'deleted',
+                    },
+                    Title: {
+                      isProtected: false,
+                      key: 'Title',
+                      value: 'Item in Deleted Group',
+                    },
+                    URL: {
+                      isProtected: false,
+                      key: 'URL',
+                      value: '',
+                    },
+                    UserName: {
+                      isProtected: false,
+                      key: 'UserName',
+                      value: 'item',
+                    },
                   },
-                  protectedAttributes: ['Password'],
                   autoType: {
                     enabled: true,
                     dataTransferObfuscation: 0,

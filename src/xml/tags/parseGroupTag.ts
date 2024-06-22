@@ -61,7 +61,9 @@ export default async function parseGroupTag(
           group.entries = [];
         }
 
-        group.entries.push(await parseEntryTag(reader.readFromCurrent()));
+        group.entries.push(
+          await parseEntryTag(reader.readFromCurrent(), false),
+        );
         break;
 
       case 'CustomData':

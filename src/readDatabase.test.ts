@@ -95,11 +95,19 @@ describe('readDatabase', () => {
       // Assert
       expect(parsed.database.metadata.name).toEqual('Passwords');
       expect(parsed.database.root.group.entries?.[0].attributes?.Title).toEqual(
-        'Sample Entry',
+        {
+          isProtected: false,
+          key: 'Title',
+          value: 'Sample Entry',
+        },
       );
       expect(
         parsed.database.root.group.entries?.[0].attributes?.Password,
-      ).toEqual('winking-unicycle-ecology-decimal');
+      ).toEqual({
+        isProtected: true,
+        key: 'Password',
+        value: 'winking-unicycle-ecology-decimal',
+      });
     },
   );
 

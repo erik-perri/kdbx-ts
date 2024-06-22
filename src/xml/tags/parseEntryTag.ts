@@ -10,7 +10,7 @@ import parseTimesTag from './parseTimesTag';
 
 export default async function parseEntryTag(
   reader: KdbxXmlReader,
-  fromHistory: boolean = false,
+  fromHistory: boolean,
 ): Promise<Entry> {
   reader.assertOpenedTagOf('Entry');
 
@@ -23,25 +23,18 @@ export default async function parseEntryTag(
         break;
 
       case 'String': {
-        const { key, value, isProtected } = await parseEntryStringTag(
-          reader.readFromCurrent(),
-        );
+        const value = await parseEntryStringTag(reader.readFromCurrent());
 
         if (!entry.attributes) {
           entry.attributes = {};
         }
-        if (entry.attributes[key] !== undefined) {
-          throw new Error(`Duplicate custom attribute found in entry "${key}"`);
+        if (entry.attributes[value.key] !== undefined) {
+          throw new Error(
+            `Duplicate custom attribute found in entry "${value.key}"`,
+          );
         }
 
-        entry.attributes[key] = value;
-
-        if (isProtected) {
-          if (!entry.protectedAttributes) {
-            entry.protectedAttributes = [];
-          }
-          entry.protectedAttributes.push(key);
-        }
+        entry.attributes[value.key] = value;
         break;
       }
 
@@ -96,14 +89,17 @@ export default async function parseEntryTag(
         break;
 
       case 'Binary': {
-        const { key, ref } = parseEntryBinaryTag(reader.readFromCurrent());
-        const binary = reader.readBinaryPoolData(ref);
+        const tag = parseEntryBinaryTag(reader.readFromCurrent());
+        const data = reader.readBinaryPoolData(tag.ref);
 
         if (!entry.attachments) {
           entry.attachments = {};
         }
 
-        entry.attachments[key] = binary;
+        entry.attachments[tag.key] = {
+          ...tag,
+          data,
+        };
         break;
       }
 

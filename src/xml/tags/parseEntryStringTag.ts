@@ -1,14 +1,9 @@
+import type EntryAttribute from '../../structure/EntryAttribute';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
-
-type StringTagData = {
-  key: string;
-  value: string;
-  isProtected: boolean;
-};
 
 export default async function parseEntryStringTag(
   reader: KdbxXmlReader,
-): Promise<StringTagData> {
+): Promise<EntryAttribute> {
   reader.assertOpenedTagOf('String');
 
   let key: string | undefined;
