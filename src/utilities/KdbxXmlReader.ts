@@ -2,6 +2,7 @@ import type { CryptoCipher } from '../crypto/types';
 import NullableBoolean from '../enums/NullableBoolean';
 import type { KdbxBinaryPoolValue } from '../types';
 import displayUuid from './displayUuid';
+import gregorianTimestampToDate from './gregorianTimestampToDate';
 import isBase64 from './isBase64';
 import Uint8ArrayHelper from './Uint8ArrayHelper';
 import XmlReader from './XmlReader';
@@ -94,24 +95,20 @@ export default class KdbxXmlReader extends XmlReader {
       8,
     ).slice(0, 8);
 
-    const julianSeconds = Uint8ArrayHelper.toUInt64LE(data);
+    const timestamp = Uint8ArrayHelper.toUInt64LE(data);
 
     if (
-      julianSeconds < Number.MIN_SAFE_INTEGER ||
-      julianSeconds > Number.MAX_SAFE_INTEGER
+      timestamp < Number.MIN_SAFE_INTEGER ||
+      timestamp > Number.MAX_SAFE_INTEGER
     ) {
       throw new Error(
-        `Invalid date time found. Out of range for Date seconds "${julianSeconds}"`,
+        `Invalid date time found. Out of range for Date seconds "${timestamp}"`,
       );
     }
 
-    const julianSecondsAsNumber = Number(julianSeconds);
+    const timestampAsNumber = Number(timestamp);
 
-    const date = new Date();
-    date.setUTCFullYear(0, 0, 0);
-    date.setUTCHours(0, 0, 0, 0);
-    date.setUTCSeconds(julianSecondsAsNumber);
-    return date;
+    return gregorianTimestampToDate(timestampAsNumber);
   }
 
   private readDateTimeFromIsoString(input: string, strictMode: boolean): Date {
