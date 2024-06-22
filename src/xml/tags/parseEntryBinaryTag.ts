@@ -20,6 +20,7 @@ export default function parseEntryBinaryTag(
 
       case 'Value':
         if (reader.current.attributes.Ref === undefined) {
+          // TODO Find out if this is possible on v4+ and change this message if not
           throw new Error('Inline Binary not implemented');
         }
 

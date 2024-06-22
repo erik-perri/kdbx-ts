@@ -114,6 +114,7 @@ export default async function parseMetaTag(
         break;
 
       case 'Binaries':
+        // TODO Verify binaries is not possible on v4+ and change this message
         throw new Error('"Binaries" not implemented');
 
       case 'CustomData':

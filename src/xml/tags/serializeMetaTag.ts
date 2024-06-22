@@ -131,6 +131,7 @@ export default function serializeMetaTag(
   }
 
   if (metadata.binaries !== undefined) {
+    // TODO Verify binaries is not possible on v4+ and change this message
     throw new Error('"Binaries" not implemented');
   }
 
