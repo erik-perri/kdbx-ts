@@ -74,9 +74,11 @@ export default async function writeDatabase(
 
   const encryptedData = await cryptInnerData(
     crypto,
-    file.header,
-    compositeKey,
     SymmetricCipherDirection.Encrypt,
+    file.header.cipherAlgorithm,
+    file.header.masterSeed,
+    file.header.encryptionIV,
+    compositeKey,
     compressedData,
   );
 

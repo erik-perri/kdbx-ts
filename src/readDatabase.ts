@@ -101,9 +101,11 @@ export default async function readDatabase(
 
   const decryptedData = await cryptInnerData(
     crypto,
-    header,
-    compositeKey,
     SymmetricCipherDirection.Decrypt,
+    header.cipherAlgorithm,
+    header.masterSeed,
+    header.encryptionIV,
+    compositeKey,
     innerData,
   );
 

@@ -1,25 +1,27 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
+import type SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import type SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
-import { type KdbxOuterHeader } from '../types';
 import { type CryptoImplementation } from './types';
 
 export default async function cryptInnerData(
   crypto: CryptoImplementation,
-  header: KdbxOuterHeader,
-  compositeKey: Uint8Array,
   direction: SymmetricCipherDirection,
+  cipherAlgorithm: SymmetricCipherAlgorithm,
+  masterSeed: Uint8Array,
+  encryptionIV: Uint8Array,
+  compositeKey: Uint8Array,
   data: Uint8Array,
 ): Promise<Uint8Array> {
   const finalKey = await crypto.hash(HashAlgorithm.Sha256, [
-    header.masterSeed,
+    masterSeed,
     compositeKey,
   ]);
 
   const cipher = await crypto.createCipher(
-    header.cipherAlgorithm,
+    cipherAlgorithm,
     direction,
     finalKey,
-    header.encryptionIV,
+    encryptionIV,
   );
 
   return await cipher.finish(data);
