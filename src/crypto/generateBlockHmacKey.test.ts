@@ -48,4 +48,19 @@ describe('generateBlockHmacKey', () => {
       ]);
     },
   );
+
+  it('should throw an error if the buffer is an unexpected size', async () => {
+    // Arrange
+    const key = Uint8Array.from(
+      Array.from({ length: 65 }, (_, index) => index),
+    );
+
+    // Act
+    await expect(
+      async () => await generateBlockHmacKey(nodeCrypto, BigInt(0), key),
+    ).rejects.toThrow('Unexpected block key length. Expected 64 bytes, got 65');
+
+    // Assert
+    // Nothing to assert.
+  });
 });
