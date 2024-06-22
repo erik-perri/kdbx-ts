@@ -35,22 +35,10 @@ export default function deserializeVariantMapValue(
     const nameLength = reader.readUInt32LE();
     const nameBytes = reader.readBytes(nameLength);
 
-    if (nameBytes.byteLength !== nameLength) {
-      throw new Error(
-        `Invalid variant map entry name data. Expected ${nameLength} bytes, got ${nameBytes.byteLength}`,
-      );
-    }
-
     const name = Uint8ArrayHelper.toString(nameBytes);
 
     const valueLength = reader.readUInt32LE();
     const valueBytes = reader.readBytes(valueLength);
-
-    if (valueBytes.byteLength !== valueLength) {
-      throw new Error(
-        `Invalid variant map entry value data. Expected ${valueLength} bytes, got ${valueBytes.byteLength}`,
-      );
-    }
 
     switch (type) {
       case VariantMapFieldType.Bool:

@@ -11,34 +11,27 @@ export default async function readHmacHashedBlocks(
 ): Promise<Uint8Array> {
   const blocks: Uint8Array[] = [];
 
+  // The minimum size should be 36 bytes (32 bytes for the HMAC and 4 bytes for the block length).
+  // It would not be a valid database, but it would be valid HMAC hashed blocks.
+  if (reader.byteLength < 36) {
+    throw new Error(
+      `Invalid HMAC hashed blocks data length. Expected at least 36 bytes, got ${reader.byteLength}`,
+    );
+  }
+
   for (let blockIndex = 0; ; blockIndex++) {
     const expectedHmac = reader.readBytes(32);
-    if (expectedHmac.byteLength !== 32) {
-      throw new Error(
-        `Invalid HMAC size. Expected 32 bytes, got ${expectedHmac.byteLength} bytes`,
-      );
-    }
 
     const blockLengthBytes = reader.readBytes(4);
-    if (blockLengthBytes.byteLength !== 4) {
-      throw new Error(
-        `Invalid block length. Expected 4 bytes, got ${blockLengthBytes.byteLength} bytes`,
-      );
-    }
 
     const blockLength = Uint8ArrayHelper.toInt32LE(blockLengthBytes);
-    if (blockLength < 0 || Number.isNaN(blockLength)) {
+    if (blockLength < 0) {
       throw new Error(
-        'Invalid block size. Expected a number greater than or equal to 0',
+        `Invalid block size. Expected a number greater than or equal to 0, got ${blockLength}`,
       );
     }
 
     const buffer = reader.readBytes(blockLength);
-    if (buffer.byteLength !== blockLength) {
-      throw new Error(
-        `Invalid block size. Expected ${blockLength}, read ${buffer.byteLength}`,
-      );
-    }
 
     const blockHmacKey = await generateBlockHmacKey(crypto, blockIndex, key);
 
