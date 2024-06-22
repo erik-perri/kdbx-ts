@@ -1,5 +1,6 @@
 import type Metadata from '../../structure/Metadata';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
+import serializeCustomDataTag from './serializeCustomDataTag';
 import serializeCustomIconsTag from './serializeCustomIconsTag';
 import serializeMemoryProtectionTag from './serializeMemoryProtectionTag';
 
@@ -134,7 +135,7 @@ export default function serializeMetaTag(
   }
 
   if (metadata.customData !== undefined) {
-    throw new Error('"CustomData" not implemented');
+    serializeCustomDataTag(writer, metadata.customData, true);
   }
 
   if (metadata.settingsChanged !== undefined) {
