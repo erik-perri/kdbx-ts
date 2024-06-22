@@ -33,6 +33,7 @@ export default class XmlWriter {
       .replace(/>/g, '&gt;');
 
     this.buffer += ` ${name}="${escapedValue}"`;
+    this.currentElementStartedAt = this.buffer.length;
   }
 
   writeCharacters(text: string): void {

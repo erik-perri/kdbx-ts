@@ -1,4 +1,5 @@
 import type { CryptoCipher } from '../crypto/types';
+import NullableBoolean from '../enums/NullableBoolean';
 import type { KdbxBinaryPoolValue } from '../types';
 import gregorianTimestampFromDate from './gregorianTimestampFromDate';
 import Uint8ArrayHelper from './Uint8ArrayHelper';
@@ -26,6 +27,14 @@ export default class KdbxXmlWriter extends XmlWriter {
     }
   }
 
+  writeColor(name: string, value: string): void {
+    if (value.length && !value.match(/^#[0-f]{6}$/)) {
+      throw new Error(`Invalid color value "${value}"`);
+    }
+
+    this.writeString(name, value);
+  }
+
   writeDateTime(name: string, value: Date): void {
     const timestamp = gregorianTimestampFromDate(value);
 
@@ -37,8 +46,37 @@ export default class KdbxXmlWriter extends XmlWriter {
     this.writeString(name, Buffer.from(timestampAsBytes).toString('base64'));
   }
 
+  writeNullableBoolean(name: string, value: NullableBoolean): void {
+    if (value === NullableBoolean.True) {
+      this.writeString(name, 'true');
+    } else if (value === NullableBoolean.False) {
+      this.writeString(name, 'false');
+    } else {
+      this.writeString(name, 'null');
+    }
+  }
+
   writeNumber(name: string, value: number): void {
     this.writeString(name, value.toString());
+  }
+
+  async writeProtectedString(name: string, value: string): Promise<void> {
+    this.writeStartElement(name);
+
+    this.writeAttribute('Protected', 'True');
+
+    if (value.length > 0) {
+      const encryptedValue = await this.cipher.process(
+        Uint8ArrayHelper.fromString(value),
+      );
+
+      const encryptedValueAsBase64 =
+        Buffer.from(encryptedValue).toString('base64');
+
+      this.writeCharacters(encryptedValueAsBase64);
+    }
+
+    this.writeEndElement();
   }
 
   writeString(name: string, value: string): void {

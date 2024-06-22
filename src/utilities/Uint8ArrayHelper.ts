@@ -67,6 +67,7 @@ const Uint8ArrayHelper = {
   },
   /**
    * Converts a UUID string to an RFC4122-compliant byte array.
+   * TODO Restructure the options to allow for empty UUIDs to match compliance
    */
   fromUuid(data: string, ensureCompliance: boolean = true): Uint8Array {
     const match = data.replace(/-/g, '').match(/.{2}/g);

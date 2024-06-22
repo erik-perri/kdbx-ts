@@ -60,7 +60,7 @@ export default function writeMetaTag(
   }
 
   if (metadata.color !== undefined) {
-    writer.writeString('Color', metadata.color);
+    writer.writeColor('Color', metadata.color);
   }
 
   if (metadata.masterKeyChanged !== undefined) {

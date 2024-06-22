@@ -73,7 +73,7 @@ export default class KdbxXmlReader extends XmlReader {
     }
 
     if (!colorString.match(/^#[0-f]{6}$/)) {
-      throw new Error('Invalid color value');
+      throw new Error(`Invalid color value "${colorString}"`);
     }
 
     return colorString;
