@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import * as esbuild from 'esbuild';
 
 const commonOptions = {
@@ -17,3 +18,4 @@ for (const formatOptions of outputFormats) {
     ...formatOptions,
   });
 }
+/* v8 ignore end */
