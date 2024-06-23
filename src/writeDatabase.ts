@@ -56,7 +56,7 @@ export default async function writeDatabase(
     file.innerHeader.innerEncryptionKey,
   );
 
-  const xml = await serializeDatabaseXml(
+  const databaseXml = await serializeDatabaseXml(
     file.database,
     file.innerHeader.binaryPool,
     streamCipher,
@@ -64,7 +64,7 @@ export default async function writeDatabase(
 
   const innerData = Buffer.concat([
     innerHeader,
-    Uint8ArrayHelper.fromString(xml),
+    Uint8ArrayHelper.fromString(databaseXml),
   ]);
 
   const compressedData = compressInnerData(
