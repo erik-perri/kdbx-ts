@@ -37,7 +37,7 @@ export default function deserializeKdfParametersValue(
   switch (uuid) {
     case KdfUuid.AesKdbx3:
     case KdfUuid.AesKdbx4:
-      return parseAesParameterVariantMap(variantMap);
+      return parseAesParameterVariantMap(uuid, variantMap);
 
     case KdfUuid.Argon2d:
     case KdfUuid.Argon2id:
@@ -49,11 +49,12 @@ export default function deserializeKdfParametersValue(
 }
 
 function parseAesParameterVariantMap(
+  uuid: typeof KdfUuid.AesKdbx3 | typeof KdfUuid.AesKdbx4,
   variantMap: KdbxVariantMap,
 ): KdbxKdfParameters {
   return {
-    // Upgrade Kdbx3 automatically to Kdbx4.
-    uuid: KdfUuid.AesKdbx4,
+    // TODO Upgrade Kdbx3 automatically to Kdbx4?
+    uuid: uuid,
     rounds: validateKdfRounds(
       validateVariantValueBigInt(KdfParameterKey.AesRounds, variantMap.values),
     ),
