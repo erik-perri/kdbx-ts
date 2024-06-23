@@ -37,10 +37,10 @@ export default function serializeInnerHeaderFields(
     },
   ];
 
-  for (const field of fields) {
-    writer.writeUInt8(field.id);
-    writer.writeUInt32LE(field.data.byteLength);
-    writer.writeBytes(field.data);
+  for (const { data, id } of fields) {
+    writer.writeUInt8(id);
+    writer.writeUInt32LE(data.byteLength);
+    writer.writeBytes(data);
   }
 
   return writer.toUint8Array();
