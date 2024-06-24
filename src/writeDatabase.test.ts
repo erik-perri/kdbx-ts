@@ -8,9 +8,9 @@ import { sampleDatabasesKeePassXC } from '../fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
 import readHeaderFields from './outerHeader/readHeaderFields';
 import readSignature from './outerHeader/readSignature';
+import randomizeSeeds from './randomizeSeeds';
 import readDatabase from './readDatabase';
 import { type KdbxAesKdfParameters } from './types';
-import updateKeysForWrite from './updateKeysForWrite';
 import BufferReader from './utilities/BufferReader';
 import writeDatabase from './writeDatabase';
 
@@ -24,7 +24,7 @@ describe('writeDatabase', () => {
       sampleDatabasesKeePassXC.AesAesCompressed.file,
     );
 
-    const file = await updateKeysForWrite(nodeCrypto, originalFile);
+    const file = await randomizeSeeds(nodeCrypto, originalFile);
 
     // Act
     const result = await writeDatabase(nodeCrypto, keys, file);

@@ -8,7 +8,7 @@ import {
 import getSymmetricCipherIvSize from './utilities/getSymmetricCipherIvSize';
 import getSymmetricCipherKeySize from './utilities/getSymmetricCipherKeySize';
 
-export default async function updateKeysForWrite(
+export default async function randomizeSeeds(
   crypto: CryptoImplementation,
   file: KdbxFile,
 ): Promise<KdbxFile> {
