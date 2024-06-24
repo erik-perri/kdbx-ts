@@ -12,7 +12,6 @@ import SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import readInnerHeaderFields from './innerHeader/readInnerHeaderFields';
 import type { KdbxKey } from './keys/types';
 import readHeaderFields from './outerHeader/readHeaderFields';
-import readHeaderHashes from './outerHeader/readHeaderHashes';
 import readSignature from './outerHeader/readSignature';
 import { type KdbxFile } from './types';
 import BufferReader from './utilities/BufferReader';
@@ -62,14 +61,15 @@ export default async function readDatabase(
   const headerData = reader.processed();
 
   // Read the expected header hashes
-  const headerHashes = readHeaderHashes(reader);
+  const expectedHeaderHash = reader.readBytes(32);
+  const expectedHeaderHmacHash = reader.readBytes(32);
 
   // Verify the header hash to check the integrity of the header
   const headerHash = await crypto.hash(HashAlgorithm.Sha256, [headerData]);
 
-  if (!Uint8ArrayHelper.areEqual(headerHashes.hash, headerHash)) {
+  if (!Uint8ArrayHelper.areEqual(expectedHeaderHash, headerHash)) {
     throw new Error(
-      `Invalid header hash. Expected "${displayHash(headerHashes.hash)}", got "${displayHash(headerHash)}"`,
+      `Invalid header hash. Expected "${displayHash(expectedHeaderHash)}", got "${displayHash(headerHash)}"`,
     );
   }
 
@@ -93,7 +93,7 @@ export default async function readDatabase(
     [headerData],
   );
 
-  if (!Uint8ArrayHelper.areEqual(headerHashes.hmacHash, headerHmacHash)) {
+  if (!Uint8ArrayHelper.areEqual(expectedHeaderHmacHash, headerHmacHash)) {
     throw new Error('HMAC mismatch');
   }
 
