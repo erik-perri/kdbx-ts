@@ -133,6 +133,6 @@ describe('readDatabase', () => {
     const parsed = await readDatabase(nodeCrypto, keys, file);
 
     // Assert
-    expect(parsed.database).toMatchSnapshot();
+    expect(parsed).toMatchSnapshot();
   });
 });
