@@ -2,10 +2,7 @@ import { readFileSync } from 'fs';
 import { describe, expect, it } from 'vitest';
 
 import nodeCrypto from '../fixtures/crypto/nodeCrypto';
-import {
-  sampleDatabaseCases,
-  sampleDatabaseFeatures,
-} from '../fixtures/databases';
+import { sampleDatabaseCases } from '../fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
 import type { KdbxKey } from './keys/types';
 import readDatabase from './readDatabase';
@@ -111,18 +108,31 @@ describe('readDatabase', () => {
     },
   );
 
-  it('parses known fields', async () => {
+  it.each([
+    [
+      'KeePassXC',
+      {
+        file: readFileSync(
+          'fixtures/databases/kdbx4-aes-kdf-aes-features.kdbx',
+        ),
+      },
+    ],
+    [
+      'KeePass2',
+      {
+        file: readFileSync(
+          'fixtures/databases/keepass2-kdbx4-aes-kdf-chacha-features.kdbx',
+        ),
+      },
+    ],
+  ])('parses known fields from %s', async (_, { file }) => {
     // Arrange
     const keys = [await createPasswordKey(nodeCrypto, 'password')];
 
     // Act
-    const parsed = await readDatabase(
-      nodeCrypto,
-      keys,
-      readFileSync('fixtures/databases/kdbx4-aes-kdf-aes-features.kdbx'),
-    );
+    const parsed = await readDatabase(nodeCrypto, keys, file);
 
     // Assert
-    expect(parsed.database).toEqual(sampleDatabaseFeatures);
+    expect(parsed.database).toMatchSnapshot();
   });
 });
