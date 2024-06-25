@@ -60,10 +60,6 @@ const nodeCrypto: CryptoImplementation = {
   transformAesKdfKey(key, seed, iterations) {
     let result = Uint8Array.from(key);
 
-    if (Array.isArray(seed)) {
-      seed = Uint8Array.from(seed);
-    }
-
     while (iterations--) {
       const cipher = crypto
         .createCipheriv('aes-256-ecb', seed, Buffer.alloc(0))
