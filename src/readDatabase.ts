@@ -16,8 +16,8 @@ import { type KdbxFile } from './types/format';
 import type { KdbxKey } from './types/keys';
 import BufferReader from './utilities/BufferReader';
 import displayHash from './utilities/displayHash';
+import getVersionFromSignature from './utilities/getVersionFromSignature';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
-import { findVersionFromSignature } from './versions';
 import readDatabaseXml from './xml/readDatabaseXml';
 
 export default async function readDatabase(
@@ -29,10 +29,7 @@ export default async function readDatabase(
 
   // Verify the version
   const signature = readSignature(reader);
-  const appVersion = findVersionFromSignature(
-    signature.signature1,
-    signature.signature2,
-  );
+  const appVersion = getVersionFromSignature(signature);
 
   switch (appVersion) {
     case KeePassVersion.KeePass1:

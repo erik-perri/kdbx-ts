@@ -16,15 +16,3 @@ export const KeePass2 = Object.freeze({
   variantMapVersion: 0x0100,
   version: KeePassVersion.KeePass2,
 } as const);
-
-export function findVersionFromSignature(
-  signature1: number,
-  signature2: number,
-): KeePassVersion {
-  const details = [KeePass1, KeePass2].find(
-    (version) =>
-      version.signature1 === signature1 && version.signature2 === signature2,
-  );
-
-  return details?.version ?? KeePassVersion.Unknown;
-}
