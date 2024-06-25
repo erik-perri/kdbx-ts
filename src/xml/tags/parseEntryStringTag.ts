@@ -1,4 +1,4 @@
-import type EntryAttribute from '../../types/database/EntryAttribute';
+import { type EntryAttribute } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default async function parseEntryStringTag(

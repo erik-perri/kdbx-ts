@@ -1,5 +1,5 @@
 import HeaderFieldId from '../enums/HeaderFieldId';
-import { type KdbxOuterHeader } from '../types';
+import { type KdbxOuterHeader } from '../types/format';
 import BufferWriter from '../utilities/BufferWriter';
 import serializeCipherAlgorithmValue from './fields/serializeCipherAlgorithmValue';
 import serializeCompressionAlgorithmValue from './fields/serializeCompressionAlgorithmValue';

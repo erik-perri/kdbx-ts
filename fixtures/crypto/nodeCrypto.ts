@@ -1,12 +1,12 @@
 import * as argon2 from 'argon2';
 import crypto from 'crypto';
 
+import SymmetricCipherAlgorithm from '../../src/enums/SymmetricCipherAlgorithm';
+import type SymmetricCipherDirection from '../../src/enums/SymmetricCipherDirection';
 import type {
   CryptoCipher,
   CryptoImplementation,
-} from '../../src/crypto/types';
-import SymmetricCipherAlgorithm from '../../src/enums/SymmetricCipherAlgorithm';
-import type SymmetricCipherDirection from '../../src/enums/SymmetricCipherDirection';
+} from '../../src/types/crypto';
 import displaySymmetricCipherAlgorithm from '../../src/utilities/displaySymmetricCipherAlgorithm';
 import createAes256CbcCipher from './createAes256CbcCipher';
 import createChaCha20Cipher from './createChaCha20Cipher';

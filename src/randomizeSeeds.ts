@@ -1,10 +1,10 @@
-import { type CryptoImplementation } from './crypto/types';
+import { type CryptoImplementation } from './types/crypto';
 import {
   type KdbxFile,
   type KdbxInnerHeader,
   type KdbxKdfParameters,
   type KdbxOuterHeader,
-} from './types';
+} from './types/format';
 import getSymmetricCipherIvSize from './utilities/getSymmetricCipherIvSize';
 import getSymmetricCipherKeySize from './utilities/getSymmetricCipherKeySize';
 

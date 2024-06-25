@@ -1,4 +1,4 @@
-import { type KdbxSignature } from '../types';
+import { type KdbxSignature } from '../types/format';
 import BufferWriter from '../utilities/BufferWriter';
 
 export default function serializeSignature(

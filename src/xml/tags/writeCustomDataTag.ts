@@ -1,5 +1,7 @@
-import type CustomData from '../../types/database/CustomData';
-import type CustomDataWithTimes from '../../types/database/CustomDataWithTimes';
+import {
+  type CustomData,
+  type CustomDataWithTimes,
+} from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeCustomDataTag(
@@ -44,5 +46,5 @@ function serializeCustomDataItemTag(
 function isCustomDataWithTimes(
   data: CustomData | CustomDataWithTimes,
 ): data is CustomDataWithTimes {
-  return (data as CustomDataWithTimes).lastModified !== undefined;
+  return (data as Partial<CustomDataWithTimes>).lastModified !== undefined;
 }

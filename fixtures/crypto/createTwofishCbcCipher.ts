@@ -1,7 +1,7 @@
 import { decrypt, encrypt, makeSession, type Session } from 'twofish-ts';
 
-import { type CryptoCipher } from '../../src/crypto/types';
 import SymmetricCipherDirection from '../../src/enums/SymmetricCipherDirection';
+import { type CryptoCipher } from '../../src/types/crypto';
 
 export default function createTwofishCbcCipher(
   direction: SymmetricCipherDirection,

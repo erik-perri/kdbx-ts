@@ -1,5 +1,7 @@
-import type CustomData from '../../types/database/CustomData';
-import type CustomDataWithTimes from '../../types/database/CustomDataWithTimes';
+import {
+  type CustomData,
+  type CustomDataWithTimes,
+} from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseCustomDataTag(

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import VariantMapFieldType from '../../../enums/VariantMapFieldType';
-import { type KdbxVariantMapValues } from '../../../types';
+import { type KdbxVariantMapValues } from '../../../types/format';
 import validateVariantValueNumber from './validateVariantValueNumber';
 
 describe('validateVariantValueNumber', () => {

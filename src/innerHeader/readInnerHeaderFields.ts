@@ -1,5 +1,5 @@
 import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
-import { type KdbxInnerHeader } from '../types';
+import { type KdbxInnerHeader } from '../types/format';
 import type BufferReader from '../utilities/BufferReader';
 import displayInnerHeaderFieldId from '../utilities/displayInnerHeaderFieldId';
 import isInnerHeaderFieldId from '../utilities/isInnerHeaderFieldId';

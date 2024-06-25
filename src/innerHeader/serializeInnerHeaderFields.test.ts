@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
 import ProtectedStreamAlgorithm from '../enums/ProtectedStreamAlgorithm';
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
-import { type KdbxInnerHeader } from '../types';
+import { type KdbxInnerHeader } from '../types/format';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import serializeInnerHeaderFields from './serializeInnerHeaderFields';
 

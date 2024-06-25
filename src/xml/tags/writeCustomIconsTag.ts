@@ -1,4 +1,4 @@
-import { type MetadataCustomIcons } from '../../types/database/Metadata';
+import { type MetadataCustomIcons } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 import writeIconTag from './writeIconTag';
 

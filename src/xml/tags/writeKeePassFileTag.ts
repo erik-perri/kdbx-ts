@@ -1,4 +1,4 @@
-import type Database from '../../types/Database';
+import { type Database } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 import writeMetaTag from './writeMetaTag';
 import writeRootTag from './writeRootTag';

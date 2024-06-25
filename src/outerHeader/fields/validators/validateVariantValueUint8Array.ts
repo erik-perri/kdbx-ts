@@ -1,5 +1,5 @@
 import VariantMapFieldType from '../../../enums/VariantMapFieldType';
-import { type KdbxVariantMapValues } from '../../../types';
+import { type KdbxVariantMapValues } from '../../../types/format';
 import displayVariantMapFieldType from '../../../utilities/displayVariantMapFieldType';
 
 export default function validateVariantValueUint8Array(

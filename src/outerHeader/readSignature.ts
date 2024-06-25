@@ -1,4 +1,4 @@
-import { type KdbxSignature } from '../types';
+import { type KdbxSignature } from '../types/format';
 import type BufferReader from '../utilities/BufferReader';
 
 export default function readSignature(buffer: BufferReader): KdbxSignature {

@@ -1,5 +1,8 @@
 import VariantMapFieldType from '../../enums/VariantMapFieldType';
-import { type KdbxVariantMap, type KdbxVariantMapValues } from '../../types';
+import {
+  type KdbxVariantMap,
+  type KdbxVariantMapValues,
+} from '../../types/format';
 import BufferReader from '../../utilities/BufferReader';
 import isVariantMapFieldType from '../../utilities/isVariantMapFieldType';
 import Uint8ArrayHelper from '../../utilities/Uint8ArrayHelper';

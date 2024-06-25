@@ -1,6 +1,6 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
+import { type CryptoImplementation } from '../types/crypto';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
-import { type CryptoImplementation } from './types';
 
 export default async function generateBlockHmacKey(
   crypto: CryptoImplementation,

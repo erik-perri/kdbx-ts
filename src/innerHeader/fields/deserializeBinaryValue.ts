@@ -1,4 +1,4 @@
-import { type KdbxBinaryPoolValue } from '../../types';
+import { type KdbxBinaryPoolValue } from '../../types/format';
 import BufferReader from '../../utilities/BufferReader';
 
 type KdbxBinaryPoolValueWithoutIndex = Omit<KdbxBinaryPoolValue, 'index'>;

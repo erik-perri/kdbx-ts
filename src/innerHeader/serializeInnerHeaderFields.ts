@@ -1,5 +1,5 @@
 import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
-import { type KdbxInnerHeader } from '../types';
+import { type KdbxInnerHeader } from '../types/format';
 import BufferWriter from '../utilities/BufferWriter';
 import serializeBinaryValue from './fields/serializeBinaryValue';
 import serializeEndOfHeaderValue from './fields/serializeEndOfHeaderValue';

@@ -2,7 +2,10 @@ import Argon2Type from '../../enums/Argon2Type';
 import KdfParameterKey from '../../enums/KdfParameterKey';
 import KdfUuid from '../../enums/KdfUuid';
 import VariantMapFieldType from '../../enums/VariantMapFieldType';
-import { type KdbxKdfParameters, type KdbxVariantMap } from '../../types';
+import {
+  type KdbxKdfParameters,
+  type KdbxVariantMap,
+} from '../../types/format';
 import displayUuid from '../../utilities/displayUuid';
 import deserializeVariantMapValue from './deserializeVariantMapValue';
 import validateKdfArgon2Memory from './validators/validateKdfArgon2Memory';

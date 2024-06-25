@@ -1,5 +1,4 @@
-import type AutoType from '../../types/database/AutoType';
-import type AutoTypeAssociation from '../../types/database/AutoTypeAssociation';
+import { type AutoType, type AutoTypeAssociation } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeAutoTypeTag(

@@ -1,7 +1,7 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
 import KdfUuid from '../enums/KdfUuid';
-import { type KdbxKdfParameters } from '../types';
-import type { CryptoImplementation } from './types';
+import type { CryptoImplementation } from '../types/crypto';
+import { type KdbxKdfParameters } from '../types/format';
 
 export default async function transformKdf(
   crypto: CryptoImplementation,

@@ -4,8 +4,8 @@ import { describe, expect, it } from 'vitest';
 import nodeCrypto from '../fixtures/crypto/nodeCrypto';
 import { sampleDatabaseCases } from '../fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
-import type { KdbxKey } from './keys/types';
 import readDatabase from './readDatabase';
+import type { KdbxKey } from './types/keys';
 
 describe('readDatabase', () => {
   it('fails when encountering an unknown file type', async () => {

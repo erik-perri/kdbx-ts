@@ -1,4 +1,4 @@
-import type { KdbxBinaryPoolValue } from '../../types';
+import type { KdbxBinaryPoolValue } from '../../types/format';
 import BufferWriter from '../../utilities/BufferWriter';
 
 export default function serializeBinaryValue(

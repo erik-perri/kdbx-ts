@@ -1,6 +1,6 @@
-import type { CryptoCipher } from '../crypto/types';
 import NullableBoolean from '../enums/NullableBoolean';
-import type { KdbxBinaryPoolValue } from '../types';
+import type { CryptoCipher } from '../types/crypto';
+import type { KdbxBinaryPoolValue } from '../types/format';
 import displayUuid from './displayUuid';
 import gregorianTimestampToDate from './gregorianTimestampToDate';
 import isBase64 from './isBase64';

@@ -1,12 +1,12 @@
-import { type CryptoImplementation } from '../crypto/types';
 import HashAlgorithm from '../enums/HashAlgorithm';
+import { type CryptoImplementation } from '../types/crypto';
+import { type KdbxPasswordKey } from '../types/keys';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
-import { type KdbxProcessedKey } from './types';
 
 export default async function createPasswordKey(
   crypto: CryptoImplementation,
   password: string,
-): Promise<KdbxProcessedKey> {
+): Promise<KdbxPasswordKey> {
   const data = await crypto.hash(HashAlgorithm.Sha256, [
     Uint8ArrayHelper.fromString(password),
   ]);

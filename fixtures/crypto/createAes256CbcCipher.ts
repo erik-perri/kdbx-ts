@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
-import { type CryptoCipher } from '../../src/crypto/types';
 import SymmetricCipherDirection from '../../src/enums/SymmetricCipherDirection';
+import { type CryptoCipher } from '../../src/types/crypto';
 
 export default function createAes256CbcCipher(
   direction: SymmetricCipherDirection,

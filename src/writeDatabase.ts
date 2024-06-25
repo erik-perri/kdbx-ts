@@ -5,14 +5,14 @@ import cryptInnerData from './crypto/cryptInnerData';
 import generateBlockHmacKey from './crypto/generateBlockHmacKey';
 import generateHmacKeySeed from './crypto/generateHmacKeySeed';
 import transformCompositeKey from './crypto/transformCompositeKey';
-import { type CryptoImplementation } from './crypto/types';
 import HashAlgorithm from './enums/HashAlgorithm';
 import SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import serializeInnerHeaderFields from './innerHeader/serializeInnerHeaderFields';
-import { type KdbxKey } from './keys/types';
 import serializeHeaderFields from './outerHeader/serializeHeaderFields';
 import serializeSignature from './outerHeader/serializeSignature';
-import { type KdbxFile } from './types';
+import { type CryptoImplementation } from './types/crypto';
+import { type KdbxFile } from './types/format';
+import { type KdbxKey } from './types/keys';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 import serializeDatabaseXml from './xml/serializeDatabaseXml';
 

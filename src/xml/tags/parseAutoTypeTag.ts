@@ -1,5 +1,4 @@
-import type AutoType from '../../types/database/AutoType';
-import type AutoTypeAssociation from '../../types/database/AutoTypeAssociation';
+import { type AutoType, type AutoTypeAssociation } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseAutoTypeTag(reader: KdbxXmlReader): AutoType {

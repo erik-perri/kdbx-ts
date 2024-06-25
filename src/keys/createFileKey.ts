@@ -1,7 +1,7 @@
-import { type CryptoImplementation } from '../crypto/types';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import KeyFileType from '../enums/KeyFileType';
-import { type KdbxFileKey } from './types';
+import { type CryptoImplementation } from '../types/crypto';
+import { type KdbxFileKey } from '../types/keys';
 
 async function createFileKeyHashed(
   crypto: CryptoImplementation,

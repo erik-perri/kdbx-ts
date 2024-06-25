@@ -6,7 +6,7 @@ import {
   type KdbxArgon2KdfParameters,
   type KdbxKdfParameters,
   type KdbxVariantMap,
-} from '../../types';
+} from '../../types/format';
 import Uint8ArrayHelper from '../../utilities/Uint8ArrayHelper';
 import serializeVariantMapValue from './serializeVariantMapValue';
 

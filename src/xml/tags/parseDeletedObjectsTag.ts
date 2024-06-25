@@ -1,4 +1,4 @@
-import type DeletedObject from '../../types/database/DeletedObject';
+import { type DeletedObject } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default async function parseDeletedObjectsTag(

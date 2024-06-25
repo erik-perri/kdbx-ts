@@ -1,5 +1,5 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
-import { type CryptoImplementation } from './types';
+import { type CryptoImplementation } from '../types/crypto';
 
 export default async function generateHmacKeySeed(
   crypto: CryptoImplementation,

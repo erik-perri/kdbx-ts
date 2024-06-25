@@ -7,7 +7,7 @@ import KdfUuid from '../enums/KdfUuid';
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherUuid from '../enums/SymmetricCipherUuid';
 import VariantMapFieldType from '../enums/VariantMapFieldType';
-import { type KdbxOuterHeader } from '../types';
+import { type KdbxOuterHeader } from '../types/format';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import { KeePass2 } from '../versions';
 import serializeHeaderFields from './serializeHeaderFields';

@@ -1,10 +1,10 @@
-import type Argon2Type from './enums/Argon2Type';
-import type Argon2Version from './enums/Argon2Version';
-import type CompressionAlgorithm from './enums/CompressionAlgorithm';
-import type KdfUuid from './enums/KdfUuid';
-import type SymmetricCipherAlgorithm from './enums/SymmetricCipherAlgorithm';
-import type VariantMapFieldType from './enums/VariantMapFieldType';
-import type Database from './types/Database';
+import type Argon2Type from '../enums/Argon2Type';
+import type Argon2Version from '../enums/Argon2Version';
+import type CompressionAlgorithm from '../enums/CompressionAlgorithm';
+import type KdfUuid from '../enums/KdfUuid';
+import type SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
+import type VariantMapFieldType from '../enums/VariantMapFieldType';
+import { type Database } from './database';
 
 export type KdbxFile = {
   database: Database;
@@ -28,18 +28,6 @@ export type KdbxOuterHeader = {
   kdfParameters: KdbxKdfParameters;
   masterSeed: Uint8Array;
   publicCustomData?: KdbxVariantMap;
-};
-
-export type KdbxHeaderHashes = {
-  /**
-   * SHA-256 hash of the header data for integrity verification
-   */
-  hash: Uint8Array;
-
-  /**
-   * HMAC-SHA-256 hash of the header data for authenticity verification
-   */
-  hmacHash: Uint8Array;
 };
 
 export type KdbxVariantMapValue =

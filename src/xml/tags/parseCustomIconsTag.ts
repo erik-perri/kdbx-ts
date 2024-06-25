@@ -1,5 +1,4 @@
-import type Icon from '../../types/database/Icon';
-import type { Uuid } from '../../types/database/Uuid';
+import { type Icon, type Uuid } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseIconTag from './parseIconTag';
 

@@ -1,4 +1,4 @@
-import type Icon from '../../types/database/Icon';
+import { type Icon } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeIconTag(writer: KdbxXmlWriter, icon: Icon): void {

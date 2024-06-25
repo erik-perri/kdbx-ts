@@ -1,4 +1,4 @@
-import type Entry from '../../types/database/Entry';
+import { type Entry } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseEntryTag from './parseEntryTag';
 

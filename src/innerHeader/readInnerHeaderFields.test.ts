@@ -4,7 +4,7 @@ import HeaderFieldId from '../enums/HeaderFieldId';
 import InnerHeaderFieldId from '../enums/InnerHeaderFieldId';
 import ProtectedStreamAlgorithm from '../enums/ProtectedStreamAlgorithm';
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
-import { type KdbxInnerHeader } from '../types';
+import { type KdbxInnerHeader } from '../types/format';
 import BufferReader from '../utilities/BufferReader';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import readInnerHeaderFields from './readInnerHeaderFields';

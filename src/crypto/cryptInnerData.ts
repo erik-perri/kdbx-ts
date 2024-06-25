@@ -1,7 +1,7 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
 import type SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import type SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
-import { type CryptoImplementation } from './types';
+import { type CryptoImplementation } from '../types/crypto';
 
 export default async function cryptInnerData(
   crypto: CryptoImplementation,

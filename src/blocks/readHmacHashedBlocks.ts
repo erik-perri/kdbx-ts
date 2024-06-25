@@ -1,6 +1,6 @@
 import generateBlockHmacKey from '../crypto/generateBlockHmacKey';
-import { type CryptoImplementation } from '../crypto/types';
 import HashAlgorithm from '../enums/HashAlgorithm';
+import { type CryptoImplementation } from '../types/crypto';
 import type BufferReader from '../utilities/BufferReader';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 

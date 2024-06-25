@@ -1,4 +1,4 @@
-import type EntryAttribute from '../../types/database/EntryAttribute';
+import { type EntryAttribute } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default async function writeEntryStringTag(

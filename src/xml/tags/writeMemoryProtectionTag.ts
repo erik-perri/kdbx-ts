@@ -1,4 +1,4 @@
-import type MemoryProtection from '../../types/database/MemoryProtection';
+import { type MemoryProtection } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeMemoryProtectionTag(

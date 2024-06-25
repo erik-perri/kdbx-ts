@@ -1,5 +1,5 @@
 import HeaderFieldId from '../enums/HeaderFieldId';
-import { type KdbxOuterHeader } from '../types';
+import { type KdbxOuterHeader } from '../types/format';
 import type BufferReader from '../utilities/BufferReader';
 import displayHeaderFieldId from '../utilities/displayHeaderFieldId';
 import { isHeaderFieldId } from '../utilities/isHeaderFieldId';

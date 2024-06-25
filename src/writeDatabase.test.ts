@@ -10,7 +10,7 @@ import readHeaderFields from './outerHeader/readHeaderFields';
 import readSignature from './outerHeader/readSignature';
 import randomizeSeeds from './randomizeSeeds';
 import readDatabase from './readDatabase';
-import { type KdbxAesKdfParameters } from './types';
+import { type KdbxAesKdfParameters } from './types/format';
 import BufferReader from './utilities/BufferReader';
 import writeDatabase from './writeDatabase';
 
