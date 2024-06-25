@@ -1,5 +1,5 @@
-import type CustomData from '../../structure/CustomData';
-import type CustomDataWithTimes from '../../structure/CustomDataWithTimes';
+import type CustomData from '../../types/database/CustomData';
+import type CustomDataWithTimes from '../../types/database/CustomDataWithTimes';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeCustomDataTag(

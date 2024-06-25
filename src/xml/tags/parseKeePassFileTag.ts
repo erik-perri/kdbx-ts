@@ -1,4 +1,4 @@
-import type Database from '../../structure/Database';
+import type Database from '../../types/Database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseMetaTag from './parseMetaTag';
 import parseRootTag from './parseRootTag';

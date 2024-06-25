@@ -1,4 +1,4 @@
-import type Metadata from '../../structure/Metadata';
+import type Metadata from '../../types/database/Metadata';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 import writeCustomDataTag from './writeCustomDataTag';
 import writeCustomIconsTag from './writeCustomIconsTag';

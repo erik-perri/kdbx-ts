@@ -1,4 +1,4 @@
-import type TimeInfo from '../../structure/TimeInfo';
+import type TimeInfo from '../../types/database/TimeInfo';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeTimesTag(

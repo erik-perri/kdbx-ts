@@ -1,4 +1,4 @@
-import type EntryAttachment from '../../structure/EntryAttachment';
+import type EntryAttachment from '../../types/database/EntryAttachment';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeEntryBinaryTag(

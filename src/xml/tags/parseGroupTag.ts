@@ -1,4 +1,4 @@
-import type Group from '../../structure/Group';
+import type Group from '../../types/database/Group';
 import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseCustomDataTag from './parseCustomDataTag';

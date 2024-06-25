@@ -1,4 +1,4 @@
-import type Group from '../../structure/Group';
+import type Group from '../../types/database/Group';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 import writeCustomDataTag from './writeCustomDataTag';
 import writeEntryTag from './writeEntryTag';

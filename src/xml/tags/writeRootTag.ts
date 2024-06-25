@@ -1,4 +1,4 @@
-import type DatabaseRoot from '../../structure/DatabaseRoot';
+import type DatabaseRoot from '../../types/database/DatabaseRoot';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 import writeDeletedObjectsTag from './writeDeletedObjectsTag';
 import writeGroupTag from './writeGroupTag';

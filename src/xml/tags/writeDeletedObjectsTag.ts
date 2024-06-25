@@ -1,4 +1,4 @@
-import type DeletedObject from '../../structure/DeletedObject';
+import type DeletedObject from '../../types/database/DeletedObject';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeDeletedObjectsTag(

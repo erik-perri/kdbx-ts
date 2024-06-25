@@ -1,4 +1,4 @@
-import type Icon from '../../structure/Icon';
+import type Icon from '../../types/database/Icon';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default async function parseIconTag(

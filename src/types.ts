@@ -4,7 +4,7 @@ import type CompressionAlgorithm from './enums/CompressionAlgorithm';
 import type KdfUuid from './enums/KdfUuid';
 import type SymmetricCipherAlgorithm from './enums/SymmetricCipherAlgorithm';
 import type VariantMapFieldType from './enums/VariantMapFieldType';
-import type Database from './structure/Database';
+import type Database from './types/Database';
 
 export type KdbxFile = {
   database: Database;

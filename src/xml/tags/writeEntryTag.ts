@@ -1,4 +1,4 @@
-import type Entry from '../../structure/Entry';
+import type Entry from '../../types/database/Entry';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 import writeAutoTypeTag from './writeAutoTypeTag';
 import writeCustomDataTag from './writeCustomDataTag';

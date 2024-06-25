@@ -1,4 +1,4 @@
-import type MemoryProtection from '../../structure/MemoryProtection';
+import type MemoryProtection from '../../types/database/MemoryProtection';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseMemoryProtectionTag(

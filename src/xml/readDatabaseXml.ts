@@ -1,6 +1,6 @@
 import { type CryptoCipher } from '../crypto/types';
-import type Database from '../structure/Database';
 import { type KdbxBinaryPoolValue } from '../types';
+import type Database from '../types/Database';
 import KdbxXmlReader from '../utilities/KdbxXmlReader';
 import parseKeePassFileTag from './tags/parseKeePassFileTag';
 

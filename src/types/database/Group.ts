@@ -1,4 +1,4 @@
-import type NullableBoolean from '../enums/NullableBoolean';
+import type NullableBoolean from '../../enums/NullableBoolean';
 import type CustomData from './CustomData';
 import type Entry from './Entry';
 import type TimeInfo from './TimeInfo';

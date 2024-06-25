@@ -1,4 +1,4 @@
-import type DatabaseRoot from '../../structure/DatabaseRoot';
+import type DatabaseRoot from '../../types/database/DatabaseRoot';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseDeletedObjectsTag from './parseDeletedObjectsTag';
 import parseGroupTag from './parseGroupTag';

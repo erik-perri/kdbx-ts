@@ -1,4 +1,4 @@
-import type Metadata from '../../structure/Metadata';
+import type Metadata from '../../types/database/Metadata';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseCustomDataTag from './parseCustomDataTag';
 import parseCustomIconsTag from './parseCustomIconsTag';

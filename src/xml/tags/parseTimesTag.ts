@@ -1,4 +1,4 @@
-import type TimeInfo from '../../structure/TimeInfo';
+import type TimeInfo from '../../types/database/TimeInfo';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseTimesTag(reader: KdbxXmlReader): TimeInfo {
