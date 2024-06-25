@@ -127,6 +127,19 @@ export default class KdbxXmlReader extends XmlReader {
     return new Date();
   }
 
+  readNullableBoolean(): NullableBoolean {
+    const value = this.readStringValue().toLowerCase();
+    if (value === 'null') {
+      return NullableBoolean.Inherit;
+    } else if (value === 'true') {
+      return NullableBoolean.True;
+    } else if (value === 'false') {
+      return NullableBoolean.False;
+    }
+
+    throw new Error(`Invalid NullableBoolean value "${value}"`);
+  }
+
   readNumberValue(radix: number = 10): number {
     const text = this.readElementText();
 
@@ -155,19 +168,6 @@ export default class KdbxXmlReader extends XmlReader {
     }
 
     return this.readElementText();
-  }
-
-  readNullableBoolean(): NullableBoolean {
-    const value = this.readStringValue().toLowerCase();
-    if (value === 'null') {
-      return NullableBoolean.Inherit;
-    } else if (value === 'true') {
-      return NullableBoolean.True;
-    } else if (value === 'false') {
-      return NullableBoolean.False;
-    }
-
-    throw new Error(`Invalid NullableBoolean value "${value}"`);
   }
 
   readUnsignedNumberValue(radix: number = 10): number {
