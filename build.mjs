@@ -2,7 +2,7 @@
 import * as esbuild from 'esbuild';
 
 const commonOptions = {
-  entryPoints: ['./src/index.js'],
+  entryPoints: ['./src/index.ts'],
   bundle: true,
   sourcemap: true,
 };
