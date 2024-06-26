@@ -1,6 +1,3 @@
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-
 const Uint8ArrayHelper = {
   areEqual(a: Uint8Array, b: Uint8Array): boolean {
     if (a.byteLength !== b.byteLength) {
@@ -35,7 +32,7 @@ const Uint8ArrayHelper = {
     return Uint8Array.from(Uint8Array.prototype.slice.call(buffer));
   },
   fromString(data: string): Uint8Array {
-    return encoder.encode(data);
+    return Uint8Array.from(Buffer.from(data, 'utf8'));
   },
   fromUInt8(data: number): Uint8Array {
     const buffer = Buffer.allocUnsafe(1);
@@ -129,7 +126,7 @@ const Uint8ArrayHelper = {
     return buffer.readBigInt64LE(0);
   },
   toString(bytes: Uint8Array): string {
-    return decoder.decode(bytes);
+    return Buffer.from(bytes).toString('utf8');
   },
   toUInt32LE(bytes: Uint8Array): number {
     const buffer = Buffer.from(bytes);
