@@ -75,7 +75,7 @@ describe('writeDatabase', () => {
       });
 
     const original = fs.readFileSync(
-      'fixtures/databases/kdbx4-aes-kdf-aes-features.kdbx',
+      'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
     );
     const keys = [await createPasswordKey(nodeCrypto, 'password')];
     const parsed = await readDatabase(nodeCrypto, keys, original);

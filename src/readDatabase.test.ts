@@ -28,7 +28,7 @@ describe('readDatabase', () => {
     [
       'KeePass 1.x',
       {
-        file: readFileSync('fixtures/databases/kp1-aes.kdb'),
+        file: readFileSync('fixtures/databases/keepass1-aes.kdb'),
         expected: 'KeePass1 databases are not supported',
       },
     ],
@@ -44,7 +44,7 @@ describe('readDatabase', () => {
     [
       'Kdbx 3.x',
       {
-        file: readFileSync('fixtures/databases/kdbx3-aes-kdf.kdbx'),
+        file: readFileSync('fixtures/databases/keepassxc-kdbx3-aes-kdf.kdbx'),
         expected: 'KeePass2 v3.x databases are not supported',
       },
     ],
@@ -113,7 +113,7 @@ describe('readDatabase', () => {
       'KeePassXC',
       {
         file: readFileSync(
-          'fixtures/databases/kdbx4-aes-kdf-aes-features.kdbx',
+          'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
         ),
       },
     ],
