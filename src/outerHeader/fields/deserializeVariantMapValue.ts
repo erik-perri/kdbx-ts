@@ -1,3 +1,4 @@
+import { KeePass2 } from '../../constants';
 import VariantMapFieldType from '../../enums/VariantMapFieldType';
 import {
   type KdbxVariantMap,
@@ -6,7 +7,6 @@ import {
 import BufferReader from '../../utilities/BufferReader';
 import isVariantMapFieldType from '../../utilities/isVariantMapFieldType';
 import Uint8ArrayHelper from '../../utilities/Uint8ArrayHelper';
-import { KeePass2 } from '../../versions';
 
 export default function deserializeVariantMapValue(
   data: Uint8Array,

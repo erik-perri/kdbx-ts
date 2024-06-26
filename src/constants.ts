@@ -1,9 +1,6 @@
-import KeePassVersion from './enums/KeePassVersion';
-
 export const KeePass1 = Object.freeze({
   signature1: 0x9aa2d903,
   signature2: 0xb54bfb65,
-  version: KeePassVersion.KeePass1,
 } as const);
 
 export const KeePass2 = Object.freeze({
@@ -14,5 +11,4 @@ export const KeePass2 = Object.freeze({
   signature2: 0xb54bfb67,
   variantMapCriticalMask: 0xff00,
   variantMapVersion: 0x0100,
-  version: KeePassVersion.KeePass2,
 } as const);

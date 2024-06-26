@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { expect } from 'vitest';
 
+import { KeePass2 } from '../src/constants';
 import Argon2Type from '../src/enums/Argon2Type';
 import Argon2Version from '../src/enums/Argon2Version';
 import CompressionAlgorithm from '../src/enums/CompressionAlgorithm';
@@ -12,7 +13,6 @@ import createPasswordKey from '../src/keys/createPasswordKey';
 import { type KdbxKdfParameters } from '../src/types/format';
 import { type KdbxKey } from '../src/types/keys';
 import Uint8ArrayHelper from '../src/utilities/Uint8ArrayHelper';
-import { KeePass2 } from '../src/versions';
 import nodeCrypto from './crypto/nodeCrypto';
 
 const mockChallengeResponseKey = createChallengeResponseKey(

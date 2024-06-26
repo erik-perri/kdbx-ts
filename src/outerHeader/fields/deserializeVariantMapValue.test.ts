@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
+import { KeePass2 } from '../../constants';
 import Argon2Version from '../../enums/Argon2Version';
 import KdfUuid from '../../enums/KdfUuid';
 import VariantMapFieldType from '../../enums/VariantMapFieldType';
 import Uint8ArrayHelper from '../../utilities/Uint8ArrayHelper';
-import { KeePass2 } from '../../versions';
 import deserializeVariantMapValue from './deserializeVariantMapValue';
 
 describe('deserializeVariantMapValue', () => {

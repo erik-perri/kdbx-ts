@@ -1,4 +1,5 @@
 /* v8 ignore start */
+import { KeePass2 } from './constants';
 import Argon2Type from './enums/Argon2Type';
 import Argon2Version from './enums/Argon2Version';
 import CompressionAlgorithm from './enums/CompressionAlgorithm';
@@ -23,8 +24,9 @@ import {
 } from './types/keys';
 import writeDatabase from './writeDatabase';
 
-export type { CryptoCipher, CryptoImplementation };
 export type {
+  CryptoCipher,
+  CryptoImplementation,
   KdbxChallengeResponseKey,
   KdbxFileKey,
   KdbxKey,
@@ -35,19 +37,18 @@ export {
   Argon2Type,
   Argon2Version,
   CompressionAlgorithm,
-  DefaultIconNumber,
-  HashAlgorithm,
-  KdfUuid,
-  SymmetricCipherAlgorithm,
-  SymmetricCipherDirection,
-  SymmetricCipherUuid,
-};
-export {
   createChallengeResponseKey,
   createFileKey,
   createPasswordKey,
+  DefaultIconNumber,
+  HashAlgorithm,
+  KdfUuid,
+  KeePass2,
   randomizeSeeds,
   readDatabase,
+  SymmetricCipherAlgorithm,
+  SymmetricCipherDirection,
+  SymmetricCipherUuid,
   writeDatabase,
 };
 /* v8 ignore stop */

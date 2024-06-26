@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { KeePass2 } from '../constants';
 import CompressionAlgorithm from '../enums/CompressionAlgorithm';
 import HeaderFieldId from '../enums/HeaderFieldId';
 import KdfParameterKey from '../enums/KdfParameterKey';
@@ -10,7 +11,6 @@ import VariantMapFieldType from '../enums/VariantMapFieldType';
 import { type KdbxOuterHeader } from '../types/format';
 import BufferReader from '../utilities/BufferReader';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
-import { KeePass2 } from '../versions';
 import readHeaderFields from './readHeaderFields';
 
 describe('readHeaderFields', () => {

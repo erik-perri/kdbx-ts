@@ -1,12 +1,12 @@
 import { describe, expect, it, vitest } from 'vitest';
 
 import nodeCrypto from '../../fixtures/crypto/nodeCrypto';
+import { KeePass2 } from '../constants';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import KdfUuid from '../enums/KdfUuid';
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 import createPasswordKey from '../keys/createPasswordKey';
-import { KeePass2 } from '../versions';
 import cryptInnerData from './cryptInnerData';
 import transformCompositeKey from './transformCompositeKey';
 
