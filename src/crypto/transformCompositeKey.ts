@@ -1,5 +1,5 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
-import type { CryptoImplementation } from '../types/crypto';
+import { type CryptoImplementation } from '../types/crypto';
 import { type KdbxKdfParameters } from '../types/format';
 import { type KdbxKey } from '../types/keys';
 import isChallengeResponseKey from '../utilities/isChallengeResponseKey';

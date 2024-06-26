@@ -13,13 +13,13 @@ import createFileKey from './keys/createFileKey';
 import createPasswordKey from './keys/createPasswordKey';
 import randomizeSeeds from './randomizeSeeds';
 import readDatabase from './readDatabase';
-import type { CryptoCipher, CryptoImplementation } from './types/crypto';
-import type {
-  KdbxChallengeResponseKey,
-  KdbxFileKey,
-  KdbxKey,
-  KdbxPasswordKey,
-  KdbxProcessedKey,
+import { type CryptoCipher, type CryptoImplementation } from './types/crypto';
+import {
+  type KdbxChallengeResponseKey,
+  type KdbxFileKey,
+  type KdbxKey,
+  type KdbxPasswordKey,
+  type KdbxProcessedKey,
 } from './types/keys';
 import writeDatabase from './writeDatabase';
 

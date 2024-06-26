@@ -1,7 +1,7 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
-import type { CryptoCipher, CryptoImplementation } from '../types/crypto';
+import { type CryptoCipher, type CryptoImplementation } from '../types/crypto';
 import displaySymmetricCipherAlgorithm from '../utilities/displaySymmetricCipherAlgorithm';
 import { KeePass2 } from '../versions';
 
