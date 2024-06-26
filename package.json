@@ -32,6 +32,7 @@
       }
     }
   },
+  "main": "dist/index.cjs",
   "files": [
     "dist",
     "src"
