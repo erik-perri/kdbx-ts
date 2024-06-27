@@ -24,7 +24,7 @@ export type KdbxOuterHeader = {
   cipherAlgorithm: SymmetricCipherAlgorithm;
   compressionAlgorithm: CompressionAlgorithm;
   encryptionIV: Uint8Array;
-  endOfHeader: Uint8Array;
+  endOfHeader?: Uint8Array;
   kdfParameters: KdbxKdfParameters;
   masterSeed: Uint8Array;
   publicCustomData?: KdbxVariantMap;
@@ -101,7 +101,7 @@ export type KdbxBinaryPoolValue = {
 
 export type KdbxInnerHeader = {
   binaryPool?: KdbxBinaryPoolValue[];
-  endOfHeader: Uint8Array;
+  endOfHeader?: Uint8Array;
   innerEncryptionAlgorithm: SymmetricCipherAlgorithm;
   innerEncryptionKey: Uint8Array;
 };

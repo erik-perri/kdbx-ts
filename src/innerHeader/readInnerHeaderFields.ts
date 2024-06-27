@@ -81,10 +81,6 @@ function validateInnerHeader(
       missingFields.push(InnerHeaderFieldId.InnerEncryptionKey);
     }
 
-    if (header.endOfHeader === undefined) {
-      missingFields.push(InnerHeaderFieldId.EndOfHeader);
-    }
-
     return missingFields.length === 0;
   }
 

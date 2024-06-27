@@ -112,13 +112,12 @@ describe('serializeHeaderFields', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  it('serializes header fields without custom data', () => {
+  it('serializes header fields without custom data or end', () => {
     // Arrange
     const header: KdbxOuterHeader = {
       cipherAlgorithm: SymmetricCipherAlgorithm.Aes256_CBC,
       compressionAlgorithm: CompressionAlgorithm.GZip,
       encryptionIV: Uint8ArrayHelper.fromString('IV'.repeat(8)),
-      endOfHeader: Uint8ArrayHelper.fromString('\r\n\r\n'),
       kdfParameters: {
         uuid: KdfUuid.AesKdbx4,
         rounds: BigInt(1000),

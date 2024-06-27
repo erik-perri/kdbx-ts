@@ -1,6 +1,7 @@
 import HeaderFieldId from '../enums/HeaderFieldId';
 import { type KdbxOuterHeader } from '../types/format';
 import BufferWriter from '../utilities/BufferWriter';
+import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import serializeCipherAlgorithmValue from './fields/serializeCipherAlgorithmValue';
 import serializeCompressionAlgorithmValue from './fields/serializeCompressionAlgorithmValue';
 import serializeEncryptionIvValue from './fields/serializeEncryptionIvValue';
@@ -43,7 +44,10 @@ export default function serializeHeaderFields(
     },
     {
       id: HeaderFieldId.EndOfHeader,
-      data: serializeEndOfHeaderValue(header.endOfHeader),
+      data:
+        header.endOfHeader !== undefined
+          ? serializeEndOfHeaderValue(header.endOfHeader)
+          : Uint8ArrayHelper.fromString('\r\n\r\n'),
     },
   ];
 

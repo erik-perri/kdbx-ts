@@ -33,7 +33,10 @@ export default function serializeInnerHeaderFields(
     })),
     {
       id: InnerHeaderFieldId.EndOfHeader,
-      data: serializeEndOfHeaderValue(header.endOfHeader),
+      data:
+        header.endOfHeader !== undefined
+          ? serializeEndOfHeaderValue(header.endOfHeader)
+          : new Uint8Array(0),
     },
   ];
 
