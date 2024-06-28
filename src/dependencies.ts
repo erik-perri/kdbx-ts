@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 
 import createAes256CbcCipher from './crypto/createAes256CbcCipher';
+import createChaCha20Cipher from './crypto/createChaCha20Cipher';
+import createTwofishCbcCipher from './crypto/createTwofishCbcCipher';
 import transformAes256KdfKey from './crypto/transformAes256KdfKey';
 import type SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import {
@@ -55,9 +57,9 @@ export type TransformArgon2KdfKey = (
 
 const dependencies: Dependencies = {
   cipherAes256: createAes256CbcCipher,
-  cipherChaCha20: undefined,
+  cipherChaCha20: createChaCha20Cipher,
   cipherSalsa20: undefined,
-  cipherTwofish: undefined,
+  cipherTwofish: createTwofishCbcCipher,
 
   hash: (algorithm) => Promise.resolve(crypto.createHash(algorithm)),
   hmac: (algorithm, key) => Promise.resolve(crypto.createHmac(algorithm, key)),

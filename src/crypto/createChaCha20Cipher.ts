@@ -1,7 +1,7 @@
 import { Chacha20 } from 'ts-chacha20';
 
-import { type SymmetricCipher } from '../../src/dependencies';
-import SymmetricCipherDirection from '../../src/enums/SymmetricCipherDirection';
+import { type SymmetricCipher } from '../dependencies';
+import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 
 export default async function createChaCha20Cipher(
   direction: SymmetricCipherDirection,

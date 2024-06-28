@@ -1,7 +1,7 @@
 import { decrypt, encrypt, makeSession, type Session } from 'twofish-ts';
 
-import { type SymmetricCipher } from '../../src/dependencies';
-import SymmetricCipherDirection from '../../src/enums/SymmetricCipherDirection';
+import { type SymmetricCipher } from '../dependencies';
+import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 
 export default async function createTwofishCbcCipher(
   direction: SymmetricCipherDirection,

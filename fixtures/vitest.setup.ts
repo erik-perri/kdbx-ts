@@ -1,6 +1,6 @@
+import createChaCha20Cipher from '../src/crypto/createChaCha20Cipher';
+import createTwofishCbcCipher from '../src/crypto/createTwofishCbcCipher';
 import { configureDependencies } from '../src/dependencies';
-import createChaCha20Cipher from './crypto/createChaCha20Cipher';
-import createTwofishCbcCipher from './crypto/createTwofishCbcCipher';
 import transformKdfArgon2 from './crypto/transformKdfArgon2';
 
 configureDependencies({
