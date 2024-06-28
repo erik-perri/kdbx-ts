@@ -1,6 +1,15 @@
 /* v8 ignore start */
 import { KeePass2 } from './constants';
-import { configureDependencies } from './dependencies';
+import {
+  configureDependencies,
+  type Dependencies,
+  type HashFactory,
+  type HmacFactory,
+  type SymmetricCipher,
+  type SymmetricCipherFactory,
+  type TransformAesKdfKey,
+  type TransformArgon2KdfKey,
+} from './dependencies';
 import Argon2Type from './enums/Argon2Type';
 import Argon2Version from './enums/Argon2Version';
 import CompressionAlgorithm from './enums/CompressionAlgorithm';
@@ -25,12 +34,20 @@ import {
 import writeDatabase from './writeDatabase';
 
 export type {
+  Dependencies,
+  HashFactory,
+  HmacFactory,
   KdbxChallengeResponseKey,
   KdbxFileKey,
   KdbxKey,
   KdbxPasswordKey,
   KdbxProcessedKey,
+  SymmetricCipher,
+  SymmetricCipherFactory,
+  TransformAesKdfKey,
+  TransformArgon2KdfKey,
 };
+
 export {
   Argon2Type,
   Argon2Version,
