@@ -2,8 +2,9 @@
 import * as esbuild from 'esbuild';
 
 const commonOptions = {
-  entryPoints: ['./src/index.ts'],
   bundle: true,
+  entryPoints: ['./src/index.ts'],
+  external: ['crypto'],
   sourcemap: true,
 };
 
