@@ -30,14 +30,22 @@ export type SymmetricCipher = {
   process(data: Uint8Array): Promise<Uint8Array>;
 };
 
-export type HashFactory = (
-  algorithm: string,
-) => Promise<ReturnType<typeof crypto.createHash>>;
+export type HashImplementation = {
+  update(data: Uint8Array): HashImplementation;
+  digest(): Uint8Array;
+};
+
+export type HashFactory = (algorithm: string) => Promise<HashImplementation>;
+
+export type HmacImplementation = {
+  update(data: Uint8Array): HmacImplementation;
+  digest(): Uint8Array;
+};
 
 export type HmacFactory = (
   algorithm: string,
   key: Uint8Array,
-) => Promise<ReturnType<typeof crypto.createHmac>>;
+) => Promise<HmacImplementation>;
 
 export type SymmetricCipherFactory = (
   direction: SymmetricCipherDirection,
