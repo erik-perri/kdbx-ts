@@ -10,6 +10,7 @@
     "@types/pako": "^2.0.3",
     "@vitest/coverage-v8": "^1.6.0",
     "argon2": "^0.40.3",
+    "dts-bundle-generator": "^9.5.1",
     "esbuild": "0.21.5",
     "eslint": "^8.57.0",
     "eslint-plugin-simple-import-sort": "^12.1.0",
@@ -38,7 +39,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsc --project ./tsconfig.build.json && node ./build.mjs",
+    "build": "dts-bundle-generator -o dist/index.d.ts src/index.ts && node ./build.mjs",
     "check-code": "npm run check-types && npm run lint && npm run prettier",
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
