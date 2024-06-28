@@ -1,12 +1,11 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
-import { type CryptoImplementation } from '../types/crypto';
+import processHash from './processHash';
 
 export default async function generateHmacKeySeed(
-  crypto: CryptoImplementation,
   masterSeed: Uint8Array,
   transformedMasterKey: Uint8Array,
 ): Promise<Uint8Array> {
-  return await crypto.hash(HashAlgorithm.Sha512, [
+  return await processHash(HashAlgorithm.Sha512, [
     masterSeed,
     transformedMasterKey,
     Uint8Array.from([0x01]),

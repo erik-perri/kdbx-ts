@@ -1,5 +1,5 @@
+import { type SymmetricCipher } from '../dependencies';
 import NullableBoolean from '../enums/NullableBoolean';
-import type { CryptoCipher } from '../types/crypto';
 import type { KdbxBinaryPoolValue } from '../types/format';
 import displayUuid from './displayUuid';
 import gregorianTimestampToDate from './gregorianTimestampToDate';
@@ -10,7 +10,7 @@ import XmlReader from './XmlReader';
 export default class KdbxXmlReader extends XmlReader {
   constructor(
     contents: string,
-    private readonly cipher: CryptoCipher,
+    private readonly cipher: SymmetricCipher,
     private readonly binaryPool: KdbxBinaryPoolValue[],
   ) {
     super(contents);

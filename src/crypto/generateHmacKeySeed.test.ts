@@ -1,12 +1,12 @@
 import { describe, expect, it, vitest } from 'vitest';
 
-import nodeCrypto from '../../fixtures/crypto/nodeCrypto';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import generateHmacKeySeed from './generateHmacKeySeed';
+import * as processHash from './processHash';
 
 describe('getHmacKeySeed', () => {
   it('should create key using the expected pattern ', async () => {
-    // The key for the HMAC-SHA-256 hash of the i-th block (zero-based index, type UInt64)
+    // The key for the HMAC-SHA-256 processHash of the i-th block (zero-based index, type UInt64)
     // of the HMAC-protected block stream is: SHA-512(i ‖ SHA-512(S ‖ T ‖ 0x01)).
 
     // Arrange
@@ -14,11 +14,11 @@ describe('getHmacKeySeed', () => {
     const key = Uint8Array.from([2]);
 
     const hashSpy = vitest
-      .spyOn(nodeCrypto, 'hash')
+      .spyOn(processHash, 'default')
       .mockResolvedValue(Uint8Array.from([]));
 
     // Act
-    await generateHmacKeySeed(nodeCrypto, seed, key);
+    await generateHmacKeySeed(seed, key);
 
     // Assert
     expect(hashSpy).toHaveBeenCalledTimes(1);

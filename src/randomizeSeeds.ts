@@ -1,4 +1,4 @@
-import { type CryptoImplementation } from './types/crypto';
+import { getDependency } from './dependencies';
 import {
   type KdbxFile,
   type KdbxInnerHeader,
@@ -9,12 +9,11 @@ import getSymmetricCipherIvSize from './utilities/getSymmetricCipherIvSize';
 import getSymmetricCipherKeySize from './utilities/getSymmetricCipherKeySize';
 
 export default async function randomizeSeeds(
-  crypto: CryptoImplementation,
   file: KdbxFile,
 ): Promise<KdbxFile> {
-  const kdfSeed = await crypto.randomBytes(
-    file.header.kdfParameters.seed.byteLength,
-  );
+  const randomBytes = getDependency('randomBytes');
+
+  const kdfSeed = await randomBytes(file.header.kdfParameters.seed.byteLength);
 
   const kdfParameters: KdbxKdfParameters = {
     ...file.header.kdfParameters,
@@ -23,16 +22,16 @@ export default async function randomizeSeeds(
 
   const header: KdbxOuterHeader = {
     ...file.header,
-    encryptionIV: await crypto.randomBytes(
+    encryptionIV: await randomBytes(
       getSymmetricCipherIvSize(file.header.cipherAlgorithm),
     ),
     kdfParameters,
-    masterSeed: await crypto.randomBytes(32),
+    masterSeed: await randomBytes(32),
   };
 
   const innerHeader: KdbxInnerHeader = {
     ...file.innerHeader,
-    innerEncryptionKey: await crypto.randomBytes(
+    innerEncryptionKey: await randomBytes(
       getSymmetricCipherKeySize(file.innerHeader.innerEncryptionAlgorithm),
     ),
   };

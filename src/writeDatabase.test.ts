@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import pako from 'pako';
 import { describe, expect, it, vitest } from 'vitest';
 
-import nodeCrypto from '../fixtures/crypto/nodeCrypto';
 import { sampleDatabasesKeePassXC } from '../fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
 import readHeaderFields from './outerHeader/readHeaderFields';
@@ -17,17 +16,16 @@ import writeDatabase from './writeDatabase';
 describe('writeDatabase', () => {
   it('can write a readable header', async () => {
     // Arrange
-    const keys = [await createPasswordKey(nodeCrypto, 'password')];
+    const keys = [await createPasswordKey('password')];
     const originalFile = await readDatabase(
-      nodeCrypto,
       keys,
       sampleDatabasesKeePassXC.AesAesCompressed.file,
     );
 
-    const file = await randomizeSeeds(nodeCrypto, originalFile);
+    const file = await randomizeSeeds(originalFile);
 
     // Act
-    const result = await writeDatabase(nodeCrypto, keys, file);
+    const result = await writeDatabase(keys, file);
 
     const reader = new BufferReader(result);
 
@@ -77,11 +75,11 @@ describe('writeDatabase', () => {
     const original = fs.readFileSync(
       'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
     );
-    const keys = [await createPasswordKey(nodeCrypto, 'password')];
-    const parsed = await readDatabase(nodeCrypto, keys, original);
+    const keys = [await createPasswordKey('password')];
+    const parsed = await readDatabase(keys, original);
 
     // Act
-    const saved = await writeDatabase(nodeCrypto, keys, parsed);
+    const saved = await writeDatabase(keys, parsed);
 
     // Assert
     // Since the GZip compression produces different results, we have to compare the uncompressed data

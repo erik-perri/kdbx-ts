@@ -1,13 +1,13 @@
 import { decrypt, encrypt, makeSession, type Session } from 'twofish-ts';
 
+import { type SymmetricCipher } from '../../src/dependencies';
 import SymmetricCipherDirection from '../../src/enums/SymmetricCipherDirection';
-import { type CryptoCipher } from '../../src/types/crypto';
 
-export default function createTwofishCbcCipher(
+export default async function createTwofishCbcCipher(
   direction: SymmetricCipherDirection,
   key: Uint8Array,
   initialIv: Uint8Array,
-): CryptoCipher {
+): Promise<SymmetricCipher> {
   let session: Session | undefined = makeSession(key);
   let buffer = new Uint8Array(0);
   const iv = initialIv;
@@ -19,7 +19,7 @@ export default function createTwofishCbcCipher(
     }
   }
 
-  return {
+  return Promise.resolve({
     process(data): Promise<Uint8Array> {
       if (!session) {
         throw new Error('Cipher is no longer available');
@@ -76,5 +76,5 @@ export default function createTwofishCbcCipher(
 
       return processedData;
     },
-  };
+  });
 }

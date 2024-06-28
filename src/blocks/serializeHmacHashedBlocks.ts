@@ -1,10 +1,9 @@
 import generateBlockHmacKey from '../crypto/generateBlockHmacKey';
+import processHmac from '../crypto/processHmac';
 import HashAlgorithm from '../enums/HashAlgorithm';
-import { type CryptoImplementation } from '../types/crypto';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 
 export default async function serializeHmacHashedBlocks(
-  crypto: CryptoImplementation,
   data: Uint8Array,
   key: Uint8Array,
 ): Promise<Uint8Array> {
@@ -19,9 +18,9 @@ export default async function serializeHmacHashedBlocks(
     const chunk = chunks[blockIndex];
     const blockLengthBytes = Uint8ArrayHelper.fromUInt32LE(chunk.byteLength);
 
-    const hmac = await crypto.hmac(
+    const hmac = await processHmac(
       HashAlgorithm.Sha256,
-      await generateBlockHmacKey(crypto, blockIndex, key),
+      await generateBlockHmacKey(blockIndex, key),
       [Uint8ArrayHelper.fromUInt64LE(blockIndex), blockLengthBytes, chunk],
     );
 

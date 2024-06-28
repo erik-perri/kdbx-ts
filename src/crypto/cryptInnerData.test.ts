@@ -1,6 +1,5 @@
 import { describe, expect, it, vitest } from 'vitest';
 
-import nodeCrypto from '../../fixtures/crypto/nodeCrypto';
 import { KeePass2 } from '../constants';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import KdfUuid from '../enums/KdfUuid';
@@ -8,6 +7,7 @@ import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 import createPasswordKey from '../keys/createPasswordKey';
 import cryptInnerData from './cryptInnerData';
+import * as processHash from './processHash';
 import transformCompositeKey from './transformCompositeKey';
 
 describe('cryptInnerData', () => {
@@ -43,21 +43,19 @@ describe('cryptInnerData', () => {
       const masterSeed = new Uint8Array(32);
       const encryptionIV = new Uint8Array(16);
       const compositeKey = await transformCompositeKey(
-        nodeCrypto,
         {
           uuid: KdfUuid.AesKdbx4,
           variantMapVersion: KeePass2.variantMapVersion,
           rounds: BigInt(10),
           seed: new Uint8Array(32),
         },
-        [await createPasswordKey(nodeCrypto, 'password')],
+        [await createPasswordKey('password')],
       );
 
-      const hashSpy = vitest.spyOn(nodeCrypto, 'hash');
+      const hashSpy = vitest.spyOn(processHash, 'default');
 
       // Act
       const result = await cryptInnerData(
-        nodeCrypto,
         direction,
         algorithm,
         masterSeed,

@@ -4,6 +4,8 @@ import createInnerStreamCipher from './crypto/createInnerStreamCipher';
 import cryptInnerData from './crypto/cryptInnerData';
 import generateBlockHmacKey from './crypto/generateBlockHmacKey';
 import generateHmacKeySeed from './crypto/generateHmacKeySeed';
+import processHash from './crypto/processHash';
+import processHmac from './crypto/processHmac';
 import transformCompositeKey from './crypto/transformCompositeKey';
 import HashAlgorithm from './enums/HashAlgorithm';
 import KeePassVersion from './enums/KeePassVersion';
@@ -11,9 +13,8 @@ import SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import readInnerHeaderFields from './innerHeader/readInnerHeaderFields';
 import readHeaderFields from './outerHeader/readHeaderFields';
 import readSignature from './outerHeader/readSignature';
-import { type CryptoImplementation } from './types/crypto';
 import { type KdbxFile } from './types/format';
-import type { KdbxKey } from './types/keys';
+import { type KdbxKey } from './types/keys';
 import BufferReader from './utilities/BufferReader';
 import displayHash from './utilities/displayHash';
 import getVersionFromSignature from './utilities/getVersionFromSignature';
@@ -21,7 +22,6 @@ import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 import readDatabaseXml from './xml/readDatabaseXml';
 
 export default async function readDatabase(
-  crypto: CryptoImplementation,
   keys: KdbxKey[],
   fileBytes: Buffer | Uint8Array | number[],
 ): Promise<KdbxFile> {
@@ -61,8 +61,8 @@ export default async function readDatabase(
   const expectedHeaderHash = reader.readBytes(32);
   const expectedHeaderHmacHash = reader.readBytes(32);
 
-  // Verify the header hash to check the integrity of the header
-  const headerHash = await crypto.hash(HashAlgorithm.Sha256, [headerData]);
+  // Verify the header processHash to check the integrity of the header
+  const headerHash = await processHash(HashAlgorithm.Sha256, [headerData]);
 
   if (!Uint8ArrayHelper.areEqual(expectedHeaderHash, headerHash)) {
     throw new Error(
@@ -71,22 +71,14 @@ export default async function readDatabase(
   }
 
   // Transform the composite key using the KDF parameters
-  const compositeKey = await transformCompositeKey(
-    crypto,
-    header.kdfParameters,
-    keys,
-  );
+  const compositeKey = await transformCompositeKey(header.kdfParameters, keys);
 
-  // Verify the HMAC hash to check the authenticity of the header and key(s)
-  const hmacKey = await generateHmacKeySeed(
-    crypto,
-    header.masterSeed,
-    compositeKey,
-  );
+  // Verify the HMAC processHash to check the authenticity of the header and key(s)
+  const hmacKey = await generateHmacKeySeed(header.masterSeed, compositeKey);
 
-  const headerHmacHash = await crypto.hmac(
+  const headerHmacHash = await processHmac(
     HashAlgorithm.Sha256,
-    await generateBlockHmacKey(crypto, null, hmacKey),
+    await generateBlockHmacKey(null, hmacKey),
     [headerData],
   );
 
@@ -94,10 +86,9 @@ export default async function readDatabase(
     throw new Error('HMAC mismatch');
   }
 
-  const innerData = await readHmacHashedBlocks(crypto, reader, hmacKey);
+  const innerData = await readHmacHashedBlocks(reader, hmacKey);
 
   const decryptedData = await cryptInnerData(
-    crypto,
     SymmetricCipherDirection.Decrypt,
     header.cipherAlgorithm,
     header.masterSeed,
@@ -118,7 +109,6 @@ export default async function readDatabase(
   const databaseXml = Uint8ArrayHelper.toString(innerReader.remaining());
 
   const streamCipher = await createInnerStreamCipher(
-    crypto,
     innerHeader.innerEncryptionAlgorithm,
     innerHeader.innerEncryptionKey,
   );

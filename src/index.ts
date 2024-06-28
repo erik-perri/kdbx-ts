@@ -1,5 +1,6 @@
 /* v8 ignore start */
 import { KeePass2 } from './constants';
+import { configureDependencies } from './dependencies';
 import Argon2Type from './enums/Argon2Type';
 import Argon2Version from './enums/Argon2Version';
 import CompressionAlgorithm from './enums/CompressionAlgorithm';
@@ -14,7 +15,6 @@ import createFileKey from './keys/createFileKey';
 import createPasswordKey from './keys/createPasswordKey';
 import randomizeSeeds from './randomizeSeeds';
 import readDatabase from './readDatabase';
-import { type CryptoCipher, type CryptoImplementation } from './types/crypto';
 import {
   type KdbxChallengeResponseKey,
   type KdbxFileKey,
@@ -25,8 +25,6 @@ import {
 import writeDatabase from './writeDatabase';
 
 export type {
-  CryptoCipher,
-  CryptoImplementation,
   KdbxChallengeResponseKey,
   KdbxFileKey,
   KdbxKey,
@@ -37,6 +35,7 @@ export {
   Argon2Type,
   Argon2Version,
   CompressionAlgorithm,
+  configureDependencies,
   createChallengeResponseKey,
   createFileKey,
   createPasswordKey,

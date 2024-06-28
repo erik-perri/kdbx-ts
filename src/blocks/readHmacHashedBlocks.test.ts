@@ -1,6 +1,6 @@
 import { describe, expect, it, vitest } from 'vitest';
 
-import nodeCrypto from '../../fixtures/crypto/nodeCrypto';
+import * as processHmac from '../crypto/processHmac';
 import BufferReader from '../utilities/BufferReader';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import readHmacHashedBlocks from './readHmacHashedBlocks';
@@ -34,11 +34,11 @@ describe('readHmacHashedBlocks', () => {
     const reader = new BufferReader(buffer);
 
     const hmacSpy = vitest
-      .spyOn(nodeCrypto, 'hmac')
+      .spyOn(processHmac, 'default')
       .mockResolvedValue(new Uint8Array(32));
 
     // Act
-    const result = await readHmacHashedBlocks(nodeCrypto, reader, key);
+    const result = await readHmacHashedBlocks(reader, key);
 
     // Assert
     expect(result).toEqual(Uint8Array.from([1, 2, 2, 3, 3, 3]));
@@ -53,7 +53,7 @@ describe('readHmacHashedBlocks', () => {
 
     // Act
     await expect(async () =>
-      readHmacHashedBlocks(nodeCrypto, reader, key),
+      readHmacHashedBlocks(reader, key),
     ).rejects.toThrowError(
       'Invalid HMAC hashed blocks data length. Expected at least 36 bytes, got 0',
     );
@@ -68,11 +68,11 @@ describe('readHmacHashedBlocks', () => {
       Buffer.concat([new Uint8Array(32), Uint8ArrayHelper.fromInt32LE(-123)]),
     );
     const key = new Uint8Array(0);
-    const reader = new BufferReader(buffer);
+    const readers = new BufferReader(buffer);
 
     // Act
     await expect(async () =>
-      readHmacHashedBlocks(nodeCrypto, reader, key),
+      readHmacHashedBlocks(readers, key),
     ).rejects.toThrowError(
       'Invalid block size. Expected a number greater than or equal to 0, got -123',
     );
@@ -81,7 +81,7 @@ describe('readHmacHashedBlocks', () => {
     // Nothing to assert.
   });
 
-  it('should throw an error when a block hmac does not match', async () => {
+  it('should throw an error when a block processHmac does not match', async () => {
     // Arrange
     const buffer = Uint8Array.from(
       Buffer.concat([
@@ -104,7 +104,7 @@ describe('readHmacHashedBlocks', () => {
     const reader = new BufferReader(buffer);
 
     const hmacSpy = vitest
-      .spyOn(nodeCrypto, 'hmac')
+      .spyOn(processHmac, 'default')
       .mockResolvedValueOnce(new Uint8Array(32))
       .mockResolvedValueOnce(
         Uint8Array.from(Array.from({ length: 32 }, (_, i) => i)),
@@ -112,7 +112,7 @@ describe('readHmacHashedBlocks', () => {
 
     // Act
     await expect(async () =>
-      readHmacHashedBlocks(nodeCrypto, reader, key),
+      readHmacHashedBlocks(reader, key),
     ).rejects.toThrowError('HMAC mismatch on block 1');
 
     // Assert

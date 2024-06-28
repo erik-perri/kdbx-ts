@@ -1,11 +1,10 @@
 import generateBlockHmacKey from '../crypto/generateBlockHmacKey';
+import processHmac from '../crypto/processHmac';
 import HashAlgorithm from '../enums/HashAlgorithm';
-import { type CryptoImplementation } from '../types/crypto';
 import type BufferReader from '../utilities/BufferReader';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 
 export default async function readHmacHashedBlocks(
-  crypto: CryptoImplementation,
   reader: BufferReader,
   key: Uint8Array,
 ): Promise<Uint8Array> {
@@ -33,9 +32,9 @@ export default async function readHmacHashedBlocks(
 
     const buffer = reader.readBytes(blockLength);
 
-    const blockHmacKey = await generateBlockHmacKey(crypto, blockIndex, key);
+    const blockHmacKey = await generateBlockHmacKey(blockIndex, key);
 
-    const hmac = await crypto.hmac(HashAlgorithm.Sha256, blockHmacKey, [
+    const hmac = await processHmac(HashAlgorithm.Sha256, blockHmacKey, [
       Uint8ArrayHelper.fromUInt64LE(blockIndex),
       blockLengthBytes,
       buffer,

@@ -1,14 +1,14 @@
 import { describe, expect, it, vitest } from 'vitest';
 
-import nodeCrypto from '../../fixtures/crypto/nodeCrypto';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import generateBlockHmacKey from './generateBlockHmacKey';
+import * as processHash from './processHash';
 
 describe('generateBlockHmacKey', () => {
   it.each([
     [
-      // The key for the HMAC-SHA-256 hash of the header is:
+      // The key for the HMAC-SHA-256 processHash of the header is:
       // SHA-512(0xFFFFFFFFFFFFFFFF ‖ SHA-512(S ‖ T ‖ 0x01)).
       'header',
       {
@@ -17,7 +17,7 @@ describe('generateBlockHmacKey', () => {
       },
     ],
     [
-      // The key for the HMAC-SHA-256 hash of the i-th block (zero-based index, type UInt64)
+      // The key for the HMAC-SHA-256 processHash of the i-th block (zero-based index, type UInt64)
       // of the HMAC-protected block stream is: SHA-512(i ‖ SHA-512(S ‖ T ‖ 0x01)).
       'block',
       {
@@ -34,11 +34,11 @@ describe('generateBlockHmacKey', () => {
       );
 
       const hashSpy = vitest
-        .spyOn(nodeCrypto, 'hash')
+        .spyOn(processHash, 'default')
         .mockResolvedValue(Uint8Array.from([]));
 
       // Act
-      await generateBlockHmacKey(nodeCrypto, blockIndex, key);
+      await generateBlockHmacKey(blockIndex, key);
 
       // Assert
       expect(hashSpy).toHaveBeenCalledTimes(1);
@@ -57,7 +57,7 @@ describe('generateBlockHmacKey', () => {
 
     // Act
     await expect(
-      async () => await generateBlockHmacKey(nodeCrypto, BigInt(0), key),
+      async () => await generateBlockHmacKey(BigInt(0), key),
     ).rejects.toThrow('Unexpected block key length. Expected 64 bytes, got 65');
 
     // Assert

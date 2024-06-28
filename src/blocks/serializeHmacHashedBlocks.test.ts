@@ -1,6 +1,6 @@
 import { describe, expect, it, vitest } from 'vitest';
 
-import nodeCrypto from '../../fixtures/crypto/nodeCrypto';
+import * as processHmac from '../crypto/processHmac';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import serializeHmacHashedBlocks from './serializeHmacHashedBlocks';
 
@@ -14,12 +14,12 @@ describe('serializeHmacHashedBlocks', () => {
     const hashTwo = Uint8Array.from(Array.from({ length: 32 }, () => 2));
 
     const hmacSpy = vitest
-      .spyOn(nodeCrypto, 'hmac')
+      .spyOn(processHmac, 'default')
       .mockResolvedValueOnce(hashOne)
       .mockResolvedValueOnce(hashTwo);
 
     // Act
-    const result = await serializeHmacHashedBlocks(nodeCrypto, data, key);
+    const result = await serializeHmacHashedBlocks(data, key);
 
     // Assert
     expect(result).toEqual(
@@ -43,11 +43,11 @@ describe('serializeHmacHashedBlocks', () => {
     const key = new Uint8Array(64);
 
     const hashSpy = vitest
-      .spyOn(nodeCrypto, 'hmac')
+      .spyOn(processHmac, 'default')
       .mockResolvedValue(new Uint8Array(32));
 
     // Act
-    const result = await serializeHmacHashedBlocks(nodeCrypto, data, key);
+    const result = await serializeHmacHashedBlocks(data, key);
 
     // Assert
     expect(result.byteLength).toEqual(

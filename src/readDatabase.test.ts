@@ -1,7 +1,6 @@
 import { readFileSync } from 'fs';
 import { describe, expect, it } from 'vitest';
 
-import nodeCrypto from '../fixtures/crypto/nodeCrypto';
 import { sampleDatabaseCases } from '../fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
 import readDatabase from './readDatabase';
@@ -10,13 +9,13 @@ import type { KdbxKey } from './types/keys';
 describe('readDatabase', () => {
   it('fails when encountering an unknown file type', async () => {
     // Arrange
-    const key: KdbxKey = await createPasswordKey(nodeCrypto, 'what');
+    const key: KdbxKey = await createPasswordKey('what');
     const bytes = Uint8Array.from(
       Array.from({ length: 20 }, (_, index) => index),
     );
 
     // Act
-    await expect(readDatabase(nodeCrypto, [key], bytes)).rejects.toThrow(
+    await expect(readDatabase([key], bytes)).rejects.toThrow(
       'Unknown database format',
     );
 
@@ -52,12 +51,10 @@ describe('readDatabase', () => {
     'fails when encountering an unsupported file type %s',
     async (_, { file, expected }) => {
       // Arrange
-      const key: KdbxKey = await createPasswordKey(nodeCrypto, 'what');
+      const key: KdbxKey = await createPasswordKey('what');
 
       // Act
-      await expect(readDatabase(nodeCrypto, [key], file)).rejects.toThrow(
-        expected,
-      );
+      await expect(readDatabase([key], file)).rejects.toThrow(expected);
 
       // Assert
       // No assertions.
@@ -68,12 +65,10 @@ describe('readDatabase', () => {
     'failed with invalid password %s',
     async (_, { file }) => {
       // Arrange
-      const key: KdbxKey = await createPasswordKey(nodeCrypto, 'what');
+      const key: KdbxKey = await createPasswordKey('what');
 
       // Act
-      await expect(readDatabase(nodeCrypto, [key], file)).rejects.toThrow(
-        'HMAC mismatch',
-      );
+      await expect(readDatabase([key], file)).rejects.toThrow('HMAC mismatch');
 
       // Assert
       // No assertions.
@@ -87,7 +82,7 @@ describe('readDatabase', () => {
       const keys: KdbxKey[] = await keyFactory();
 
       // Act
-      const parsed = await readDatabase(nodeCrypto, keys, file);
+      const parsed = await readDatabase(keys, file);
 
       // Assert
       expect(parsed.database.metadata.name).toEqual('Passwords');
@@ -127,10 +122,10 @@ describe('readDatabase', () => {
     ],
   ])('parses known fields from %s', async (_, { file }) => {
     // Arrange
-    const keys = [await createPasswordKey(nodeCrypto, 'password')];
+    const keys = [await createPasswordKey('password')];
 
     // Act
-    const parsed = await readDatabase(nodeCrypto, keys, file);
+    const parsed = await readDatabase(keys, file);
 
     // Assert
     expect(parsed).toMatchSnapshot();

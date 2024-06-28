@@ -10,5 +10,6 @@ export default defineConfig({
 
       return `${currentPath}/snapshots/${relativeTestPath}${snapshotExtension}`;
     },
+    setupFiles: ['fixtures/vitest.setup.ts'],
   },
 });

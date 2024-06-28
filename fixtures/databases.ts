@@ -13,7 +13,6 @@ import createPasswordKey from '../src/keys/createPasswordKey';
 import { type KdbxKdfParameters } from '../src/types/format';
 import { type KdbxKey } from '../src/types/keys';
 import Uint8ArrayHelper from '../src/utilities/Uint8ArrayHelper';
-import nodeCrypto from './crypto/nodeCrypto';
 
 const mockChallengeResponseKey = createChallengeResponseKey(
   (challenge: Uint8Array) => {
@@ -63,7 +62,7 @@ export const sampleDatabasesKeePass2: Record<string, DatabaseInformation> = {
       uuid: KdfUuid.AesKdbx4,
       variantMapVersion: KeePass2.variantMapVersion,
     },
-    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+    keyFactory: async () => [await createPasswordKey('password')],
   },
   AesAesUncompressed: {
     file: readFileSync(
@@ -78,7 +77,7 @@ export const sampleDatabasesKeePass2: Record<string, DatabaseInformation> = {
       uuid: KdfUuid.AesKdbx4,
       variantMapVersion: KeePass2.variantMapVersion,
     },
-    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+    keyFactory: async () => [await createPasswordKey('password')],
   },
 };
 
@@ -94,7 +93,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
       uuid: KdfUuid.AesKdbx4,
       variantMapVersion: KeePass2.variantMapVersion,
     },
-    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+    keyFactory: async () => [await createPasswordKey('password')],
   },
   AesAesUncompressed: {
     file: readFileSync(
@@ -109,7 +108,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
       uuid: KdfUuid.AesKdbx4,
       variantMapVersion: KeePass2.variantMapVersion,
     },
-    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+    keyFactory: async () => [await createPasswordKey('password')],
   },
   AesAesWithKeyFile: {
     file: readFileSync(
@@ -125,8 +124,8 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
       variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [
-      await createPasswordKey(nodeCrypto, 'password'),
-      await createFileKey(nodeCrypto, readFileSync('fixtures/sample.key')),
+      await createPasswordKey('password'),
+      await createFileKey(readFileSync('fixtures/sample.key')),
     ],
   },
   AesAesWithHardwareKey: {
@@ -143,7 +142,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
       variantMapVersion: KeePass2.variantMapVersion,
     },
     keyFactory: async () => [
-      await createPasswordKey(nodeCrypto, 'password'),
+      await createPasswordKey('password'),
       mockChallengeResponseKey,
     ],
   },
@@ -160,7 +159,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
       uuid: KdfUuid.AesKdbx4,
       variantMapVersion: KeePass2.variantMapVersion,
     },
-    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+    keyFactory: async () => [await createPasswordKey('password')],
   },
   AesTwofish: {
     file: readFileSync(
@@ -175,7 +174,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
       uuid: KdfUuid.AesKdbx4,
       variantMapVersion: KeePass2.variantMapVersion,
     },
-    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+    keyFactory: async () => [await createPasswordKey('password')],
   },
   Argon2dAes: {
     file: readFileSync(
@@ -194,7 +193,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
       variantMapVersion: KeePass2.variantMapVersion,
       version: Argon2Version.V13,
     },
-    keyFactory: async () => [await createPasswordKey(nodeCrypto, 'password')],
+    keyFactory: async () => [await createPasswordKey('password')],
   },
 };
 

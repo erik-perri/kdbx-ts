@@ -1,9 +1,8 @@
 import HashAlgorithm from '../enums/HashAlgorithm';
-import { type CryptoImplementation } from '../types/crypto';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
+import processHash from './processHash';
 
 export default async function generateBlockHmacKey(
-  crypto: CryptoImplementation,
   blockIndex: bigint | number | null,
   key: Uint8Array,
 ): Promise<Uint8Array> {
@@ -17,7 +16,7 @@ export default async function generateBlockHmacKey(
     blockIndex = BigInt('0xffffffffffffffff'); // UINT64_MAX
   }
 
-  return crypto.hash(HashAlgorithm.Sha512, [
+  return await processHash(HashAlgorithm.Sha512, [
     Uint8ArrayHelper.fromUInt64LE(blockIndex),
     key,
   ]);

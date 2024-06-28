@@ -1,28 +1,37 @@
+import { getDependency } from '../dependencies';
 import HashAlgorithm from '../enums/HashAlgorithm';
-import { type CryptoImplementation } from '../types/crypto';
+import KdfUuid from '../enums/KdfUuid';
 import { type KdbxKdfParameters } from '../types/format';
 import { type KdbxKey } from '../types/keys';
 import isChallengeResponseKey from '../utilities/isChallengeResponseKey';
 import isKdbxProcessedKey from '../utilities/isKdbxProcessedKey';
-import transformKdf from './transformKdf';
+import processHash from './processHash';
 
 export default async function transformCompositeKey(
-  crypto: CryptoImplementation,
-  kdfParameters: KdbxKdfParameters,
+  parameters: KdbxKdfParameters,
   keys: KdbxKey[],
 ): Promise<Uint8Array> {
   const processedKeys = keys.filter(isKdbxProcessedKey);
   const keyData: Uint8Array[] = processedKeys.map((key) => key.data);
 
-  keyData.push(await challengeKeys(crypto, kdfParameters.seed, keys));
+  keyData.push(await challengeKeys(parameters.seed, keys));
 
-  const hash = await crypto.hash(HashAlgorithm.Sha256, keyData);
+  const hash = await processHash(HashAlgorithm.Sha256, keyData);
 
-  return await transformKdf(crypto, kdfParameters, hash);
+  switch (parameters.uuid) {
+    case KdfUuid.Argon2d:
+    case KdfUuid.Argon2id:
+      return await getDependency('transformKdfArgon2')(hash, parameters);
+
+    case KdfUuid.AesKdbx3:
+    case KdfUuid.AesKdbx4:
+      return await processHash(HashAlgorithm.Sha256, [
+        await getDependency('transformKdfAes256')(hash, parameters),
+      ]);
+  }
 }
 
 async function challengeKeys(
-  crypto: CryptoImplementation,
   seed: Uint8Array,
   keys: KdbxKey[],
 ): Promise<Uint8Array> {
@@ -36,5 +45,5 @@ async function challengeKeys(
     responses.push(await key.challenge(seed));
   }
 
-  return await crypto.hash(HashAlgorithm.Sha256, responses);
+  return await processHash(HashAlgorithm.Sha256, responses);
 }

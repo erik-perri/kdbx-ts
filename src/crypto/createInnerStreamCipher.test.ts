@@ -1,11 +1,12 @@
 import { describe, expect, it, vitest } from 'vitest';
 
-import nodeCrypto from '../../fixtures/crypto/nodeCrypto';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherDirection from '../enums/SymmetricCipherDirection';
 import displaySymmetricCipherAlgorithm from '../utilities/displaySymmetricCipherAlgorithm';
 import createInnerStreamCipher from './createInnerStreamCipher';
+import * as createSymmetricCipher from './createSymmetricCipher';
+import processHash from './processHash';
 
 describe('createInnerStreamCipher', () => {
   it('should use the expected nonce when using salsa20', async () => {
@@ -18,25 +19,21 @@ describe('createInnerStreamCipher', () => {
     );
 
     const createCipherSpy = vitest
-      .spyOn(nodeCrypto, 'createCipher')
+      .spyOn(createSymmetricCipher, 'default')
       .mockResolvedValue({
         process: () => Promise.resolve(Uint8Array.from([])),
         finish: () => Promise.resolve(Uint8Array.from([])),
       });
 
     // Act
-    await createInnerStreamCipher(
-      nodeCrypto,
-      SymmetricCipherAlgorithm.Salsa20,
-      key,
-    );
+    await createInnerStreamCipher(SymmetricCipherAlgorithm.Salsa20, key);
 
     // Assert
     expect(createCipherSpy).toHaveBeenCalledTimes(1);
     expect(createCipherSpy).toHaveBeenCalledWith(
       SymmetricCipherAlgorithm.Salsa20,
       SymmetricCipherDirection.Encrypt,
-      await nodeCrypto.hash(HashAlgorithm.Sha256, [key]),
+      await processHash(HashAlgorithm.Sha256, [key]),
       Uint8Array.from([0xe8, 0x30, 0x09, 0x4b, 0x97, 0x20, 0x5d, 0x2a]),
     );
   });
@@ -50,21 +47,17 @@ describe('createInnerStreamCipher', () => {
       Array.from({ length: 64 }, (_, index) => index),
     );
 
-    const keyHash = await nodeCrypto.hash(HashAlgorithm.Sha512, [key]);
+    const keyHash = await processHash(HashAlgorithm.Sha512, [key]);
 
     const createCipherSpy = vitest
-      .spyOn(nodeCrypto, 'createCipher')
+      .spyOn(createSymmetricCipher, 'default')
       .mockResolvedValue({
         process: () => Promise.resolve(Uint8Array.from([])),
         finish: () => Promise.resolve(Uint8Array.from([])),
       });
 
     // Act
-    await createInnerStreamCipher(
-      nodeCrypto,
-      SymmetricCipherAlgorithm.ChaCha20,
-      key,
-    );
+    await createInnerStreamCipher(SymmetricCipherAlgorithm.ChaCha20, key);
 
     // Assert
     expect(createCipherSpy).toHaveBeenCalledTimes(1);
@@ -86,9 +79,7 @@ describe('createInnerStreamCipher', () => {
     );
 
     // Act
-    await expect(
-      createInnerStreamCipher(nodeCrypto, algorithm, key),
-    ).rejects.toThrow(
+    await expect(createInnerStreamCipher(algorithm, key)).rejects.toThrow(
       `Invalid inner stream cipher algorithm ${displaySymmetricCipherAlgorithm(algorithm)}`,
     );
 
