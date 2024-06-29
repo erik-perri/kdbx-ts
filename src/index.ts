@@ -23,7 +23,7 @@ import createChallengeResponseKey from './keys/createChallengeResponseKey';
 import createFileKey from './keys/createFileKey';
 import createPasswordKey from './keys/createPasswordKey';
 import randomizeSeeds from './randomizeSeeds';
-import readDatabase from './readDatabase';
+import readKdbxFile from './readKdbxFile';
 import {
   type KdbxChallengeResponseKey,
   type KdbxFileKey,
@@ -31,7 +31,7 @@ import {
   type KdbxPasswordKey,
   type KdbxProcessedKey,
 } from './types/keys';
-import writeDatabase from './writeDatabase';
+import writeKdbxFile from './writeKdbxFile';
 
 export type {
   Dependencies,
@@ -61,10 +61,10 @@ export {
   KdfUuid,
   KeePass2,
   randomizeSeeds,
-  readDatabase,
+  readKdbxFile,
   SymmetricCipherAlgorithm,
   SymmetricCipherDirection,
   SymmetricCipherUuid,
-  writeDatabase,
+  writeKdbxFile,
 };
 /* v8 ignore stop */

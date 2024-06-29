@@ -8,16 +8,16 @@ import createPasswordKey from './keys/createPasswordKey';
 import readHeaderFields from './outerHeader/readHeaderFields';
 import readSignature from './outerHeader/readSignature';
 import randomizeSeeds from './randomizeSeeds';
-import readDatabase from './readDatabase';
+import readKdbxFile from './readKdbxFile';
 import { type KdbxAesKdfParameters } from './types/format';
 import BufferReader from './utilities/BufferReader';
-import writeDatabase from './writeDatabase';
+import writeKdbxFile from './writeKdbxFile';
 
-describe('writeDatabase', () => {
+describe('writeKdbxFile', () => {
   it('can write a readable header', async () => {
     // Arrange
     const keys = [await createPasswordKey('password')];
-    const originalFile = await readDatabase(
+    const originalFile = await readKdbxFile(
       keys,
       sampleDatabasesKeePassXC.AesAesCompressed.file,
     );
@@ -25,7 +25,7 @@ describe('writeDatabase', () => {
     const file = await randomizeSeeds(originalFile);
 
     // Act
-    const result = await writeDatabase(keys, file);
+    const result = await writeKdbxFile(keys, file);
 
     const reader = new BufferReader(result);
 
@@ -76,10 +76,10 @@ describe('writeDatabase', () => {
       'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
     );
     const keys = [await createPasswordKey('password')];
-    const parsed = await readDatabase(keys, original);
+    const parsed = await readKdbxFile(keys, original);
 
     // Act
-    const saved = await writeDatabase(keys, parsed);
+    const saved = await writeKdbxFile(keys, parsed);
 
     // Assert
     // Since the GZip compression produces different results, we have to compare the uncompressed data

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`readDatabase > parses known fields from KeePass2 1`] = `
+exports[`readKdbxFile > parses known fields from KeePass2 1`] = `
 {
   "database": {
     "metadata": {
@@ -969,7 +969,7 @@ exports[`readDatabase > parses known fields from KeePass2 1`] = `
 }
 `;
 
-exports[`readDatabase > parses known fields from KeePassXC 1`] = `
+exports[`readKdbxFile > parses known fields from KeePassXC 1`] = `
 {
   "database": {
     "metadata": {
@@ -8424,7 +8424,7 @@ exports[`readDatabase > parses known fields from KeePassXC 1`] = `
 }
 `;
 
-exports[`readDatabase > parses with valid password AesAesCompressed generated with KeePass2 1`] = `
+exports[`readKdbxFile > parses with valid password AesAesCompressed generated with KeePass2 1`] = `
 {
   "database": {
     "metadata": {
@@ -9003,7 +9003,7 @@ exports[`readDatabase > parses with valid password AesAesCompressed generated wi
 }
 `;
 
-exports[`readDatabase > parses with valid password AesAesCompressed generated with KeePassXC 1`] = `
+exports[`readKdbxFile > parses with valid password AesAesCompressed generated with KeePassXC 1`] = `
 {
   "database": {
     "metadata": {
@@ -9296,7 +9296,7 @@ exports[`readDatabase > parses with valid password AesAesCompressed generated wi
 }
 `;
 
-exports[`readDatabase > parses with valid password AesAesUncompressed generated with KeePass2 1`] = `
+exports[`readKdbxFile > parses with valid password AesAesUncompressed generated with KeePass2 1`] = `
 {
   "database": {
     "metadata": {
@@ -9875,7 +9875,7 @@ exports[`readDatabase > parses with valid password AesAesUncompressed generated 
 }
 `;
 
-exports[`readDatabase > parses with valid password AesAesUncompressed generated with KeePassXC 1`] = `
+exports[`readKdbxFile > parses with valid password AesAesUncompressed generated with KeePassXC 1`] = `
 {
   "database": {
     "metadata": {
@@ -10267,7 +10267,7 @@ exports[`readDatabase > parses with valid password AesAesUncompressed generated 
 }
 `;
 
-exports[`readDatabase > parses with valid password AesAesWithHardwareKey generated with KeePassXC 1`] = `
+exports[`readKdbxFile > parses with valid password AesAesWithHardwareKey generated with KeePassXC 1`] = `
 {
   "database": {
     "metadata": {
@@ -10560,7 +10560,7 @@ exports[`readDatabase > parses with valid password AesAesWithHardwareKey generat
 }
 `;
 
-exports[`readDatabase > parses with valid password AesAesWithKeyFile generated with KeePassXC 1`] = `
+exports[`readKdbxFile > parses with valid password AesAesWithKeyFile generated with KeePassXC 1`] = `
 {
   "database": {
     "metadata": {
@@ -10853,7 +10853,7 @@ exports[`readDatabase > parses with valid password AesAesWithKeyFile generated w
 }
 `;
 
-exports[`readDatabase > parses with valid password AesChaCha20 generated with KeePassXC 1`] = `
+exports[`readKdbxFile > parses with valid password AesChaCha20 generated with KeePassXC 1`] = `
 {
   "database": {
     "metadata": {
@@ -11142,7 +11142,7 @@ exports[`readDatabase > parses with valid password AesChaCha20 generated with Ke
 }
 `;
 
-exports[`readDatabase > parses with valid password AesTwofish generated with KeePassXC 1`] = `
+exports[`readKdbxFile > parses with valid password AesTwofish generated with KeePassXC 1`] = `
 {
   "database": {
     "metadata": {
@@ -11435,7 +11435,7 @@ exports[`readDatabase > parses with valid password AesTwofish generated with Kee
 }
 `;
 
-exports[`readDatabase > parses with valid password Argon2dAes generated with KeePassXC 1`] = `
+exports[`readKdbxFile > parses with valid password Argon2dAes generated with KeePassXC 1`] = `
 {
   "database": {
     "metadata": {

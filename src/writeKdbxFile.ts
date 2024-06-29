@@ -17,7 +17,7 @@ import { type KdbxKey } from './types/keys';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 import serializeDatabaseXml from './xml/serializeDatabaseXml';
 
-export default async function writeDatabase(
+export default async function writeKdbxFile(
   keys: KdbxKey[],
   file: KdbxFile,
 ): Promise<Uint8Array> {

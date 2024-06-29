@@ -21,7 +21,7 @@ import getVersionFromSignature from './utilities/getVersionFromSignature';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 import readDatabaseXml from './xml/readDatabaseXml';
 
-export default async function readDatabase(
+export default async function readKdbxFile(
   keys: KdbxKey[],
   fileBytes: Buffer | Uint8Array | number[],
 ): Promise<KdbxFile> {

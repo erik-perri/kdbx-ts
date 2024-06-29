@@ -3,10 +3,10 @@ import { describe, expect, it } from 'vitest';
 
 import { sampleDatabaseCases } from '../fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
-import readDatabase from './readDatabase';
+import readKdbxFile from './readKdbxFile';
 import type { KdbxKey } from './types/keys';
 
-describe('readDatabase', () => {
+describe('readKdbxFile', () => {
   it('fails when encountering an unknown file type', async () => {
     // Arrange
     const key: KdbxKey = await createPasswordKey('what');
@@ -15,7 +15,7 @@ describe('readDatabase', () => {
     );
 
     // Act
-    await expect(readDatabase([key], bytes)).rejects.toThrow(
+    await expect(readKdbxFile([key], bytes)).rejects.toThrow(
       'Unknown database format',
     );
 
@@ -54,7 +54,7 @@ describe('readDatabase', () => {
       const key: KdbxKey = await createPasswordKey('what');
 
       // Act
-      await expect(readDatabase([key], file)).rejects.toThrow(expected);
+      await expect(readKdbxFile([key], file)).rejects.toThrow(expected);
 
       // Assert
       // No assertions.
@@ -68,7 +68,7 @@ describe('readDatabase', () => {
       const key: KdbxKey = await createPasswordKey('what');
 
       // Act
-      await expect(readDatabase([key], file)).rejects.toThrow('HMAC mismatch');
+      await expect(readKdbxFile([key], file)).rejects.toThrow('HMAC mismatch');
 
       // Assert
       // No assertions.
@@ -82,7 +82,7 @@ describe('readDatabase', () => {
       const keys: KdbxKey[] = await keyFactory();
 
       // Act
-      const parsed = await readDatabase(keys, file);
+      const parsed = await readKdbxFile(keys, file);
 
       // Assert
       expect(parsed).toMatchSnapshot();
@@ -111,7 +111,7 @@ describe('readDatabase', () => {
     const keys = [await createPasswordKey('password')];
 
     // Act
-    const parsed = await readDatabase(keys, file);
+    const parsed = await readKdbxFile(keys, file);
 
     // Assert
     expect(parsed).toMatchSnapshot();
