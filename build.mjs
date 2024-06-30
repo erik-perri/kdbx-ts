@@ -1,5 +1,10 @@
 /* v8 ignore start */
+import { rm } from 'node:fs';
+
 import * as esbuild from 'esbuild';
+import glob from 'fast-glob';
+
+await clearOutputFiles();
 
 const commonOptions = {
   bundle: true,
@@ -18,5 +23,28 @@ for (const formatOptions of outputFormats) {
     ...commonOptions,
     ...formatOptions,
   });
+}
+
+async function clearOutputFiles() {
+  const files = await glob('dist/*');
+  const expectedFiles = [
+    'dist/index.cjs',
+    'dist/index.cjs.map',
+    'dist/index.d.ts',
+    'dist/index.mjs',
+    'dist/index.mjs.map',
+  ];
+
+  for (const file of files) {
+    if (!expectedFiles.includes(file)) {
+      throw new Error(`Unexpected file found in dist folder "${file}"`);
+    }
+
+    await rm(file, { recursive: false }, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
 }
 /* v8 ignore end */
