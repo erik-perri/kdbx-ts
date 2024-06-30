@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import { type KdbxAesKdfParameters } from '../types/format';
+import { type KdbxAesKdfParameters } from '../../src/types/format';
 
 export default function transformAes256KdfKey(
   key: Uint8Array,

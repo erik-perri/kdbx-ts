@@ -3,7 +3,6 @@ import crypto from 'crypto';
 import createAes256CbcCipher from './crypto/createAes256CbcCipher';
 import createChaCha20Cipher from './crypto/createChaCha20Cipher';
 import createTwofishCbcCipher from './crypto/createTwofishCbcCipher';
-import transformAes256KdfKey from './crypto/transformAes256KdfKey';
 import type SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import {
   type KdbxAesKdfParameters,
@@ -21,7 +20,7 @@ export type Dependencies = {
 
   randomBytes: (length: number) => Promise<Uint8Array>;
 
-  transformKdfAes256: TransformAesKdfKey;
+  transformKdfAes256?: TransformAesKdfKey;
   transformKdfArgon2?: TransformArgon2KdfKey;
 };
 
@@ -74,7 +73,7 @@ const dependencies: Dependencies = {
 
   randomBytes: (length: number) => Promise.resolve(crypto.randomBytes(length)),
 
-  transformKdfAes256: transformAes256KdfKey,
+  transformKdfAes256: undefined,
   transformKdfArgon2: undefined,
 };
 
