@@ -49,6 +49,11 @@ function getArgon2VariantMap(
 ): KdbxVariantMap {
   return {
     values: {
+      [KdfParameterKey.Uuid]: {
+        type: VariantMapFieldType.ByteArray,
+        // TODO We should accept UUID or version, not both
+        value: Uint8ArrayHelper.fromUuid(parameters.uuid),
+      },
       [KdfParameterKey.Argon2Salt]: {
         type: VariantMapFieldType.ByteArray,
         value: parameters.seed,
