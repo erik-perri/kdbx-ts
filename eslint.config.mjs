@@ -9,14 +9,23 @@ export default tsEslint.config(
     ignores: ['dist'],
   },
   {
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+      'no-duplicate-imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'simple-import-sort/imports': 'error',
+    },
+  },
+  {
+    files: ['**/*.ts'],
     languageOptions: {
       parserOptions: {
         project: true,
         tsconfigDirName: import.meta.dirname,
       },
-    },
-    plugins: {
-      'simple-import-sort': simpleImportSort,
     },
     rules: {
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
@@ -40,10 +49,6 @@ export default tsEslint.config(
       ],
       '@typescript-eslint/strict-boolean-expressions': 'error',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
-      'no-console': ['error', { allow: ['warn', 'error'] }],
-      'no-duplicate-imports': 'error',
-      'simple-import-sort/exports': 'error',
-      'simple-import-sort/imports': 'error',
     },
   },
   {
