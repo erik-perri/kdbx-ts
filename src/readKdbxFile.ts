@@ -61,7 +61,7 @@ export default async function readKdbxFile(
   const expectedHeaderHash = reader.readBytes(32);
   const expectedHeaderHmacHash = reader.readBytes(32);
 
-  // Verify the header processHash to check the integrity of the header
+  // Verify the header hash to check the integrity of the header
   const headerHash = await processHash(HashAlgorithm.Sha256, [headerData]);
 
   if (!Uint8ArrayHelper.areEqual(expectedHeaderHash, headerHash)) {
@@ -73,7 +73,7 @@ export default async function readKdbxFile(
   // Transform the composite key using the KDF parameters
   const compositeKey = await transformCompositeKey(header.kdfParameters, keys);
 
-  // Verify the HMAC processHash to check the authenticity of the header and key(s)
+  // Verify the HMAC hash to check the authenticity of the header and key(s)
   const hmacKey = await generateHmacKeySeed(header.masterSeed, compositeKey);
 
   const headerHmacHash = await processHmac(

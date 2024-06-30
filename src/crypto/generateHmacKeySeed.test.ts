@@ -6,7 +6,7 @@ import * as processHash from './processHash';
 
 describe('getHmacKeySeed', () => {
   it('should create key using the expected pattern ', async () => {
-    // The key for the HMAC-SHA-256 processHash of the i-th block (zero-based index, type UInt64)
+    // The key for the HMAC-SHA-256 hash of the i-th block (zero-based index, type UInt64)
     // of the HMAC-protected block stream is: SHA-512(i ‖ SHA-512(S ‖ T ‖ 0x01)).
 
     // Arrange
