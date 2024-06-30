@@ -9,16 +9,31 @@ import {
   type KdbxArgon2KdfParameters,
 } from './types/format';
 
+const dependencies: Dependencies = {
+  cipherAes256: createAes256CbcCipher,
+  cipherChaCha20: createChaCha20Cipher,
+  cipherSalsa20: undefined,
+  cipherTwofish: createTwofishCbcCipher,
+
+  hash: (algorithm) => Promise.resolve(crypto.createHash(algorithm)),
+  hmac: (algorithm, key) => Promise.resolve(crypto.createHmac(algorithm, key)),
+
+  randomBytes: (length: number) => Promise.resolve(crypto.randomBytes(length)),
+
+  transformKdfAes256: undefined,
+  transformKdfArgon2: undefined,
+};
+
 export type Dependencies = {
-  cipherAes256: SymmetricCipherFactory;
+  cipherAes256?: SymmetricCipherFactory;
   cipherChaCha20?: SymmetricCipherFactory;
   cipherSalsa20?: SymmetricCipherFactory;
   cipherTwofish?: SymmetricCipherFactory;
 
-  hash: HashFactory;
-  hmac: HmacFactory;
+  hash?: HashFactory;
+  hmac?: HmacFactory;
 
-  randomBytes: (length: number) => Promise<Uint8Array>;
+  randomBytes?: (length: number) => Promise<Uint8Array>;
 
   transformKdfAes256?: TransformAesKdfKey;
   transformKdfArgon2?: TransformArgon2KdfKey;
@@ -61,21 +76,6 @@ export type TransformArgon2KdfKey = (
   key: Uint8Array,
   parameters: KdbxArgon2KdfParameters,
 ) => Promise<Uint8Array>;
-
-const dependencies: Dependencies = {
-  cipherAes256: createAes256CbcCipher,
-  cipherChaCha20: createChaCha20Cipher,
-  cipherSalsa20: undefined,
-  cipherTwofish: createTwofishCbcCipher,
-
-  hash: (algorithm) => Promise.resolve(crypto.createHash(algorithm)),
-  hmac: (algorithm, key) => Promise.resolve(crypto.createHmac(algorithm, key)),
-
-  randomBytes: (length: number) => Promise.resolve(crypto.randomBytes(length)),
-
-  transformKdfAes256: undefined,
-  transformKdfArgon2: undefined,
-};
 
 export function configureDependencies(overrides: Partial<Dependencies>): void {
   Object.assign(dependencies, overrides);
