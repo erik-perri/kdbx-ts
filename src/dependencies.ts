@@ -20,8 +20,8 @@ const dependencies: Dependencies = {
 
   randomBytes: (length: number) => Promise.resolve(crypto.randomBytes(length)),
 
-  transformKdfAes256: undefined,
-  transformKdfArgon2: undefined,
+  transformAes256KdfKey: undefined,
+  transformArgon2KdfKey: undefined,
 };
 
 export type Dependencies = {
@@ -35,8 +35,8 @@ export type Dependencies = {
 
   randomBytes?: (length: number) => Promise<Uint8Array>;
 
-  transformKdfAes256?: TransformAesKdfKey;
-  transformKdfArgon2?: TransformArgon2KdfKey;
+  transformAes256KdfKey?: TransformAes256KdfKey;
+  transformArgon2KdfKey?: TransformArgon2KdfKey;
 };
 
 export type SymmetricCipher = {
@@ -67,7 +67,7 @@ export type SymmetricCipherFactory = (
   iv: Uint8Array,
 ) => Promise<SymmetricCipher>;
 
-export type TransformAesKdfKey = (
+export type TransformAes256KdfKey = (
   key: Uint8Array,
   parameters: KdbxAesKdfParameters,
 ) => Promise<Uint8Array>;
@@ -109,9 +109,9 @@ function displayDependencyDescription(key: keyof Dependencies): string {
       return 'HMAC function';
     case 'randomBytes':
       return 'Random bytes generator';
-    case 'transformKdfAes256':
+    case 'transformAes256KdfKey':
       return 'AES-256 KDF transformer';
-    case 'transformKdfArgon2':
+    case 'transformArgon2KdfKey':
       return 'Argon2 KDF transformer';
   }
 }

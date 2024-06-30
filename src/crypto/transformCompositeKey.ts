@@ -21,12 +21,12 @@ export default async function transformCompositeKey(
   switch (parameters.uuid) {
     case KdfUuid.Argon2d:
     case KdfUuid.Argon2id:
-      return await getDependency('transformKdfArgon2')(hash, parameters);
+      return await getDependency('transformArgon2KdfKey')(hash, parameters);
 
     case KdfUuid.AesKdbx3:
     case KdfUuid.AesKdbx4:
       return await processHash(HashAlgorithm.Sha256, [
-        await getDependency('transformKdfAes256')(hash, parameters),
+        await getDependency('transformAes256KdfKey')(hash, parameters),
       ]);
   }
 }

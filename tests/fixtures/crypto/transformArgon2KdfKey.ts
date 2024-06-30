@@ -2,7 +2,7 @@ import * as argon2 from 'argon2';
 
 import { type KdbxArgon2KdfParameters } from '../../../src/types/format';
 
-export default async function transformKdfArgon2(
+export default async function transformArgon2KdfKey(
   key: Uint8Array,
   parameters: KdbxArgon2KdfParameters,
 ): Promise<Uint8Array> {

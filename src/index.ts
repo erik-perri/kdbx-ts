@@ -7,7 +7,7 @@ import {
   type HmacFactory,
   type SymmetricCipher,
   type SymmetricCipherFactory,
-  type TransformAesKdfKey,
+  type TransformAes256KdfKey,
   type TransformArgon2KdfKey,
 } from './dependencies';
 import Argon2Type from './enums/Argon2Type';
@@ -44,7 +44,7 @@ export type {
   KdbxProcessedKey,
   SymmetricCipher,
   SymmetricCipherFactory,
-  TransformAesKdfKey,
+  TransformAes256KdfKey,
   TransformArgon2KdfKey,
 };
 
