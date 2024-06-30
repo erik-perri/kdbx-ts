@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { describe, expect, it } from 'vitest';
 
-import { sampleDatabaseCases } from '../fixtures/databases';
+import { sampleDatabaseCases } from '../tests/fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
 import readKdbxFile from './readKdbxFile';
 import type { KdbxKey } from './types/keys';
@@ -27,7 +27,7 @@ describe('readKdbxFile', () => {
     [
       'KeePass 1.x',
       {
-        file: readFileSync('fixtures/databases/keepass1-aes.kdb'),
+        file: readFileSync('tests/fixtures/databases/keepass1-aes.kdb'),
         expected: 'KeePass1 databases are not supported',
       },
     ],
@@ -35,7 +35,7 @@ describe('readKdbxFile', () => {
       'Kdbx 2.x',
       {
         file: readFileSync(
-          'fixtures/databases/keepass2-kdbx2-aes-kdf-aes.kdbx',
+          'tests/fixtures/databases/keepass2-kdbx2-aes-kdf-aes.kdbx',
         ),
         expected: 'KeePass2 v2.x databases are not supported',
       },
@@ -43,7 +43,9 @@ describe('readKdbxFile', () => {
     [
       'Kdbx 3.x',
       {
-        file: readFileSync('fixtures/databases/keepassxc-kdbx3-aes-kdf.kdbx'),
+        file: readFileSync(
+          'tests/fixtures/databases/keepassxc-kdbx3-aes-kdf.kdbx',
+        ),
         expected: 'KeePass2 v3.x databases are not supported',
       },
     ],
@@ -94,7 +96,7 @@ describe('readKdbxFile', () => {
       'KeePassXC',
       {
         file: readFileSync(
-          'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
+          'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
         ),
       },
     ],
@@ -102,7 +104,7 @@ describe('readKdbxFile', () => {
       'KeePass2',
       {
         file: readFileSync(
-          'fixtures/databases/keepass2-kdbx4-aes-kdf-chacha-features.kdbx',
+          'tests/fixtures/databases/keepass2-kdbx4-aes-kdf-chacha-features.kdbx',
         ),
       },
     ],

@@ -1,18 +1,18 @@
 import { readFileSync } from 'fs';
 import { expect } from 'vitest';
 
-import { KeePass2 } from '../src/constants';
-import Argon2Type from '../src/enums/Argon2Type';
-import Argon2Version from '../src/enums/Argon2Version';
-import CompressionAlgorithm from '../src/enums/CompressionAlgorithm';
-import KdfUuid from '../src/enums/KdfUuid';
-import SymmetricCipherUuid from '../src/enums/SymmetricCipherUuid';
-import createChallengeResponseKey from '../src/keys/createChallengeResponseKey';
-import createFileKey from '../src/keys/createFileKey';
-import createPasswordKey from '../src/keys/createPasswordKey';
-import { type KdbxKdfParameters } from '../src/types/format';
-import { type KdbxKey } from '../src/types/keys';
-import Uint8ArrayHelper from '../src/utilities/Uint8ArrayHelper';
+import { KeePass2 } from '../../src/constants';
+import Argon2Type from '../../src/enums/Argon2Type';
+import Argon2Version from '../../src/enums/Argon2Version';
+import CompressionAlgorithm from '../../src/enums/CompressionAlgorithm';
+import KdfUuid from '../../src/enums/KdfUuid';
+import SymmetricCipherUuid from '../../src/enums/SymmetricCipherUuid';
+import createChallengeResponseKey from '../../src/keys/createChallengeResponseKey';
+import createFileKey from '../../src/keys/createFileKey';
+import createPasswordKey from '../../src/keys/createPasswordKey';
+import { type KdbxKdfParameters } from '../../src/types/format';
+import { type KdbxKey } from '../../src/types/keys';
+import Uint8ArrayHelper from '../../src/utilities/Uint8ArrayHelper';
 
 const mockChallengeResponseKey = createChallengeResponseKey(
   (challenge: Uint8Array) => {
@@ -52,7 +52,9 @@ type DatabaseInformation = {
 
 export const sampleDatabasesKeePass2: Record<string, DatabaseInformation> = {
   AesAesCompressed: {
-    file: readFileSync('fixtures/databases/keepass2-kdbx4-aes-kdf-aes.kdbx'),
+    file: readFileSync(
+      'tests/fixtures/databases/keepass2-kdbx4-aes-kdf-aes.kdbx',
+    ),
     expectedCipher: SymmetricCipherUuid.Aes256,
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
     expectedIvLength: 16,
@@ -66,7 +68,7 @@ export const sampleDatabasesKeePass2: Record<string, DatabaseInformation> = {
   },
   AesAesUncompressed: {
     file: readFileSync(
-      'fixtures/databases/keepass2-kdbx4-aes-kdf-aes-uncompressed.kdbx',
+      'tests/fixtures/databases/keepass2-kdbx4-aes-kdf-aes-uncompressed.kdbx',
     ),
     expectedCipher: SymmetricCipherUuid.Aes256,
     expectedCompressionAlgorithm: CompressionAlgorithm.None,
@@ -83,7 +85,9 @@ export const sampleDatabasesKeePass2: Record<string, DatabaseInformation> = {
 
 export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
   AesAesCompressed: {
-    file: readFileSync('fixtures/databases/keepassxc-kdbx4-aes-kdf-aes.kdbx'),
+    file: readFileSync(
+      'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-aes.kdbx',
+    ),
     expectedCipher: SymmetricCipherUuid.Aes256,
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
     expectedIvLength: 16,
@@ -97,7 +101,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
   },
   AesAesUncompressed: {
     file: readFileSync(
-      'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-uncompressed.kdbx',
+      'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-uncompressed.kdbx',
     ),
     expectedCipher: SymmetricCipherUuid.Aes256,
     expectedCompressionAlgorithm: CompressionAlgorithm.None,
@@ -112,7 +116,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
   },
   AesAesWithKeyFile: {
     file: readFileSync(
-      'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-with-key-file.kdbx',
+      'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-with-key-file.kdbx',
     ),
     expectedCipher: SymmetricCipherUuid.Aes256,
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
@@ -125,12 +129,12 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
     },
     keyFactory: async () => [
       await createPasswordKey('password'),
-      await createFileKey(readFileSync('fixtures/sample.key')),
+      await createFileKey(readFileSync('tests/fixtures/sample.key')),
     ],
   },
   AesAesWithHardwareKey: {
     file: readFileSync(
-      'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-with-hardware-key.kdbx',
+      'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-with-hardware-key.kdbx',
     ),
     expectedCipher: SymmetricCipherUuid.Aes256,
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
@@ -148,7 +152,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
   },
   AesChaCha20: {
     file: readFileSync(
-      'fixtures/databases/keepassxc-kdbx4-aes-kdf-chacha20.kdbx',
+      'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-chacha20.kdbx',
     ),
     expectedCipher: SymmetricCipherUuid.ChaCha20,
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
@@ -163,7 +167,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
   },
   AesTwofish: {
     file: readFileSync(
-      'fixtures/databases/keepassxc-kdbx4-aes-kdf-twofish.kdbx',
+      'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-twofish.kdbx',
     ),
     expectedCipher: SymmetricCipherUuid.Twofish,
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,
@@ -178,7 +182,7 @@ export const sampleDatabasesKeePassXC: Record<string, DatabaseInformation> = {
   },
   Argon2dAes: {
     file: readFileSync(
-      'fixtures/databases/keepassxc-kdbx4-argon2d-kdf-aes.kdbx',
+      'tests/fixtures/databases/keepassxc-kdbx4-argon2d-kdf-aes.kdbx',
     ),
     expectedCipher: SymmetricCipherUuid.Aes256,
     expectedCompressionAlgorithm: CompressionAlgorithm.GZip,

@@ -1,15 +1,15 @@
-import * as path from 'node:path';
+import { relative, resolve } from 'node:path';
 
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     resolveSnapshotPath: (testPath, snapshotExtension) => {
-      const currentPath = path.resolve('./');
-      const relativeTestPath = path.relative(currentPath, testPath);
+      const currentPath = resolve('./');
+      const relativeTestPath = relative(currentPath, testPath);
 
-      return `${currentPath}/snapshots/${relativeTestPath}${snapshotExtension}`;
+      return `${currentPath}/tests/snapshots/${relativeTestPath}${snapshotExtension}`;
     },
-    setupFiles: ['fixtures/vitest.setup.ts'],
+    setupFiles: ['tests/fixtures/vitest.setup.ts'],
   },
 });

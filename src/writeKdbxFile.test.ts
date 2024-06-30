@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import pako from 'pako';
 import { describe, expect, it, vitest } from 'vitest';
 
-import { sampleDatabasesKeePassXC } from '../fixtures/databases';
+import { sampleDatabasesKeePassXC } from '../tests/fixtures/databases';
 import createPasswordKey from './keys/createPasswordKey';
 import readHeaderFields from './outerHeader/readHeaderFields';
 import readSignature from './outerHeader/readSignature';
@@ -73,7 +73,7 @@ describe('writeKdbxFile', () => {
       });
 
     const original = fs.readFileSync(
-      'fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
+      'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
     );
     const keys = [await createPasswordKey('password')];
     const parsed = await readKdbxFile(keys, original);

@@ -1,6 +1,6 @@
 import * as argon2 from 'argon2';
 
-import { type KdbxArgon2KdfParameters } from '../../src/types/format';
+import { type KdbxArgon2KdfParameters } from '../../../src/types/format';
 
 export default async function transformKdfArgon2(
   key: Uint8Array,
