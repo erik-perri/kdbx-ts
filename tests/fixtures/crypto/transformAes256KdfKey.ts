@@ -6,15 +6,18 @@ export default function transformAes256KdfKey(
   key: Uint8Array,
   parameters: KdbxAesKdfParameters,
 ): Promise<Uint8Array> {
+  const cipher = crypto
+    .createCipheriv('aes-256-ecb', parameters.seed, Buffer.alloc(0))
+    .setAutoPadding(false);
+
   let result = Uint8Array.from(key);
   let iterations = parameters.rounds;
 
   while (iterations--) {
-    const cipher = crypto
-      .createCipheriv('aes-256-ecb', parameters.seed, Buffer.alloc(0))
-      .setAutoPadding(false);
-    result = Buffer.concat([cipher.update(result), cipher.final()]);
+    result = cipher.update(result);
   }
 
-  return Promise.resolve(result);
+  return Promise.resolve(
+    Uint8Array.from(Buffer.concat([result, cipher.final()])),
+  );
 }
