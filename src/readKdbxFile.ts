@@ -14,17 +14,19 @@ import readInnerHeaderFields from './innerHeader/readInnerHeaderFields';
 import readHeaderFields from './outerHeader/readHeaderFields';
 import readSignature from './outerHeader/readSignature';
 import { type KdbxFile } from './types/format';
-import { type KdbxKey } from './types/keys';
+import { type KdbxCompositeKey, type KdbxKey } from './types/keys';
 import BufferReader from './utilities/BufferReader';
 import displayHash from './utilities/displayHash';
 import getVersionFromSignature from './utilities/getVersionFromSignature';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 import readDatabaseXml from './xml/readDatabaseXml';
 
+type ReadKdbxFile = KdbxFile & { compositeKey: Uint8Array };
+
 export default async function readKdbxFile(
-  keys: KdbxKey[],
+  keys: KdbxKey[] | KdbxCompositeKey,
   fileBytes: Buffer | Uint8Array | number[],
-): Promise<KdbxFile> {
+): Promise<ReadKdbxFile> {
   const reader = new BufferReader(fileBytes);
 
   // Verify the version
@@ -71,7 +73,9 @@ export default async function readKdbxFile(
   }
 
   // Transform the composite key using the KDF parameters
-  const compositeKey = await transformCompositeKey(header.kdfParameters, keys);
+  const compositeKey = ArrayBuffer.isView(keys)
+    ? keys
+    : await transformCompositeKey(header.kdfParameters, keys);
 
   // Verify the HMAC hash to check the authenticity of the header and key(s)
   const hmacKey = await generateHmacKeySeed(header.masterSeed, compositeKey);
@@ -119,5 +123,5 @@ export default async function readKdbxFile(
     streamCipher,
   );
 
-  return { signature, header, innerHeader, database };
+  return { compositeKey, database, header, innerHeader, signature };
 }

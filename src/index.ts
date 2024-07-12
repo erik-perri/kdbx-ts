@@ -26,6 +26,7 @@ import randomizeSeeds from './randomizeSeeds';
 import readKdbxFile from './readKdbxFile';
 import {
   type KdbxChallengeResponseKey,
+  type KdbxCompositeKey,
   type KdbxFileKey,
   type KdbxKey,
   type KdbxPasswordKey,
@@ -38,6 +39,7 @@ export type {
   HashFactory,
   HmacFactory,
   KdbxChallengeResponseKey,
+  KdbxCompositeKey,
   KdbxFileKey,
   KdbxKey,
   KdbxPasswordKey,

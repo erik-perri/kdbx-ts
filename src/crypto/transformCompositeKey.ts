@@ -2,7 +2,7 @@ import { getDependency } from '../dependencies';
 import HashAlgorithm from '../enums/HashAlgorithm';
 import KdfUuid from '../enums/KdfUuid';
 import { type KdbxKdfParameters } from '../types/format';
-import { type KdbxKey } from '../types/keys';
+import { type KdbxCompositeKey, type KdbxKey } from '../types/keys';
 import isChallengeResponseKey from '../utilities/isChallengeResponseKey';
 import isKdbxProcessedKey from '../utilities/isKdbxProcessedKey';
 import processHash from './processHash';
@@ -10,7 +10,7 @@ import processHash from './processHash';
 export default async function transformCompositeKey(
   parameters: KdbxKdfParameters,
   keys: KdbxKey[],
-): Promise<Uint8Array> {
+): Promise<KdbxCompositeKey> {
   const processedKeys = keys.filter(isKdbxProcessedKey);
   const keyData: Uint8Array[] = processedKeys.map((key) => key.data);
 

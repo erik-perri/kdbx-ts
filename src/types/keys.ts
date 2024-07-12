@@ -15,3 +15,5 @@ export type KdbxChallengeResponseKey = {
 };
 
 export type KdbxKey = KdbxProcessedKey | KdbxFileKey | KdbxChallengeResponseKey;
+
+export type KdbxCompositeKey = Uint8Array;
