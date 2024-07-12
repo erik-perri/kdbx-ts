@@ -8,7 +8,7 @@ import { type Database } from './database';
 
 export type KdbxFile = {
   database: Database;
-  header: KdbxOuterHeader;
+  header: KdbxOuterHeaderFields;
   innerHeader: KdbxInnerHeader;
   signature: KdbxSignature;
 };
@@ -20,7 +20,7 @@ export type KdbxSignature = {
   versionMinor: number;
 };
 
-export type KdbxOuterHeader = {
+export type KdbxOuterHeaderFields = {
   cipherAlgorithm: SymmetricCipherAlgorithm;
   compressionAlgorithm: CompressionAlgorithm;
   encryptionIV: Uint8Array;

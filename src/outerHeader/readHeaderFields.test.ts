@@ -8,7 +8,7 @@ import KdfUuid from '../enums/KdfUuid';
 import SymmetricCipherAlgorithm from '../enums/SymmetricCipherAlgorithm';
 import SymmetricCipherUuid from '../enums/SymmetricCipherUuid';
 import VariantMapFieldType from '../enums/VariantMapFieldType';
-import { type KdbxOuterHeader } from '../types/format';
+import { type KdbxOuterHeaderFields } from '../types/format';
 import BufferReader from '../utilities/BufferReader';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import readHeaderFields from './readHeaderFields';
@@ -110,7 +110,7 @@ describe('readHeaderFields', () => {
         },
         version: KeePass2.variantMapVersion,
       },
-    } satisfies KdbxOuterHeader);
+    } satisfies KdbxOuterHeaderFields);
   });
 
   it.each([

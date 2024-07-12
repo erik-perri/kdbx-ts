@@ -1,5 +1,5 @@
 import HeaderFieldId from '../enums/HeaderFieldId';
-import { type KdbxOuterHeader } from '../types/format';
+import { type KdbxOuterHeaderFields } from '../types/format';
 import BufferWriter from '../utilities/BufferWriter';
 import Uint8ArrayHelper from '../utilities/Uint8ArrayHelper';
 import serializeCipherAlgorithmValue from './fields/serializeCipherAlgorithmValue';
@@ -11,7 +11,7 @@ import serializeMasterSeedValue from './fields/serializeMasterSeedValue';
 import serializeVariantMapValue from './fields/serializeVariantMapValue';
 
 export default function serializeHeaderFields(
-  header: KdbxOuterHeader,
+  header: KdbxOuterHeaderFields,
 ): Uint8Array {
   const writer = new BufferWriter();
 

@@ -3,7 +3,7 @@ import {
   type KdbxFile,
   type KdbxInnerHeader,
   type KdbxKdfParameters,
-  type KdbxOuterHeader,
+  type KdbxOuterHeaderFields,
 } from './types/format';
 import getSymmetricCipherIvSize from './utilities/getSymmetricCipherIvSize';
 import getSymmetricCipherKeySize from './utilities/getSymmetricCipherKeySize';
@@ -20,7 +20,7 @@ export default async function randomizeSeeds(
     seed: kdfSeed,
   };
 
-  const header: KdbxOuterHeader = {
+  const header: KdbxOuterHeaderFields = {
     ...file.header,
     encryptionIV: await randomBytes(
       getSymmetricCipherIvSize(file.header.cipherAlgorithm),

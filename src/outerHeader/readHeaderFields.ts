@@ -1,5 +1,5 @@
 import HeaderFieldId from '../enums/HeaderFieldId';
-import { type KdbxOuterHeader } from '../types/format';
+import { type KdbxOuterHeaderFields } from '../types/format';
 import type BufferReader from '../utilities/BufferReader';
 import displayHeaderFieldId from '../utilities/displayHeaderFieldId';
 import { isHeaderFieldId } from '../utilities/isHeaderFieldId';
@@ -14,8 +14,8 @@ import deserializeVariantMapValue from './fields/deserializeVariantMapValue';
 
 export default function readHeaderFields(
   buffer: BufferReader,
-): KdbxOuterHeader {
-  const header: Partial<KdbxOuterHeader> = {};
+): KdbxOuterHeaderFields {
+  const header: Partial<KdbxOuterHeaderFields> = {};
 
   for (;;) {
     const fieldId = readOuterHeaderFieldId(buffer);
@@ -65,13 +65,13 @@ export default function readHeaderFields(
 }
 
 function validateOuterHeader(
-  header: Partial<KdbxOuterHeader>,
-): KdbxOuterHeader {
+  header: Partial<KdbxOuterHeaderFields>,
+): KdbxOuterHeaderFields {
   const missingFields: HeaderFieldId[] = [];
 
   function validateHeaderComplete(
-    header: Partial<KdbxOuterHeader>,
-  ): header is KdbxOuterHeader {
+    header: Partial<KdbxOuterHeaderFields>,
+  ): header is KdbxOuterHeaderFields {
     missingFields.length = 0;
 
     if (header.cipherAlgorithm === undefined) {
