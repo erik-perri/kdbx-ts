@@ -20,6 +20,9 @@ import KdfUuid from './enums/KdfUuid';
 import SymmetricCipherAlgorithm from './enums/SymmetricCipherAlgorithm';
 import SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import SymmetricCipherUuid from './enums/SymmetricCipherUuid';
+import KdbxError from './errors/KdbxError';
+import UnknownKdbxSignatureError from './errors/UnknownKdbxSignatureError';
+import UnsupportedKdbxVersionError from './errors/UnsupportedKdbxVersionError';
 import createChallengeResponseKey from './keys/createChallengeResponseKey';
 import createFileKey from './keys/createFileKey';
 import createPasswordKey from './keys/createPasswordKey';
@@ -66,6 +69,7 @@ export {
   createPasswordKey,
   DefaultIconNumber,
   HashAlgorithm,
+  KdbxError,
   KdfUuid,
   KeePass2,
   parseKdbxHeader,
@@ -74,6 +78,8 @@ export {
   SymmetricCipherAlgorithm,
   SymmetricCipherDirection,
   SymmetricCipherUuid,
+  UnknownKdbxSignatureError,
+  UnsupportedKdbxVersionError,
   writeKdbxFile,
 };
 /* v8 ignore stop */
