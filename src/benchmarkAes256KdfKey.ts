@@ -31,5 +31,5 @@ export default async function benchmarkAes256KdfKey(
 
   const duration = Date.now() - startTime;
 
-  return Math.floor((Number(rounds) * trials * targetMilliseconds) / duration);
+  return Math.floor((rounds * trials * targetMilliseconds) / duration);
 }
