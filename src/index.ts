@@ -23,8 +23,10 @@ import SymmetricCipherUuid from './enums/SymmetricCipherUuid';
 import createChallengeResponseKey from './keys/createChallengeResponseKey';
 import createFileKey from './keys/createFileKey';
 import createPasswordKey from './keys/createPasswordKey';
+import parseKdbxHeader from './parseKdbxHeader';
 import randomizeSeeds from './randomizeSeeds';
 import readKdbxFile from './readKdbxFile';
+import { type KdbxFile, type KdbxOuterHeader } from './types/format';
 import {
   type KdbxChallengeResponseKey,
   type KdbxCompositeKey,
@@ -41,8 +43,10 @@ export type {
   HmacFactory,
   KdbxChallengeResponseKey,
   KdbxCompositeKey,
+  KdbxFile,
   KdbxFileKey,
   KdbxKey,
+  KdbxOuterHeader,
   KdbxPasswordKey,
   KdbxProcessedKey,
   SymmetricCipher,
@@ -64,6 +68,7 @@ export {
   HashAlgorithm,
   KdfUuid,
   KeePass2,
+  parseKdbxHeader,
   randomizeSeeds,
   readKdbxFile,
   SymmetricCipherAlgorithm,

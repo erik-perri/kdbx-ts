@@ -13,17 +13,19 @@ export default async function randomizeSeeds(
 ): Promise<KdbxFile> {
   const randomBytes = getDependency('randomBytes');
 
-  const kdfSeed = await randomBytes(file.header.kdfParameters.seed.byteLength);
+  const kdfSeed = await randomBytes(
+    file.outerHeader.fields.kdfParameters.seed.byteLength,
+  );
 
   const kdfParameters: KdbxKdfParameters = {
-    ...file.header.kdfParameters,
+    ...file.outerHeader.fields.kdfParameters,
     seed: kdfSeed,
   };
 
-  const header: KdbxOuterHeaderFields = {
-    ...file.header,
+  const fields: KdbxOuterHeaderFields = {
+    ...file.outerHeader.fields,
     encryptionIV: await randomBytes(
-      getSymmetricCipherIvSize(file.header.cipherAlgorithm),
+      getSymmetricCipherIvSize(file.outerHeader.fields.cipherAlgorithm),
     ),
     kdfParameters,
     masterSeed: await randomBytes(32),
@@ -37,9 +39,11 @@ export default async function randomizeSeeds(
   };
 
   return {
-    signature: file.signature,
-    header,
-    innerHeader,
     database: file.database,
+    innerHeader,
+    outerHeader: {
+      fields,
+      signature: file.outerHeader.signature,
+    },
   };
 }

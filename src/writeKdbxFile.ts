@@ -21,14 +21,14 @@ export default async function writeKdbxFile(
   keys: KdbxKey[],
   file: KdbxFile,
 ): Promise<Uint8Array> {
-  const signature = serializeSignature(file.signature);
+  const signature = serializeSignature(file.outerHeader.signature);
 
   const compositeKey = await transformCompositeKey(
-    file.header.kdfParameters,
+    file.outerHeader.fields.kdfParameters,
     keys,
   );
 
-  const outerHeader = serializeHeaderFields(file.header);
+  const outerHeader = serializeHeaderFields(file.outerHeader.fields);
 
   const outerHeaderHash = await processHash(HashAlgorithm.Sha256, [
     signature,
@@ -36,7 +36,7 @@ export default async function writeKdbxFile(
   ]);
 
   const outerHeaderHmacKey = await generateHmacKeySeed(
-    file.header.masterSeed,
+    file.outerHeader.fields.masterSeed,
     compositeKey,
   );
 
@@ -65,15 +65,15 @@ export default async function writeKdbxFile(
   ]);
 
   const compressedData = compressInnerData(
-    file.header.compressionAlgorithm,
+    file.outerHeader.fields.compressionAlgorithm,
     innerData,
   );
 
   const encryptedData = await cryptInnerData(
     SymmetricCipherDirection.Encrypt,
-    file.header.cipherAlgorithm,
-    file.header.masterSeed,
-    file.header.encryptionIV,
+    file.outerHeader.fields.cipherAlgorithm,
+    file.outerHeader.fields.masterSeed,
+    file.outerHeader.fields.encryptionIV,
     compositeKey,
     compressedData,
   );

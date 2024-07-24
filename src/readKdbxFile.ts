@@ -8,16 +8,13 @@ import processHash from './crypto/processHash';
 import processHmac from './crypto/processHmac';
 import transformCompositeKey from './crypto/transformCompositeKey';
 import HashAlgorithm from './enums/HashAlgorithm';
-import KeePassVersion from './enums/KeePassVersion';
 import SymmetricCipherDirection from './enums/SymmetricCipherDirection';
 import readInnerHeaderFields from './innerHeader/readInnerHeaderFields';
-import readHeaderFields from './outerHeader/readHeaderFields';
-import readSignature from './outerHeader/readSignature';
+import parseKdbxHeader from './parseKdbxHeader';
 import { type KdbxFile } from './types/format';
 import { type KdbxCompositeKey, type KdbxKey } from './types/keys';
 import BufferReader from './utilities/BufferReader';
 import displayHash from './utilities/displayHash';
-import getVersionFromSignature from './utilities/getVersionFromSignature';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 import readDatabaseXml from './xml/readDatabaseXml';
 
@@ -27,37 +24,10 @@ export default async function readKdbxFile(
   keys: KdbxKey[] | KdbxCompositeKey,
   fileBytes: Buffer | Uint8Array | number[],
 ): Promise<ReadKdbxFile> {
+  const outerHeader = parseKdbxHeader(fileBytes);
+
   const reader = new BufferReader(fileBytes);
-
-  // Verify the version
-  const signature = readSignature(reader);
-  const appVersion = getVersionFromSignature(signature);
-
-  switch (appVersion) {
-    case KeePassVersion.KeePass1:
-      throw new Error('KeePass1 databases are not supported');
-    case KeePassVersion.KeePass2:
-      break;
-    default:
-      throw new Error('Unknown database format');
-  }
-
-  switch (signature.versionMajor) {
-    case 2:
-      throw new Error('KeePass2 v2.x databases are not supported');
-    case 3:
-      throw new Error('KeePass2 v3.x databases are not supported');
-    case 4:
-      break;
-    default:
-      throw new Error(
-        `Unknown database version "${signature.versionMajor}.${signature.versionMinor}"`,
-      );
-  }
-
-  // Read the outer header
-  const header = readHeaderFields(reader);
-  const headerData = reader.processed();
+  const headerData = reader.readBytes(outerHeader.size);
 
   // Read the expected header hashes
   const expectedHeaderHash = reader.readBytes(32);
@@ -75,10 +45,13 @@ export default async function readKdbxFile(
   // Transform the composite key using the KDF parameters
   const compositeKey = ArrayBuffer.isView(keys)
     ? keys
-    : await transformCompositeKey(header.kdfParameters, keys);
+    : await transformCompositeKey(outerHeader.fields.kdfParameters, keys);
 
   // Verify the HMAC hash to check the authenticity of the header and key(s)
-  const hmacKey = await generateHmacKeySeed(header.masterSeed, compositeKey);
+  const hmacKey = await generateHmacKeySeed(
+    outerHeader.fields.masterSeed,
+    compositeKey,
+  );
 
   const headerHmacHash = await processHmac(
     HashAlgorithm.Sha256,
@@ -94,15 +67,15 @@ export default async function readKdbxFile(
 
   const decryptedData = await cryptInnerData(
     SymmetricCipherDirection.Decrypt,
-    header.cipherAlgorithm,
-    header.masterSeed,
-    header.encryptionIV,
+    outerHeader.fields.cipherAlgorithm,
+    outerHeader.fields.masterSeed,
+    outerHeader.fields.encryptionIV,
     compositeKey,
     innerData,
   );
 
   const decompressedData = decompressInnerData(
-    header.compressionAlgorithm,
+    outerHeader.fields.compressionAlgorithm,
     decryptedData,
   );
 
@@ -123,5 +96,10 @@ export default async function readKdbxFile(
     streamCipher,
   );
 
-  return { compositeKey, database, header, innerHeader, signature };
+  return {
+    compositeKey,
+    database,
+    innerHeader,
+    outerHeader,
+  };
 }

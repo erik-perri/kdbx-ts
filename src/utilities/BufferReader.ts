@@ -14,6 +14,16 @@ export default class BufferReader {
     return this.cursor;
   }
 
+  set offset(value: number) {
+    if (value < 0 || value > this.buffer.length) {
+      throw new Error(
+        `Offset out of bounds. Expected value between 0 and ${this.buffer.length}, got ${value}`,
+      );
+    }
+
+    this.cursor = value;
+  }
+
   readBytes(length: number): Uint8Array {
     this.assertRemaining(length);
 

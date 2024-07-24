@@ -8,8 +8,12 @@ import { type Database } from './database';
 
 export type KdbxFile = {
   database: Database;
-  header: KdbxOuterHeaderFields;
   innerHeader: KdbxInnerHeader;
+  outerHeader: KdbxOuterHeader;
+};
+
+export type KdbxOuterHeader = {
+  fields: KdbxOuterHeaderFields;
   signature: KdbxSignature;
 };
 

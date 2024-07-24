@@ -34,20 +34,29 @@ describe('writeKdbxFile', () => {
     const header = readHeaderFields(reader);
 
     // Assert
-    expect(header.cipherAlgorithm).toEqual(originalFile.header.cipherAlgorithm);
-    expect(header.compressionAlgorithm).toEqual(
-      originalFile.header.compressionAlgorithm,
+    expect(header.cipherAlgorithm).toEqual(
+      originalFile.outerHeader.fields.cipherAlgorithm,
     );
-    expect(header.endOfHeader).toEqual(originalFile.header.endOfHeader);
+    expect(header.compressionAlgorithm).toEqual(
+      originalFile.outerHeader.fields.compressionAlgorithm,
+    );
+    expect(header.endOfHeader).toEqual(
+      originalFile.outerHeader.fields.endOfHeader,
+    );
     expect((header.kdfParameters as KdbxAesKdfParameters).rounds).toEqual(
-      (originalFile.header.kdfParameters as KdbxAesKdfParameters).rounds,
+      (originalFile.outerHeader.fields.kdfParameters as KdbxAesKdfParameters)
+        .rounds,
     );
 
-    expect(header.encryptionIV).not.toEqual(originalFile.header.encryptionIV);
-    expect(header.kdfParameters.seed).not.toEqual(
-      originalFile.header.kdfParameters.seed,
+    expect(header.encryptionIV).not.toEqual(
+      originalFile.outerHeader.fields.encryptionIV,
     );
-    expect(header.masterSeed).not.toEqual(originalFile.header.masterSeed);
+    expect(header.kdfParameters.seed).not.toEqual(
+      originalFile.outerHeader.fields.kdfParameters.seed,
+    );
+    expect(header.masterSeed).not.toEqual(
+      originalFile.outerHeader.fields.masterSeed,
+    );
   });
 
   it('does not modify a database by reading and writing', async () => {
