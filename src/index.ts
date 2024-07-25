@@ -1,5 +1,6 @@
 /* v8 ignore start */
 import benchmarkAes256KdfKey from './benchmarkAes256KdfKey';
+import benchmarkArgon2KdfKey from './benchmarkArgon2KdfKey';
 import { KeePass2 } from './constants';
 import {
   configureDependencies,
@@ -62,6 +63,7 @@ export {
   Argon2Type,
   Argon2Version,
   benchmarkAes256KdfKey,
+  benchmarkArgon2KdfKey,
   CompressionAlgorithm,
   configureDependencies,
   createChallengeResponseKey,
