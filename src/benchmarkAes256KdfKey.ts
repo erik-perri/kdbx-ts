@@ -11,7 +11,7 @@ export default async function benchmarkAes256KdfKey(
   const seed = Uint8Array.from({ length: 32 }, () => 0x4b);
 
   const trials = 3;
-  const rounds = 1000000;
+  const rounds = 100000;
   const parameters = {
     rounds: BigInt(rounds),
     seed,
