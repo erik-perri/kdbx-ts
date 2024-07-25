@@ -22,11 +22,7 @@ export default async function benchmarkAes256KdfKey(
   const startTime = Date.now();
 
   for (let i = 0; i < trials; ++i) {
-    try {
-      await transformer(key, parameters);
-    } catch (error) {
-      return rounds;
-    }
+    await transformer(key, parameters);
   }
 
   const duration = Date.now() - startTime;
