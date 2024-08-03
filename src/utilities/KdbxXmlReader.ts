@@ -155,11 +155,11 @@ export default class KdbxXmlReader extends XmlReader {
 
     const text = this.readElementText();
     if (!isProtected) {
-      return [text, isProtected];
+      return [XmlReader.decodeText(text), isProtected];
     }
 
     const data = await this.cipher.process(Uint8ArrayHelper.fromBase64(text));
-    return [Uint8ArrayHelper.toString(data), isProtected];
+    return [XmlReader.decodeText(Uint8ArrayHelper.toString(data)), isProtected];
   }
 
   readStringValue(): string {
@@ -167,7 +167,7 @@ export default class KdbxXmlReader extends XmlReader {
       return '';
     }
 
-    return this.readElementText();
+    return XmlReader.decodeText(this.readElementText());
   }
 
   readUnsignedNumberValue(radix: number = 10): number {

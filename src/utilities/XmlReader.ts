@@ -232,7 +232,9 @@ export default class XmlReader {
       const stringMatch = /^([^=\s]+)=(['"])((?!\2).*?)?\2/g.exec(remaining);
       if (stringMatch) {
         remaining = remaining.substring(stringMatch[0].length).trim();
-        attributes[stringMatch[1]] = stringMatch[3] || '';
+        attributes[stringMatch[1]] = XmlReader.decodeAttribute(
+          stringMatch[3] || '',
+        );
         continue;
       }
 
@@ -247,5 +249,22 @@ export default class XmlReader {
     }
 
     return attributes;
+  }
+
+  protected static decodeAttribute(input: string): string {
+    return input
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&apos;/g, "'")
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+  }
+
+  protected static decodeText(input: string): string {
+    return input
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"');
   }
 }
