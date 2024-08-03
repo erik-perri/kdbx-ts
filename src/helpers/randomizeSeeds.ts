@@ -1,12 +1,13 @@
-import { getDependency } from './dependencies';
+import { getDependency } from '../dependencies';
 import {
   type KdbxFile,
   type KdbxInnerHeader,
   type KdbxKdfParameters,
   type KdbxOuterHeaderFields,
-} from './types/format';
-import getSymmetricCipherIvSize from './utilities/getSymmetricCipherIvSize';
-import getSymmetricCipherKeySize from './utilities/getSymmetricCipherKeySize';
+} from '../types/format';
+import createInnerHeaderEncryptionKey from './createInnerHeaderEncryptionKey';
+import createOuterHeaderEncryptionIV from './createOuterHeaderEncryptionIV';
+import createOuterHeaderMasterSeed from './createOuterHeaderMasterSeed';
 
 export default async function randomizeSeeds(
   file: KdbxFile,
@@ -24,17 +25,17 @@ export default async function randomizeSeeds(
 
   const fields: KdbxOuterHeaderFields = {
     ...file.outerHeader.fields,
-    encryptionIV: await randomBytes(
-      getSymmetricCipherIvSize(file.outerHeader.fields.cipherAlgorithm),
+    encryptionIV: await createOuterHeaderEncryptionIV(
+      file.outerHeader.fields.cipherAlgorithm,
     ),
     kdfParameters,
-    masterSeed: await randomBytes(32),
+    masterSeed: await createOuterHeaderMasterSeed(),
   };
 
   const innerHeader: KdbxInnerHeader = {
     ...file.innerHeader,
-    innerEncryptionKey: await randomBytes(
-      getSymmetricCipherKeySize(file.innerHeader.innerEncryptionAlgorithm),
+    innerEncryptionKey: await createInnerHeaderEncryptionKey(
+      file.innerHeader.innerEncryptionAlgorithm,
     ),
   };
 

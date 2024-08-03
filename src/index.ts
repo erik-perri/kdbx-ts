@@ -24,11 +24,16 @@ import SymmetricCipherUuid from './enums/SymmetricCipherUuid';
 import KdbxError from './errors/KdbxError';
 import UnknownKdbxSignatureError from './errors/UnknownKdbxSignatureError';
 import UnsupportedKdbxVersionError from './errors/UnsupportedKdbxVersionError';
+import createAesKdfParameters from './helpers/createAesKdfParameters';
+import createArgon2KdfParameters from './helpers/createArgon2KdfParameters';
+import createInnerHeaderEncryptionKey from './helpers/createInnerHeaderEncryptionKey';
+import createOuterHeaderEncryptionIV from './helpers/createOuterHeaderEncryptionIV';
+import createOuterHeaderMasterSeed from './helpers/createOuterHeaderMasterSeed';
+import randomizeSeeds from './helpers/randomizeSeeds';
 import createChallengeResponseKey from './keys/createChallengeResponseKey';
 import createFileKey from './keys/createFileKey';
 import createPasswordKey from './keys/createPasswordKey';
 import parseKdbxHeader from './parseKdbxHeader';
-import randomizeSeeds from './randomizeSeeds';
 import readKdbxFile from './readKdbxFile';
 import { type KdbxFile, type KdbxOuterHeader } from './types/format';
 import {
@@ -66,8 +71,13 @@ export {
   benchmarkArgon2KdfKey,
   CompressionAlgorithm,
   configureDependencies,
+  createAesKdfParameters,
+  createArgon2KdfParameters,
   createChallengeResponseKey,
   createFileKey,
+  createInnerHeaderEncryptionKey,
+  createOuterHeaderEncryptionIV,
+  createOuterHeaderMasterSeed,
   createPasswordKey,
   DefaultIconNumber,
   HashAlgorithm,

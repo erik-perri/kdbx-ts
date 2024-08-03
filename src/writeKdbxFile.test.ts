@@ -4,10 +4,10 @@ import pako from 'pako';
 import { describe, expect, it, vitest } from 'vitest';
 
 import { sampleDatabasesKeePassXC } from '../tests/fixtures/databases';
+import randomizeSeeds from './helpers/randomizeSeeds';
 import createPasswordKey from './keys/createPasswordKey';
 import readHeaderFields from './outerHeader/readHeaderFields';
 import readSignature from './outerHeader/readSignature';
-import randomizeSeeds from './randomizeSeeds';
 import readKdbxFile from './readKdbxFile';
 import { type KdbxAesKdfParameters } from './types/format';
 import BufferReader from './utilities/BufferReader';
