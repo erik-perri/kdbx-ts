@@ -17,7 +17,7 @@ describe('writeKdbxFile', () => {
   it('can write a readable header', async () => {
     // Arrange
     const keys = [await createPasswordKey('password')];
-    const originalFile = await readKdbxFile(
+    const { file: originalFile } = await readKdbxFile(
       keys,
       sampleDatabasesKeePassXC.AesAesCompressed.file,
     );
@@ -27,7 +27,7 @@ describe('writeKdbxFile', () => {
     // Act
     const result = await writeKdbxFile(keys, file);
 
-    const reader = new BufferReader(result);
+    const reader = new BufferReader(result.bytes);
 
     readSignature(reader);
 
@@ -85,10 +85,10 @@ describe('writeKdbxFile', () => {
       'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
     );
     const keys = [await createPasswordKey('password')];
-    const parsed = await readKdbxFile(keys, original);
+    const { file } = await readKdbxFile(keys, original);
 
     // Act
-    const saved = await writeKdbxFile(keys, parsed);
+    const saved = await writeKdbxFile(keys, file);
 
     // Assert
     // Since the GZip compression produces different results, we have to compare the uncompressed data
@@ -102,7 +102,7 @@ describe('writeKdbxFile', () => {
     // Check the outer header
     // TODO Detect this position automatically
     expect(Uint8Array.from(original.subarray(0, 271))).toEqual(
-      Uint8Array.from(saved.subarray(0, 271)),
+      Uint8Array.from(saved.bytes.subarray(0, 271)),
     );
   });
 });

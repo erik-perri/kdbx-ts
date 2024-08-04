@@ -17,10 +17,15 @@ import { type KdbxKey } from './types/keys';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 import serializeDatabaseXml from './xml/serializeDatabaseXml';
 
+export type KdbxWriteResult = {
+  bytes: Uint8Array;
+  compositeKey: Uint8Array;
+};
+
 export default async function writeKdbxFile(
   keys: KdbxKey[],
   file: KdbxFile,
-): Promise<Uint8Array> {
+): Promise<KdbxWriteResult> {
   const signature = serializeSignature(file.outerHeader.signature);
 
   const compositeKey = await transformCompositeKey(
@@ -83,7 +88,7 @@ export default async function writeKdbxFile(
     outerHeaderHmacKey,
   );
 
-  return Uint8Array.from(
+  const bytes = Uint8Array.from(
     Buffer.concat([
       signature,
       outerHeader,
@@ -92,4 +97,9 @@ export default async function writeKdbxFile(
       blocks,
     ]),
   );
+
+  return {
+    bytes,
+    compositeKey,
+  };
 }

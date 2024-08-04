@@ -18,12 +18,15 @@ import displayHash from './utilities/displayHash';
 import Uint8ArrayHelper from './utilities/Uint8ArrayHelper';
 import readDatabaseXml from './xml/readDatabaseXml';
 
-type ReadKdbxFile = KdbxFile & { compositeKey: Uint8Array };
+export type KdbxReadResult = {
+  compositeKey: Uint8Array;
+  file: KdbxFile;
+};
 
 export default async function readKdbxFile(
   keys: KdbxKey[] | KdbxCompositeKey,
   fileBytes: Buffer | Uint8Array | number[],
-): Promise<ReadKdbxFile> {
+): Promise<KdbxReadResult> {
   const outerHeader = parseKdbxHeader(fileBytes);
 
   const reader = new BufferReader(fileBytes);
@@ -96,10 +99,14 @@ export default async function readKdbxFile(
     streamCipher,
   );
 
-  return {
-    compositeKey,
+  const file: KdbxFile = {
     database,
     innerHeader,
     outerHeader,
+  };
+
+  return {
+    compositeKey,
+    file,
   };
 }
