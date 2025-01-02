@@ -10,7 +10,7 @@ export default async function transformArgon2KdfKey(
     await argon2.hash(Buffer.from(key), {
       memoryCost: Number(parameters.memoryInBytes / BigInt(1024)),
       parallelism: Number(parameters.parallelism),
-      salt: parameters.seed,
+      salt: Buffer.from(parameters.seed),
       timeCost: Number(parameters.iterations),
       type: parameters.type,
       version: parameters.version,
