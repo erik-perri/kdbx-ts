@@ -22,6 +22,7 @@ export default function parseKdbxHeader(
       );
     case KeePassVersion.KeePass2:
       break;
+    case KeePassVersion.Unknown:
     default:
       throw new UnknownKdbxSignatureError('Unknown database format');
   }

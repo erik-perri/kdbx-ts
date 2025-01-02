@@ -9,6 +9,8 @@ export default function getSymmetricCipherKeySize(
       return 64;
     case SymmetricCipherAlgorithm.Salsa20:
       return 32;
+    case SymmetricCipherAlgorithm.Aes256_CBC:
+    case SymmetricCipherAlgorithm.Twofish_CBC:
     default:
       throw new Error(
         `Unknown expected key size for cipher algorithm "${displaySymmetricCipherAlgorithm(algorithm)}"`,

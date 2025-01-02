@@ -31,6 +31,8 @@ export default async function createInnerStreamCipher(
       );
     }
 
+    case SymmetricCipherAlgorithm.Aes256_CBC:
+    case SymmetricCipherAlgorithm.Twofish_CBC:
     default:
       throw new Error(
         `Invalid inner stream cipher algorithm ${displaySymmetricCipherAlgorithm(algorithm)}`,
