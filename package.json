@@ -3,22 +3,22 @@
   "version": "0.0.1",
   "description": "WIP",
   "devDependencies": {
-    "@eslint/js": "^9.5.0",
+    "@eslint/js": "^9.17.0",
     "@types/pako": "^2.0.3",
-    "@vitest/coverage-v8": "^1.6.0",
-    "argon2": "^0.40.3",
+    "@vitest/coverage-v8": "^2.1.8",
+    "argon2": "^0.41.1",
     "dts-bundle-generator": "^9.5.1",
-    "esbuild": "0.21.5",
-    "eslint": "^8.57.0",
-    "eslint-plugin-simple-import-sort": "^12.1.0",
+    "esbuild": "0.24.2",
+    "eslint": "^9.17.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "fast-glob": "^3.3.2",
     "pako": "^2.1.0",
-    "prettier": "3.3.2",
+    "prettier": "3.4.2",
     "ts-chacha20": "^1.2.0",
     "twofish-ts": "^1.0.2",
-    "typescript": "^5.5.2",
-    "typescript-eslint": "^7.14.1",
-    "vitest": "^1.6.0"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.19.0",
+    "vitest": "^2.1.8"
   },
   "exports": {
     ".": {
