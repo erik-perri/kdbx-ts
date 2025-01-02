@@ -1,4 +1,5 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+
 import { expect } from 'vitest';
 
 import { KeePass2 } from '../../src/constants';
