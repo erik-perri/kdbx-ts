@@ -1,3 +1,5 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type Entry } from '../../types/database';
 import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
@@ -10,20 +12,21 @@ import parseTimesTag from './parseTimesTag';
 
 export default async function parseEntryTag(
   reader: KdbxXmlReader,
+  element: Element,
   fromHistory: boolean,
 ): Promise<Entry> {
-  reader.expect('Entry');
+  reader.assertTag(element, 'Entry');
 
   const entry: Partial<Entry> = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'UUID':
-        entry.uuid = await element.readUuidValue();
+        entry.uuid = await reader.readUuidValue(child);
         break;
 
       case 'String': {
-        const value = await parseEntryStringTag(element);
+        const value = await parseEntryStringTag(reader, child);
 
         if (!entry.attributes) {
           entry.attributes = {};
@@ -39,7 +42,7 @@ export default async function parseEntryTag(
       }
 
       case 'Times':
-        entry.timeInfo = parseTimesTag(element);
+        entry.timeInfo = parseTimesTag(reader, child);
         break;
 
       case 'History':
@@ -47,15 +50,15 @@ export default async function parseEntryTag(
           throw new Error('Recursive history element found');
         }
 
-        entry.history = await parseEntryHistoryTag(element);
+        entry.history = await parseEntryHistoryTag(reader, child);
         break;
 
       case 'CustomData':
-        entry.customData = parseCustomDataTag(element, false);
+        entry.customData = parseCustomDataTag(reader, child, false);
         break;
 
       case 'IconID':
-        entry.iconNumber = element.readNumberValue();
+        entry.iconNumber = reader.readNumberValue(child);
 
         if (!isDefaultIconNumber(entry.iconNumber)) {
           console.warn(
@@ -65,32 +68,32 @@ export default async function parseEntryTag(
         break;
 
       case 'CustomIconUUID':
-        entry.customIcon = await element.readUuidValue();
+        entry.customIcon = await reader.readUuidValue(child);
         break;
 
       case 'ForegroundColor':
-        entry.foregroundColor = element.readColorValue();
+        entry.foregroundColor = reader.readColorValue(child);
         break;
 
       case 'BackgroundColor':
-        entry.backgroundColor = element.readColorValue();
+        entry.backgroundColor = reader.readColorValue(child);
         break;
 
       case 'OverrideURL':
-        entry.overrideURL = element.readStringValue();
+        entry.overrideURL = reader.readStringValue(child);
         break;
 
       case 'Tags':
-        entry.tags = element.readStringValue();
+        entry.tags = reader.readStringValue(child);
         break;
 
       case 'QualityCheck':
-        entry.qualityCheck = element.readBooleanValue();
+        entry.qualityCheck = reader.readBooleanValue(child);
         break;
 
       case 'Binary': {
-        const tag = parseEntryBinaryTag(element);
-        const data = element.readBinaryPoolData(tag.ref);
+        const tag = parseEntryBinaryTag(reader, child);
+        const data = reader.readBinaryPoolData(tag.ref);
 
         if (!entry.attachments) {
           entry.attachments = {};
@@ -104,22 +107,22 @@ export default async function parseEntryTag(
       }
 
       case 'AutoType':
-        entry.autoType = parseAutoTypeTag(element);
+        entry.autoType = parseAutoTypeTag(reader, child);
         break;
 
       case 'PreviousParentGroup':
-        entry.previousParentGroup = await element.readUuidValue();
+        entry.previousParentGroup = await reader.readUuidValue(child);
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
 
   if (!isEntryComplete(entry)) {
-    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
+    throw new Error(`Found "${element.tagName}" tag with incomplete data`);
   }
 
   return entry;

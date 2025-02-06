@@ -1,44 +1,49 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type TimeInfo } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
-export default function parseTimesTag(reader: KdbxXmlReader): TimeInfo {
-  reader.expect('Times');
+export default function parseTimesTag(
+  reader: KdbxXmlReader,
+  element: Element,
+): TimeInfo {
+  reader.assertTag(element, 'Times');
 
   const timeInfo: TimeInfo = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'LastModificationTime':
-        timeInfo.lastModificationTime = element.readDateTimeValue();
+        timeInfo.lastModificationTime = reader.readDateTimeValue(child);
         break;
 
       case 'CreationTime':
-        timeInfo.creationTime = element.readDateTimeValue();
+        timeInfo.creationTime = reader.readDateTimeValue(child);
         break;
 
       case 'LastAccessTime':
-        timeInfo.lastAccessTime = element.readDateTimeValue();
+        timeInfo.lastAccessTime = reader.readDateTimeValue(child);
         break;
 
       case 'ExpiryTime':
-        timeInfo.expiryTime = element.readDateTimeValue();
+        timeInfo.expiryTime = reader.readDateTimeValue(child);
         break;
 
       case 'Expires':
-        timeInfo.expires = element.readBooleanValue();
+        timeInfo.expires = reader.readBooleanValue(child);
         break;
 
       case 'UsageCount':
-        timeInfo.usageCount = element.readNumberValue();
+        timeInfo.usageCount = reader.readNumberValue(child);
         break;
 
       case 'LocationChanged':
-        timeInfo.locationChanged = element.readDateTimeValue();
+        timeInfo.locationChanged = reader.readDateTimeValue(child);
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }

@@ -1,22 +1,25 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type DeletedObject } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default async function parseDeletedObjectsTag(
   reader: KdbxXmlReader,
+  element: Element,
 ): Promise<DeletedObject[]> {
-  reader.expect('DeletedObjects');
+  reader.assertTag(element, 'DeletedObjects');
 
   const objects: DeletedObject[] = [];
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'DeletedObject':
-        objects.push(await parseDeletedObjectTag(element));
+        objects.push(await parseDeletedObjectTag(reader, child));
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
@@ -26,30 +29,31 @@ export default async function parseDeletedObjectsTag(
 
 async function parseDeletedObjectTag(
   reader: KdbxXmlReader,
+  element: Element,
 ): Promise<DeletedObject> {
-  reader.expect('DeletedObject');
+  reader.assertTag(element, 'DeletedObject');
 
   const deleted: Partial<DeletedObject> = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'UUID':
-        deleted.uuid = await element.readUuidValue();
+        deleted.uuid = await reader.readUuidValue(child);
         break;
 
       case 'DeletionTime':
-        deleted.deletionTime = element.readDateTimeValue();
+        deleted.deletionTime = reader.readDateTimeValue(child);
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
 
   if (!isDeletedObjectComplete(deleted)) {
-    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
+    throw new Error(`Found "${element.tagName}" tag with incomplete data`);
   }
 
   return deleted;

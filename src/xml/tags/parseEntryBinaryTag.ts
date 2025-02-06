@@ -1,3 +1,5 @@
+import { type Element } from '@xmldom/xmldom';
+
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 type BinaryTagData = {
@@ -7,35 +9,36 @@ type BinaryTagData = {
 
 export default function parseEntryBinaryTag(
   reader: KdbxXmlReader,
+  element: Element,
 ): BinaryTagData {
-  reader.expect('Binary');
+  reader.assertTag(element, 'Binary');
 
   const result: Partial<BinaryTagData> = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'Key':
-        result.key = element.readStringValue();
+        result.key = reader.readStringValue(child);
         break;
 
       case 'Value':
-        if (element.attribute('Ref') === undefined) {
+        if (reader.attribute(child, 'Ref') === undefined) {
           // TODO Find out if this is possible on v4+ and change this message if not
           throw new Error('Inline Binary not implemented');
         }
 
-        result.ref = element.attribute('Ref');
+        result.ref = reader.attribute(child, 'Ref');
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
 
   if (!isBinaryTagDataComplete(result)) {
-    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
+    throw new Error(`Found "${element.tagName}" tag with incomplete data`);
   }
 
   return result;

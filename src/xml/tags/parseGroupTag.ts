@@ -1,3 +1,5 @@
+import type { Element } from '@xmldom/xmldom';
+
 import { type Group } from '../../types/database';
 import { isDefaultIconNumber } from '../../utilities/isDefaultIconNumber';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
@@ -7,35 +9,36 @@ import parseTimesTag from './parseTimesTag';
 
 export default async function parseGroupTag(
   reader: KdbxXmlReader,
+  element: Element,
 ): Promise<Group> {
-  reader.expect('Group');
+  reader.assertTag(element, 'Group');
 
   const group: Partial<Group> = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'UUID':
-        group.uuid = await element.readUuidValue();
+        group.uuid = await reader.readUuidValue(child);
         break;
 
       case 'Name':
-        group.name = element.readStringValue();
+        group.name = reader.readStringValue(child);
         break;
 
       case 'Notes':
-        group.notes = element.readStringValue();
+        group.notes = reader.readStringValue(child);
         break;
 
       case 'Tags':
-        group.tags = element.readStringValue();
+        group.tags = reader.readStringValue(child);
         break;
 
       case 'Times':
-        group.timeInfo = parseTimesTag(element);
+        group.timeInfo = parseTimesTag(reader, child);
         break;
 
       case 'IconID':
-        group.iconNumber = element.readNumberValue();
+        group.iconNumber = reader.readNumberValue(child);
 
         if (!isDefaultIconNumber(group.iconNumber)) {
           console.warn(
@@ -45,7 +48,7 @@ export default async function parseGroupTag(
         break;
 
       case 'CustomIconUUID':
-        group.customIcon = await element.readUuidValue();
+        group.customIcon = await reader.readUuidValue(child);
         break;
 
       case 'Group':
@@ -53,7 +56,7 @@ export default async function parseGroupTag(
           group.children = [];
         }
 
-        group.children.push(await parseGroupTag(element));
+        group.children.push(await parseGroupTag(reader, child));
         break;
 
       case 'Entry':
@@ -61,46 +64,46 @@ export default async function parseGroupTag(
           group.entries = [];
         }
 
-        group.entries.push(await parseEntryTag(element, false));
+        group.entries.push(await parseEntryTag(reader, child, false));
         break;
 
       case 'CustomData':
-        group.customData = parseCustomDataTag(element, false);
+        group.customData = parseCustomDataTag(reader, child, false);
         break;
 
       case 'IsExpanded':
-        group.isExpanded = element.readBooleanValue();
+        group.isExpanded = reader.readBooleanValue(child);
         break;
 
       case 'DefaultAutoTypeSequence':
-        group.defaultAutoTypeSequence = element.readStringValue();
+        group.defaultAutoTypeSequence = reader.readStringValue(child);
         break;
 
       case 'EnableAutoType':
-        group.enableAutoType = element.readNullableBoolean();
+        group.enableAutoType = reader.readNullableBoolean(child);
         break;
 
       case 'EnableSearching':
-        group.enableSearching = element.readNullableBoolean();
+        group.enableSearching = reader.readNullableBoolean(child);
         break;
 
       case 'LastTopVisibleEntry':
-        group.lastTopVisibleEntry = await element.readUuidValue();
+        group.lastTopVisibleEntry = await reader.readUuidValue(child);
         break;
 
       case 'PreviousParentGroup':
-        group.previousParentGroup = await element.readUuidValue();
+        group.previousParentGroup = await reader.readUuidValue(child);
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
 
   if (!isGroupComplete(group)) {
-    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
+    throw new Error(`Found "${element.tagName}" tag with incomplete data`);
   }
 
   return group;

@@ -1,35 +1,38 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type EntryAttribute } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default async function parseEntryStringTag(
   reader: KdbxXmlReader,
+  element: Element,
 ): Promise<EntryAttribute> {
-  reader.expect('String');
+  reader.assertTag(element, 'String');
 
   let key: string | undefined;
   let value: string | undefined;
   let isProtected: boolean | undefined;
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'Key':
-        key = element.readStringValue();
+        key = reader.readStringValue(child);
         break;
 
       case 'Value':
         [value, isProtected] =
-          await element.readPotentiallyProtectedStringValue();
+          await reader.readPotentiallyProtectedStringValue(child);
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
 
   if (key === undefined || value === undefined) {
-    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
+    throw new Error(`Found "${element.tagName}" tag with incomplete data`);
   }
 
   return {

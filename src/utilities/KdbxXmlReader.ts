@@ -1,4 +1,4 @@
-import { type Document, DOMParser, Element, Node } from '@xmldom/xmldom';
+import { Element, Node } from '@xmldom/xmldom';
 
 import type { SymmetricCipher } from '../dependencies';
 import NullableBoolean from '../enums/NullableBoolean';
@@ -9,49 +9,29 @@ import isBase64 from './isBase64';
 import Uint8ArrayHelper from './Uint8ArrayHelper';
 
 export default class KdbxXmlReader {
-  private constructor(
-    private readonly current: Element,
-    private readonly document: Document,
+  public constructor(
     private readonly cipher: SymmetricCipher,
     private readonly binaryPool: KdbxBinaryPoolValue[] | undefined,
   ) {
     //
   }
 
-  public static create(
-    contents: string,
-    cipher: SymmetricCipher,
-    binaryPool: KdbxBinaryPoolValue[] | undefined,
-  ): KdbxXmlReader {
-    const document = new DOMParser().parseFromString(contents, 'text/xml');
-
-    if (!document.documentElement) {
-      throw new Error('Document has no root element.');
-    }
-
-    return new this(document.documentElement, document, cipher, binaryPool);
-  }
-
-  public get tagName(): string {
-    return this.current.tagName;
-  }
-
-  public attribute(name: string): string | undefined {
-    const attribute = this.current.attributes.getNamedItem(name);
-
-    return attribute?.value;
-  }
-
-  public expect(tagName: string): void {
-    if (this.current.tagName !== tagName) {
+  public assertTag(element: Element, tagName: string): void {
+    if (element.tagName !== tagName) {
       throw new Error(
-        `Expected element "${tagName}" but found "${this.current.tagName}"`,
+        `Expected element "${tagName}" but found "${element.tagName}"`,
       );
     }
   }
 
-  public *elements(): Generator<KdbxXmlReader> {
-    for (const childNode of this.current.childNodes) {
+  public attribute(element: Element, name: string): string | undefined {
+    const attribute = element.attributes.getNamedItem(name);
+
+    return attribute?.value;
+  }
+
+  public *children(element: Element): Generator<Element> {
+    for (const childNode of element.childNodes) {
       switch (childNode.nodeType) {
         case Node.TEXT_NODE:
           if (
@@ -67,38 +47,33 @@ export default class KdbxXmlReader {
         case Node.ELEMENT_NODE:
           if (!(childNode instanceof Element)) {
             throw new Error(
-              `Unexpected non-Element node found in "${this.current.tagName}"`,
+              `Unexpected non-Element node found in "${element.tagName}"`,
             );
           }
 
-          yield new KdbxXmlReader(
-            childNode,
-            this.document,
-            this.cipher,
-            this.binaryPool,
-          );
+          yield childNode;
           break;
 
         default:
           throw new Error(
-            `Unexpected node type ${childNode.nodeType} found in "${this.current.tagName}"`,
+            `Unexpected node type ${childNode.nodeType} found in "${element.tagName}"`,
           );
       }
     }
   }
 
-  async readBinaryValue(): Promise<Uint8Array> {
-    const value = this.readStringValue();
+  public async readBinaryValue(element: Element): Promise<Uint8Array> {
+    const value = this.readStringValue(element);
     const data = Uint8ArrayHelper.fromBase64(value);
 
-    if (this.isProtectedValue()) {
+    if (this.isProtectedValue(element)) {
       return await this.cipher.process(data);
     }
 
     return data;
   }
 
-  readBinaryPoolData(index: string): Uint8Array {
+  public readBinaryPoolData(index: string): Uint8Array {
     const poolValue = this.binaryPool?.find((value) => value.index === index);
 
     if (!poolValue) {
@@ -108,8 +83,8 @@ export default class KdbxXmlReader {
     return poolValue.data;
   }
 
-  public readBooleanValue(): boolean {
-    const value = this.readStringValue();
+  public readBooleanValue(element: Element): boolean {
+    const value = this.readStringValue(element);
 
     switch (value.toLowerCase()) {
       case 'true':
@@ -122,8 +97,8 @@ export default class KdbxXmlReader {
     }
   }
 
-  public readColorValue(): string {
-    const colorString = this.readStringValue();
+  public readColorValue(element: Element): string {
+    const colorString = this.readStringValue(element);
 
     if (!colorString.length) {
       return colorString;
@@ -136,8 +111,8 @@ export default class KdbxXmlReader {
     return colorString;
   }
 
-  public readDateTimeValue(): Date {
-    const value = this.readStringValue();
+  public readDateTimeValue(element: Element): Date {
+    const value = this.readStringValue(element);
 
     if (!isBase64(value)) {
       return this.readDateTimeFromIsoString(value, true);
@@ -146,8 +121,8 @@ export default class KdbxXmlReader {
     return this.readDateTimeFromBase64(value);
   }
 
-  readNullableBoolean(): NullableBoolean {
-    const value = this.readStringValue();
+  public readNullableBoolean(element: Element): NullableBoolean {
+    const value = this.readStringValue(element);
 
     switch (value.toLowerCase()) {
       case 'null':
@@ -161,16 +136,18 @@ export default class KdbxXmlReader {
     }
   }
 
-  public readNumberValue(radix: number = 10): number {
-    const text = this.readStringValue();
+  public readNumberValue(element: Element, radix: number = 10): number {
+    const text = this.readStringValue(element);
 
     return parseInt(text, radix);
   }
 
-  async readPotentiallyProtectedStringValue(): Promise<[string, boolean]> {
-    const isProtected = this.isProtectedValue();
+  public async readPotentiallyProtectedStringValue(
+    element: Element,
+  ): Promise<[string, boolean]> {
+    const isProtected = this.isProtectedValue(element);
 
-    const text = this.readStringValue();
+    const text = this.readStringValue(element);
 
     if (!isProtected || text.length === 0) {
       return [text, isProtected];
@@ -181,18 +158,16 @@ export default class KdbxXmlReader {
     return [Uint8ArrayHelper.toString(data), isProtected];
   }
 
-  public readStringValue(): string {
-    if (this.current.textContent === null) {
-      throw new Error(
-        `Text content is null for element "${this.current.tagName}".`,
-      );
+  public readStringValue(element: Element): string {
+    if (element.textContent === null) {
+      throw new Error(`Text content is null for element "${element.tagName}".`);
     }
 
-    return this.current.textContent;
+    return element.textContent;
   }
 
-  public async readUuidValue(): Promise<string> {
-    const data = await this.readBinaryValue();
+  public async readUuidValue(element: Element): Promise<string> {
+    const data = await this.readBinaryValue(element);
 
     if (data.byteLength !== 16) {
       throw new Error(
@@ -241,8 +216,8 @@ export default class KdbxXmlReader {
     return new Date();
   }
 
-  private isProtectedValue(): boolean {
-    const protectedAttribute = this.attribute('Protected');
+  private isProtectedValue(element: Element): boolean {
+    const protectedAttribute = this.attribute(element, 'Protected');
 
     return protectedAttribute?.toLowerCase() === 'true';
   }

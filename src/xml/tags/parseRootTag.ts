@@ -1,3 +1,5 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type DatabaseRoot } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseDeletedObjectsTag from './parseDeletedObjectsTag';
@@ -5,30 +7,31 @@ import parseGroupTag from './parseGroupTag';
 
 export default async function parseRootTag(
   reader: KdbxXmlReader,
+  element: Element,
 ): Promise<DatabaseRoot> {
-  reader.expect('Root');
+  reader.assertTag(element, 'Root');
 
   const result: Partial<DatabaseRoot> = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'Group':
-        result.group = await parseGroupTag(element);
+        result.group = await parseGroupTag(reader, child);
         break;
 
       case 'DeletedObjects':
-        result.deletedObjects = await parseDeletedObjectsTag(element);
+        result.deletedObjects = await parseDeletedObjectsTag(reader, child);
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
 
   if (!isDatabaseRootComplete(result)) {
-    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
+    throw new Error(`Found "${element.tagName}" tag with incomplete data`);
   }
 
   return result;

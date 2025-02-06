@@ -1,18 +1,21 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type Icon, type Uuid } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 import parseIconTag from './parseIconTag';
 
 export default async function parseCustomIconsTag(
   reader: KdbxXmlReader,
+  element: Element,
 ): Promise<Record<Uuid, Icon | undefined>> {
-  reader.expect('CustomIcons');
+  reader.assertTag(element, 'CustomIcons');
 
   const icons: Record<Uuid, Icon | undefined> = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'Icon': {
-        const icon = await parseIconTag(element);
+        const icon = await parseIconTag(reader, child);
 
         icons[icon.uuid] = icon;
         break;
@@ -20,7 +23,7 @@ export default async function parseCustomIconsTag(
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }

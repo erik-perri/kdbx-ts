@@ -1,3 +1,5 @@
+import type { Element } from '@xmldom/xmldom';
+
 import {
   type CustomData,
   type CustomDataWithTimes,
@@ -6,26 +8,29 @@ import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseCustomDataTag(
   reader: KdbxXmlReader,
+  element: Element,
   withTimes: true,
 ): Record<string, CustomDataWithTimes | undefined>;
 
 export default function parseCustomDataTag(
   reader: KdbxXmlReader,
+  element: Element,
   withTimes: false,
 ): Record<string, CustomData | undefined>;
 
 export default function parseCustomDataTag(
   reader: KdbxXmlReader,
+  element: Element,
   withTimes: boolean,
 ): Record<string, CustomData | CustomDataWithTimes | undefined> {
-  reader.expect('CustomData');
+  reader.assertTag(element, 'CustomData');
 
   const customData: Record<string, CustomData | undefined> = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'Item': {
-        const item = parseCustomDataItemTag(element, withTimes);
+        const item = parseCustomDataItemTag(reader, child, withTimes);
 
         if (!item.key || !item.value) {
           throw new Error('Missing custom data key or value');
@@ -37,7 +42,7 @@ export default function parseCustomDataTag(
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
@@ -47,20 +52,21 @@ export default function parseCustomDataTag(
 
 function parseCustomDataItemTag(
   reader: KdbxXmlReader,
+  element: Element,
   withTimes: boolean,
 ): CustomData | CustomDataWithTimes {
-  reader.expect('Item');
+  reader.assertTag(element, 'Item');
 
   const customData: Partial<CustomDataWithTimes> = {};
 
-  for (const element of reader.elements()) {
-    switch (element.tagName) {
+  for (const child of reader.children(element)) {
+    switch (child.tagName) {
       case 'Key':
-        customData.key = element.readStringValue();
+        customData.key = reader.readStringValue(child);
         break;
 
       case 'Value':
-        customData.value = element.readStringValue();
+        customData.value = reader.readStringValue(child);
         break;
 
       case 'LastModificationTime':
@@ -69,18 +75,18 @@ function parseCustomDataItemTag(
             'Unexpected "LastModificationTime" tag in custom data item',
           );
         }
-        customData.lastModified = element.readDateTimeValue();
+        customData.lastModified = reader.readDateTimeValue(child);
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
+          `Unexpected tag "${child.tagName}" while parsing "${element.tagName}"`,
         );
     }
   }
 
   if (!isCustomDataItemComplete(customData)) {
-    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
+    throw new Error(`Found "${element.tagName}" tag with incomplete data`);
   }
 
   return customData;
