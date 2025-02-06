@@ -7,6 +7,7 @@
     "@types/node": "^22.13.1",
     "@types/pako": "^2.0.3",
     "@vitest/coverage-v8": "^2.1.9",
+    "@xmldom/xmldom": "^0.9.7",
     "argon2": "^0.41.1",
     "dts-bundle-generator": "^9.5.1",
     "esbuild": "0.24.2",
