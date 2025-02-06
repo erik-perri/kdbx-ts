@@ -5,14 +5,14 @@ import parseIconTag from './parseIconTag';
 export default async function parseCustomIconsTag(
   reader: KdbxXmlReader,
 ): Promise<Record<Uuid, Icon | undefined>> {
-  reader.assertOpenedTagOf('CustomIcons');
+  reader.expect('CustomIcons');
 
   const icons: Record<Uuid, Icon | undefined> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Icon': {
-        const icon = await parseIconTag(reader.readFromCurrent());
+        const icon = await parseIconTag(element);
 
         icons[icon.uuid] = icon;
         break;
@@ -20,7 +20,7 @@ export default async function parseCustomIconsTag(
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "CustomIcons"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }

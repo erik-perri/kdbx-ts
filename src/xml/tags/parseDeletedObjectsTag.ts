@@ -4,24 +4,19 @@ import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 export default async function parseDeletedObjectsTag(
   reader: KdbxXmlReader,
 ): Promise<DeletedObject[]> {
-  reader.assertOpenedTagOf('DeletedObjects');
+  reader.expect('DeletedObjects');
 
   const objects: DeletedObject[] = [];
 
-  // If we're a close tag, we don't need to do anything
-  if (reader.current.isClose) {
-    return objects;
-  }
-
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'DeletedObject':
-        objects.push(await parseDeletedObjectTag(reader.readFromCurrent()));
+        objects.push(await parseDeletedObjectTag(element));
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "DeletedObjects"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
@@ -32,29 +27,29 @@ export default async function parseDeletedObjectsTag(
 async function parseDeletedObjectTag(
   reader: KdbxXmlReader,
 ): Promise<DeletedObject> {
-  reader.assertOpenedTagOf('DeletedObject');
+  reader.expect('DeletedObject');
 
   const deleted: Partial<DeletedObject> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'UUID':
-        deleted.uuid = await reader.readUuidValue();
+        deleted.uuid = await element.readUuidValue();
         break;
 
       case 'DeletionTime':
-        deleted.deletionTime = reader.readDateTimeValue();
+        deleted.deletionTime = element.readDateTimeValue();
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "DeletedObject"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
 
   if (!isDeletedObjectComplete(deleted)) {
-    throw new Error('Found "DeletedObject" tag with incomplete data');
+    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
   }
 
   return deleted;

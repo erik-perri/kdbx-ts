@@ -5,19 +5,19 @@ import parseEntryTag from './parseEntryTag';
 export default async function parseEntryHistoryTag(
   reader: KdbxXmlReader,
 ): Promise<Entry[]> {
-  reader.assertOpenedTagOf('History');
+  reader.expect('History');
 
   const history: Entry[] = [];
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Entry':
-        history.push(await parseEntryTag(reader.readFromCurrent(), true));
+        history.push(await parseEntryTag(element, true));
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "History"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }

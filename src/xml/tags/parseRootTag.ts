@@ -6,35 +6,29 @@ import parseGroupTag from './parseGroupTag';
 export default async function parseRootTag(
   reader: KdbxXmlReader,
 ): Promise<DatabaseRoot> {
-  reader.assertOpenedTagOf('Root');
+  reader.expect('Root');
 
   const result: Partial<DatabaseRoot> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Group':
-        if (result.group) {
-          throw new Error('Multiple root group elements');
-        }
-
-        result.group = await parseGroupTag(reader.readFromCurrent());
+        result.group = await parseGroupTag(element);
         break;
 
       case 'DeletedObjects':
-        result.deletedObjects = await parseDeletedObjectsTag(
-          reader.readFromCurrent(),
-        );
+        result.deletedObjects = await parseDeletedObjectsTag(element);
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "Root"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
 
   if (!isDatabaseRootComplete(result)) {
-    throw new Error('Found "Root" tag with incomplete data');
+    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
   }
 
   return result;

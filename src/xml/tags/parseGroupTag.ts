@@ -8,34 +8,34 @@ import parseTimesTag from './parseTimesTag';
 export default async function parseGroupTag(
   reader: KdbxXmlReader,
 ): Promise<Group> {
-  reader.assertOpenedTagOf('Group');
+  reader.expect('Group');
 
   const group: Partial<Group> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'UUID':
-        group.uuid = await reader.readUuidValue();
+        group.uuid = await element.readUuidValue();
         break;
 
       case 'Name':
-        group.name = reader.readStringValue();
+        group.name = element.readStringValue();
         break;
 
       case 'Notes':
-        group.notes = reader.readStringValue();
+        group.notes = element.readStringValue();
         break;
 
       case 'Tags':
-        group.tags = reader.readStringValue();
+        group.tags = element.readStringValue();
         break;
 
       case 'Times':
-        group.timeInfo = parseTimesTag(reader.readFromCurrent());
+        group.timeInfo = parseTimesTag(element);
         break;
 
       case 'IconID':
-        group.iconNumber = reader.readNumberValue();
+        group.iconNumber = element.readNumberValue();
 
         if (!isDefaultIconNumber(group.iconNumber)) {
           console.warn(
@@ -45,7 +45,7 @@ export default async function parseGroupTag(
         break;
 
       case 'CustomIconUUID':
-        group.customIcon = await reader.readUuidValue();
+        group.customIcon = await element.readUuidValue();
         break;
 
       case 'Group':
@@ -53,7 +53,7 @@ export default async function parseGroupTag(
           group.children = [];
         }
 
-        group.children.push(await parseGroupTag(reader.readFromCurrent()));
+        group.children.push(await parseGroupTag(element));
         break;
 
       case 'Entry':
@@ -61,48 +61,46 @@ export default async function parseGroupTag(
           group.entries = [];
         }
 
-        group.entries.push(
-          await parseEntryTag(reader.readFromCurrent(), false),
-        );
+        group.entries.push(await parseEntryTag(element, false));
         break;
 
       case 'CustomData':
-        group.customData = parseCustomDataTag(reader.readFromCurrent(), false);
+        group.customData = parseCustomDataTag(element, false);
         break;
 
       case 'IsExpanded':
-        group.isExpanded = reader.readBooleanValue();
+        group.isExpanded = element.readBooleanValue();
         break;
 
       case 'DefaultAutoTypeSequence':
-        group.defaultAutoTypeSequence = reader.readStringValue();
+        group.defaultAutoTypeSequence = element.readStringValue();
         break;
 
       case 'EnableAutoType':
-        group.enableAutoType = reader.readNullableBoolean();
+        group.enableAutoType = element.readNullableBoolean();
         break;
 
       case 'EnableSearching':
-        group.enableSearching = reader.readNullableBoolean();
+        group.enableSearching = element.readNullableBoolean();
         break;
 
       case 'LastTopVisibleEntry':
-        group.lastTopVisibleEntry = await reader.readUuidValue();
+        group.lastTopVisibleEntry = await element.readUuidValue();
         break;
 
       case 'PreviousParentGroup':
-        group.previousParentGroup = await reader.readUuidValue();
+        group.previousParentGroup = await element.readUuidValue();
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "Group"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
 
   if (!isGroupComplete(group)) {
-    throw new Error('Found "Group" tag with incomplete data');
+    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
   }
 
   return group;

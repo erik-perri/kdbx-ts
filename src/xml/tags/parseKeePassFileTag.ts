@@ -6,38 +6,29 @@ import parseRootTag from './parseRootTag';
 export default async function parseKeePassFileTag(
   reader: KdbxXmlReader,
 ): Promise<Database> {
-  reader.assertOpenedTagOf('KeePassFile');
+  reader.expect('KeePassFile');
 
   const database: Partial<Database> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Meta':
-        if (database.metadata) {
-          throw new Error('Unexpected duplicate Meta element found');
-        }
-
-        database.metadata = await parseMetaTag(reader.readFromCurrent());
+        database.metadata = await parseMetaTag(element);
         break;
 
-      case 'Root': {
-        if (database.root) {
-          throw new Error('Unexpected duplicate Root element found');
-        }
-
-        database.root = await parseRootTag(reader.readFromCurrent());
+      case 'Root':
+        database.root = await parseRootTag(element);
         break;
-      }
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "KeePassFile"`,
+          `Unexpected tag "${element.tagName}" found in "${reader.tagName}"`,
         );
     }
   }
 
   if (!isDatabaseComplete(database)) {
-    throw new Error('Found "KeePassFile" tag with incomplete data');
+    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
   }
 
   return database;

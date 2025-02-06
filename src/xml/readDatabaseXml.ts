@@ -9,14 +9,7 @@ export default async function readDatabaseXml(
   binaryPool: KdbxBinaryPoolValue[] | undefined,
   streamCipher: SymmetricCipher,
 ): Promise<Database> {
-  const reader = new KdbxXmlReader(contents, streamCipher, binaryPool ?? []);
+  const parser = KdbxXmlReader.create(contents, streamCipher, binaryPool);
 
-  if (!reader.current.isMeta) {
-    throw new Error('Invalid database format. No XML header found');
-  }
-
-  // Skip past the XML header
-  reader.readNextStartElement();
-
-  return await parseKeePassFileTag(reader);
+  return await parseKeePassFileTag(parser);
 }

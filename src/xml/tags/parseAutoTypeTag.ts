@@ -2,22 +2,22 @@ import { type AutoType, type AutoTypeAssociation } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseAutoTypeTag(reader: KdbxXmlReader): AutoType {
-  reader.assertOpenedTagOf('AutoType');
+  reader.expect('AutoType');
 
   const autoType: AutoType = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Enabled':
-        autoType.enabled = reader.readBooleanValue();
+        autoType.enabled = element.readBooleanValue();
         break;
 
       case 'DataTransferObfuscation':
-        autoType.dataTransferObfuscation = reader.readNumberValue();
+        autoType.dataTransferObfuscation = element.readNumberValue();
         break;
 
       case 'DefaultSequence':
-        autoType.defaultSequence = reader.readStringValue();
+        autoType.defaultSequence = element.readStringValue();
         break;
 
       case 'Association':
@@ -25,14 +25,12 @@ export default function parseAutoTypeTag(reader: KdbxXmlReader): AutoType {
           autoType.associations = [];
         }
 
-        autoType.associations.push(
-          parseAutoTypeAssociationTag(reader.readFromCurrent()),
-        );
+        autoType.associations.push(parseAutoTypeAssociationTag(element));
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "AutoType"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
@@ -43,29 +41,29 @@ export default function parseAutoTypeTag(reader: KdbxXmlReader): AutoType {
 function parseAutoTypeAssociationTag(
   reader: KdbxXmlReader,
 ): AutoTypeAssociation {
-  reader.assertOpenedTagOf('Association');
+  reader.expect('Association');
 
   const association: Partial<AutoTypeAssociation> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Window':
-        association.window = reader.readStringValue();
+        association.window = element.readStringValue();
         break;
 
       case 'KeystrokeSequence':
-        association.sequence = reader.readStringValue();
+        association.sequence = element.readStringValue();
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "Association"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
 
   if (!isAutoTypeAssociationComplete(association)) {
-    throw new Error('Found "Association" tag with incomplete data');
+    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
   }
 
   return association;

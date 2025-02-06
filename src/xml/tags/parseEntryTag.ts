@@ -12,18 +12,18 @@ export default async function parseEntryTag(
   reader: KdbxXmlReader,
   fromHistory: boolean,
 ): Promise<Entry> {
-  reader.assertOpenedTagOf('Entry');
+  reader.expect('Entry');
 
   const entry: Partial<Entry> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'UUID':
-        entry.uuid = await reader.readUuidValue();
+        entry.uuid = await element.readUuidValue();
         break;
 
       case 'String': {
-        const value = await parseEntryStringTag(reader.readFromCurrent());
+        const value = await parseEntryStringTag(element);
 
         if (!entry.attributes) {
           entry.attributes = {};
@@ -39,7 +39,7 @@ export default async function parseEntryTag(
       }
 
       case 'Times':
-        entry.timeInfo = parseTimesTag(reader.readFromCurrent());
+        entry.timeInfo = parseTimesTag(element);
         break;
 
       case 'History':
@@ -47,15 +47,15 @@ export default async function parseEntryTag(
           throw new Error('Recursive history element found');
         }
 
-        entry.history = await parseEntryHistoryTag(reader.readFromCurrent());
+        entry.history = await parseEntryHistoryTag(element);
         break;
 
       case 'CustomData':
-        entry.customData = parseCustomDataTag(reader.readFromCurrent(), false);
+        entry.customData = parseCustomDataTag(element, false);
         break;
 
       case 'IconID':
-        entry.iconNumber = reader.readNumberValue();
+        entry.iconNumber = element.readNumberValue();
 
         if (!isDefaultIconNumber(entry.iconNumber)) {
           console.warn(
@@ -65,32 +65,32 @@ export default async function parseEntryTag(
         break;
 
       case 'CustomIconUUID':
-        entry.customIcon = await reader.readUuidValue();
+        entry.customIcon = await element.readUuidValue();
         break;
 
       case 'ForegroundColor':
-        entry.foregroundColor = reader.readColorValue();
+        entry.foregroundColor = element.readColorValue();
         break;
 
       case 'BackgroundColor':
-        entry.backgroundColor = reader.readColorValue();
+        entry.backgroundColor = element.readColorValue();
         break;
 
       case 'OverrideURL':
-        entry.overrideURL = reader.readStringValue();
+        entry.overrideURL = element.readStringValue();
         break;
 
       case 'Tags':
-        entry.tags = reader.readStringValue();
+        entry.tags = element.readStringValue();
         break;
 
       case 'QualityCheck':
-        entry.qualityCheck = reader.readBooleanValue();
+        entry.qualityCheck = element.readBooleanValue();
         break;
 
       case 'Binary': {
-        const tag = parseEntryBinaryTag(reader.readFromCurrent());
-        const data = reader.readBinaryPoolData(tag.ref);
+        const tag = parseEntryBinaryTag(element);
+        const data = element.readBinaryPoolData(tag.ref);
 
         if (!entry.attachments) {
           entry.attachments = {};
@@ -104,22 +104,22 @@ export default async function parseEntryTag(
       }
 
       case 'AutoType':
-        entry.autoType = parseAutoTypeTag(reader.readFromCurrent());
+        entry.autoType = parseAutoTypeTag(element);
         break;
 
       case 'PreviousParentGroup':
-        entry.previousParentGroup = await reader.readUuidValue();
+        entry.previousParentGroup = await element.readUuidValue();
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "Entry"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
 
   if (!isEntryComplete(entry)) {
-    throw new Error('Found "Entry" tag with incomplete data');
+    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
   }
 
   return entry;

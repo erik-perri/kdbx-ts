@@ -18,17 +18,14 @@ export default function parseCustomDataTag(
   reader: KdbxXmlReader,
   withTimes: boolean,
 ): Record<string, CustomData | CustomDataWithTimes | undefined> {
-  reader.assertOpenedTagOf('CustomData');
+  reader.expect('CustomData');
 
   const customData: Record<string, CustomData | undefined> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Item': {
-        const item = parseCustomDataItemTag(
-          reader.readFromCurrent(),
-          withTimes,
-        );
+        const item = parseCustomDataItemTag(element, withTimes);
 
         if (!item.key || !item.value) {
           throw new Error('Missing custom data key or value');
@@ -40,7 +37,7 @@ export default function parseCustomDataTag(
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "CustomData"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
@@ -52,18 +49,18 @@ function parseCustomDataItemTag(
   reader: KdbxXmlReader,
   withTimes: boolean,
 ): CustomData | CustomDataWithTimes {
-  reader.assertOpenedTagOf('Item');
+  reader.expect('Item');
 
   const customData: Partial<CustomDataWithTimes> = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Key':
-        customData.key = reader.readStringValue();
+        customData.key = element.readStringValue();
         break;
 
       case 'Value':
-        customData.value = reader.readStringValue();
+        customData.value = element.readStringValue();
         break;
 
       case 'LastModificationTime':
@@ -72,18 +69,18 @@ function parseCustomDataItemTag(
             'Unexpected "LastModificationTime" tag in custom data item',
           );
         }
-        customData.lastModified = reader.readDateTimeValue();
+        customData.lastModified = element.readDateTimeValue();
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "Item"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
 
   if (!isCustomDataItemComplete(customData)) {
-    throw new Error('Found "Item" tag with incomplete data');
+    throw new Error(`Found "${reader.tagName}" tag with incomplete data`);
   }
 
   return customData;

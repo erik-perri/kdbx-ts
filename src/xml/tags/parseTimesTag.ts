@@ -2,43 +2,43 @@ import { type TimeInfo } from '../../types/database';
 import type KdbxXmlReader from '../../utilities/KdbxXmlReader';
 
 export default function parseTimesTag(reader: KdbxXmlReader): TimeInfo {
-  reader.assertOpenedTagOf('Times');
+  reader.expect('Times');
 
   const timeInfo: TimeInfo = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'LastModificationTime':
-        timeInfo.lastModificationTime = reader.readDateTimeValue();
+        timeInfo.lastModificationTime = element.readDateTimeValue();
         break;
 
       case 'CreationTime':
-        timeInfo.creationTime = reader.readDateTimeValue();
+        timeInfo.creationTime = element.readDateTimeValue();
         break;
 
       case 'LastAccessTime':
-        timeInfo.lastAccessTime = reader.readDateTimeValue();
+        timeInfo.lastAccessTime = element.readDateTimeValue();
         break;
 
       case 'ExpiryTime':
-        timeInfo.expiryTime = reader.readDateTimeValue();
+        timeInfo.expiryTime = element.readDateTimeValue();
         break;
 
       case 'Expires':
-        timeInfo.expires = reader.readBooleanValue();
+        timeInfo.expires = element.readBooleanValue();
         break;
 
       case 'UsageCount':
-        timeInfo.usageCount = reader.readNumberValue();
+        timeInfo.usageCount = element.readNumberValue();
         break;
 
       case 'LocationChanged':
-        timeInfo.locationChanged = reader.readDateTimeValue();
+        timeInfo.locationChanged = element.readDateTimeValue();
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "Times"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }

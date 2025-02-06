@@ -7,110 +7,106 @@ import parseMemoryProtectionTag from './parseMemoryProtectionTag';
 export default async function parseMetaTag(
   reader: KdbxXmlReader,
 ): Promise<Metadata> {
-  reader.assertOpenedTagOf('Meta');
+  reader.expect('Meta');
 
   const metadata: Metadata = {};
 
-  while (reader.readNextStartElement()) {
-    switch (reader.current.name) {
+  for (const element of reader.elements()) {
+    switch (element.tagName) {
       case 'Generator':
-        metadata.generator = reader.readStringValue();
+        metadata.generator = element.readStringValue();
         break;
 
       case 'HeaderHash':
-        metadata.headerHash = await reader.readBinaryValue();
+        metadata.headerHash = await element.readBinaryValue();
         break;
 
       case 'DatabaseName':
-        metadata.name = reader.readStringValue();
+        metadata.name = element.readStringValue();
         break;
 
       case 'DatabaseNameChanged':
-        metadata.nameChanged = reader.readDateTimeValue();
+        metadata.nameChanged = element.readDateTimeValue();
         break;
 
       case 'DatabaseDescription':
-        metadata.description = reader.readStringValue();
+        metadata.description = element.readStringValue();
         break;
 
       case 'DatabaseDescriptionChanged':
-        metadata.descriptionChanged = reader.readDateTimeValue();
+        metadata.descriptionChanged = element.readDateTimeValue();
         break;
 
       case 'DefaultUserName':
-        metadata.defaultUserName = reader.readStringValue();
+        metadata.defaultUserName = element.readStringValue();
         break;
 
       case 'DefaultUserNameChanged':
-        metadata.defaultUserNameChanged = reader.readDateTimeValue();
+        metadata.defaultUserNameChanged = element.readDateTimeValue();
         break;
 
       case 'MaintenanceHistoryDays':
-        metadata.maintenanceHistoryDays = reader.readNumberValue();
+        metadata.maintenanceHistoryDays = element.readNumberValue();
         break;
 
       case 'Color':
-        metadata.color = reader.readColorValue();
+        metadata.color = element.readColorValue();
         break;
 
       case 'MasterKeyChanged':
-        metadata.masterKeyChanged = reader.readDateTimeValue();
+        metadata.masterKeyChanged = element.readDateTimeValue();
         break;
 
       case 'MasterKeyChangeRec':
-        metadata.masterKeyChangeRec = reader.readNumberValue();
+        metadata.masterKeyChangeRec = element.readNumberValue();
         break;
 
       case 'MasterKeyChangeForce':
-        metadata.masterKeyChangeForce = reader.readNumberValue();
+        metadata.masterKeyChangeForce = element.readNumberValue();
         break;
 
       case 'MemoryProtection':
-        metadata.memoryProtection = parseMemoryProtectionTag(
-          reader.readFromCurrent(),
-        );
+        metadata.memoryProtection = parseMemoryProtectionTag(element);
         break;
 
       case 'CustomIcons':
-        metadata.customIcons = await parseCustomIconsTag(
-          reader.readFromCurrent(),
-        );
+        metadata.customIcons = await parseCustomIconsTag(element);
         break;
 
       case 'RecycleBinEnabled':
-        metadata.recycleBinEnabled = reader.readBooleanValue();
+        metadata.recycleBinEnabled = element.readBooleanValue();
         break;
 
       case 'RecycleBinUUID':
-        metadata.recycleBinUuid = await reader.readUuidValue();
+        metadata.recycleBinUuid = await element.readUuidValue();
         break;
 
       case 'RecycleBinChanged':
-        metadata.recycleBinChanged = reader.readDateTimeValue();
+        metadata.recycleBinChanged = element.readDateTimeValue();
         break;
 
       case 'EntryTemplatesGroup':
-        metadata.entryTemplatesGroup = await reader.readUuidValue();
+        metadata.entryTemplatesGroup = await element.readUuidValue();
         break;
 
       case 'EntryTemplatesGroupChanged':
-        metadata.entryTemplatesGroupChanged = reader.readDateTimeValue();
+        metadata.entryTemplatesGroupChanged = element.readDateTimeValue();
         break;
 
       case 'LastSelectedGroup':
-        metadata.lastSelectedGroup = await reader.readUuidValue();
+        metadata.lastSelectedGroup = await element.readUuidValue();
         break;
 
       case 'LastTopVisibleGroup':
-        metadata.lastTopVisibleGroup = await reader.readUuidValue();
+        metadata.lastTopVisibleGroup = await element.readUuidValue();
         break;
 
       case 'HistoryMaxItems':
-        metadata.historyMaxItems = reader.readNumberValue();
+        metadata.historyMaxItems = element.readNumberValue();
         break;
 
       case 'HistoryMaxSize':
-        metadata.historyMaxSize = reader.readNumberValue();
+        metadata.historyMaxSize = element.readNumberValue();
         break;
 
       case 'Binaries':
@@ -118,19 +114,16 @@ export default async function parseMetaTag(
         throw new Error('"Binaries" not implemented');
 
       case 'CustomData':
-        metadata.customData = parseCustomDataTag(
-          reader.readFromCurrent(),
-          true,
-        );
+        metadata.customData = parseCustomDataTag(element, true);
         break;
 
       case 'SettingsChanged':
-        metadata.settingsChanged = reader.readDateTimeValue();
+        metadata.settingsChanged = element.readDateTimeValue();
         break;
 
       default:
         throw new Error(
-          `Unexpected tag "${reader.current.name}" while parsing "Meta"`,
+          `Unexpected tag "${element.tagName}" while parsing "${reader.tagName}"`,
         );
     }
   }
