@@ -6,11 +6,11 @@
     "@eslint/js": "^9.19.0",
     "@types/node": "^22.13.1",
     "@types/pako": "^2.0.3",
-    "@vitest/coverage-v8": "^2.1.9",
+    "@vitest/coverage-v8": "^3.0.9",
     "@xmldom/xmldom": "^0.9.7",
     "argon2": "^0.41.1",
     "dts-bundle-generator": "^9.5.1",
-    "esbuild": "0.24.2",
+    "esbuild": "0.25.1",
     "eslint": "^9.19.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "fast-glob": "^3.3.3",
@@ -20,7 +20,7 @@
     "twofish-ts": "^1.0.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.23.0",
-    "vitest": "^2.1.9"
+    "vitest": "^3.0.9"
   },
   "exports": {
     ".": {
