@@ -1,3 +1,5 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type DatabaseRoot } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 import writeDeletedObjectsTag from './writeDeletedObjectsTag';
@@ -6,14 +8,14 @@ import writeGroupTag from './writeGroupTag';
 export default async function writeRootTag(
   writer: KdbxXmlWriter,
   root: DatabaseRoot,
-): Promise<void> {
-  writer.writeStartElement('Root');
+): Promise<Element> {
+  const element = writer.createElement('Root');
 
-  await writeGroupTag(writer, root.group);
+  element.appendChild(await writeGroupTag(writer, root.group));
 
   if (root.deletedObjects !== undefined) {
-    writeDeletedObjectsTag(writer, root.deletedObjects);
+    element.appendChild(writeDeletedObjectsTag(writer, root.deletedObjects));
   }
 
-  writer.writeEndElement();
+  return element;
 }

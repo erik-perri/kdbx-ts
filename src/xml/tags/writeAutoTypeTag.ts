@@ -1,44 +1,52 @@
+import type { Element } from '@xmldom/xmldom';
+
 import { type AutoType, type AutoTypeAssociation } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeAutoTypeTag(
   writer: KdbxXmlWriter,
   autoType: AutoType,
-): void {
-  writer.writeStartElement('AutoType');
+): Element {
+  const element = writer.createElement('AutoType');
 
   if (autoType.enabled !== undefined) {
-    writer.writeBoolean('Enabled', autoType.enabled);
+    element.appendChild(writer.writeBoolean('Enabled', autoType.enabled));
   }
 
   if (autoType.dataTransferObfuscation !== undefined) {
-    writer.writeNumber(
-      'DataTransferObfuscation',
-      autoType.dataTransferObfuscation,
+    element.appendChild(
+      writer.writeNumber(
+        'DataTransferObfuscation',
+        autoType.dataTransferObfuscation,
+      ),
     );
   }
 
   if (autoType.defaultSequence !== undefined) {
-    writer.writeString('DefaultSequence', autoType.defaultSequence);
+    element.appendChild(
+      writer.writeString('DefaultSequence', autoType.defaultSequence),
+    );
   }
 
   if (autoType.associations !== undefined) {
     for (const value of autoType.associations) {
-      writeAutoTypeAssociationTag(writer, value);
+      element.appendChild(writeAutoTypeAssociationTag(writer, value));
     }
   }
 
-  writer.writeEndElement();
+  return element;
 }
 
 function writeAutoTypeAssociationTag(
   writer: KdbxXmlWriter,
   association: AutoTypeAssociation,
-): void {
-  writer.writeStartElement('Association');
+): Element {
+  const element = writer.createElement('Association');
 
-  writer.writeString('Window', association.window);
-  writer.writeString('KeystrokeSequence', association.sequence);
+  element.appendChild(writer.writeString('Window', association.window));
+  element.appendChild(
+    writer.writeString('KeystrokeSequence', association.sequence),
+  );
 
-  writer.writeEndElement();
+  return element;
 }

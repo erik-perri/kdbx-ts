@@ -1,18 +1,23 @@
+import type { Element } from '@xmldom/xmldom';
+
 import { type EntryAttribute } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default async function writeEntryStringTag(
   writer: KdbxXmlWriter,
   attribute: EntryAttribute,
-): Promise<void> {
-  writer.writeStartElement('String');
-  writer.writeString('Key', attribute.key);
+): Promise<Element> {
+  const element = writer.createElement('String');
+
+  element.appendChild(writer.writeString('Key', attribute.key));
 
   if (attribute.isProtected) {
-    await writer.writeProtectedString('Value', attribute.value);
+    element.appendChild(
+      await writer.writeProtectedString('Value', attribute.value),
+    );
   } else {
-    writer.writeString('Value', attribute.value);
+    element.appendChild(writer.writeString('Value', attribute.value));
   }
 
-  writer.writeEndElement();
+  return element;
 }

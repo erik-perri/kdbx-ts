@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 
-import pako from 'pako';
-import { describe, expect, it, vitest } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { sampleDatabasesKeePassXC } from '../tests/fixtures/databases';
 import randomizeSeeds from './helpers/randomizeSeeds';
@@ -61,26 +60,6 @@ describe('writeKdbxFile', () => {
 
   it('does not modify a database by reading and writing', async () => {
     // Arrange
-    let capturedPostInflatedData: Uint8Array | undefined;
-    let capturedPreDeflatedData: Uint8Array | undefined;
-
-    const inflateSpy = vitest
-      .spyOn(pako, 'inflate')
-      .mockImplementationOnce((data, options) => {
-        capturedPostInflatedData = pako.inflate(data, options);
-        return capturedPostInflatedData;
-      });
-
-    const deflateSpy = vitest
-      .spyOn(pako, 'deflate')
-      .mockImplementationOnce((data, options) => {
-        if (!ArrayBuffer.isView(data)) {
-          throw new Error('Expected Uint8Array');
-        }
-        capturedPreDeflatedData = Uint8Array.from(data);
-        return pako.deflate(data, options);
-      });
-
     const original = fs.readFileSync(
       'tests/fixtures/databases/keepassxc-kdbx4-aes-kdf-aes-features.kdbx',
     );
@@ -89,20 +68,9 @@ describe('writeKdbxFile', () => {
 
     // Act
     const saved = await writeKdbxFile(keys, file);
+    const { file: savedFile } = await readKdbxFile(keys, saved.bytes);
 
     // Assert
-    // Since the GZip compression produces different results, we have to compare the uncompressed data
-    // captured in the pako spies.
-    expect(inflateSpy).toHaveBeenCalledTimes(2);
-    expect(deflateSpy).toHaveBeenCalledTimes(2);
-    expect(capturedPostInflatedData).toBeDefined();
-    expect(capturedPreDeflatedData).toBeDefined();
-    expect(capturedPostInflatedData).toEqual(capturedPreDeflatedData);
-
-    // Check the outer header
-    // TODO Detect this position automatically
-    expect(Uint8Array.from(original.subarray(0, 271))).toEqual(
-      Uint8Array.from(saved.bytes.subarray(0, 271)),
-    );
+    expect(savedFile).toEqual(file);
   });
 });

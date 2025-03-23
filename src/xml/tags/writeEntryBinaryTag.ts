@@ -1,17 +1,19 @@
+import type { Element } from '@xmldom/xmldom';
+
 import { type EntryAttachment } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeEntryBinaryTag(
   writer: KdbxXmlWriter,
   attachment: EntryAttachment,
-): void {
-  writer.writeStartElement('Binary');
+): Element {
+  const element = writer.createElement('Binary');
 
-  writer.writeString('Key', attachment.key);
+  element.appendChild(writer.writeString('Key', attachment.key));
 
-  writer.writeStartElement('Value');
-  writer.writeAttribute('Ref', attachment.ref);
-  writer.writeEndElement();
+  const value = writer.createElement('Value');
+  value.setAttribute('Ref', attachment.ref);
+  element.appendChild(value);
 
-  writer.writeEndElement();
+  return element;
 }

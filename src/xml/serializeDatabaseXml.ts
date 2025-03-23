@@ -1,3 +1,5 @@
+import { DOMImplementation, XMLSerializer } from '@xmldom/xmldom';
+
 import { type SymmetricCipher } from '../dependencies';
 import { type Database } from '../types/database';
 import type { KdbxBinaryPoolValue } from '../types/format';
@@ -9,13 +11,18 @@ export default async function serializeDatabaseXml(
   binaryPool: KdbxBinaryPoolValue[] | undefined,
   streamCipher: SymmetricCipher,
 ): Promise<string> {
-  const writer = new KdbxXmlWriter(streamCipher, binaryPool ?? []);
+  const document = new DOMImplementation().createDocument('', '', null);
+  const writer = new KdbxXmlWriter(document, binaryPool, streamCipher);
 
-  writer.writeStartDocument('1.0', true);
+  const root = await writeKeePassFileTag(writer, database);
 
-  await writeKeePassFileTag(writer, database);
+  document.appendChild(root);
 
-  writer.writeEndDocument();
+  const serialized = new XMLSerializer().serializeToString(document);
 
-  return writer.contents + writer.lineSeparator;
+  return (
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    serialized +
+    '\n'
+  );
 }

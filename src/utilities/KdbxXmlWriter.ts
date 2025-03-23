@@ -1,41 +1,45 @@
-import { type SymmetricCipher } from '../dependencies';
+import { type Document, type Element } from '@xmldom/xmldom';
+
+import type { SymmetricCipher } from '../dependencies';
 import NullableBoolean from '../enums/NullableBoolean';
 import type { KdbxBinaryPoolValue } from '../types/format';
 import gregorianTimestampFromDate from './gregorianTimestampFromDate';
 import Uint8ArrayHelper from './Uint8ArrayHelper';
-import XmlWriter from './XmlWriter';
 
-export default class KdbxXmlWriter extends XmlWriter {
+export default class KdbxXmlWriter {
   constructor(
-    private readonly cipher: SymmetricCipher,
-    private readonly binaryPool: KdbxBinaryPoolValue[],
+    private readonly document: Document,
+    private readonly binaryPool: KdbxBinaryPoolValue[] | undefined,
+    private readonly streamCipher: SymmetricCipher,
   ) {
-    super('\t');
+    //
   }
 
-  writeBinary(name: string, value: Uint8Array): void {
+  public createElement(tagName: string): Element {
+    return this.document.createElement(tagName);
+  }
+
+  public writeBinary(tagName: string, value: Uint8Array): Element {
     const valueAsBase64 = Buffer.from(value).toString('base64');
 
-    this.writeTextElement(name, valueAsBase64);
+    return this.writeString(tagName, valueAsBase64);
   }
 
-  writeBoolean(name: string, value: boolean): void {
-    if (value) {
-      this.writeString(name, 'True');
-    } else {
-      this.writeString(name, 'False');
-    }
+  public writeBoolean(name: string, value: boolean): Element {
+    const valueAsString = value ? 'True' : 'False';
+
+    return this.writeString(name, valueAsString);
   }
 
-  writeColor(name: string, value: string): void {
+  public writeColor(name: string, value: string): Element {
     if (value.length && !value.match(/^#[0-f]{6}$/)) {
       throw new Error(`Invalid color value "${value}"`);
     }
 
-    this.writeString(name, value);
+    return this.writeString(name, value);
   }
 
-  writeDateTime(name: string, value: Date): void {
+  public writeDateTime(tagName: string, value: Date): Element {
     const timestamp = gregorianTimestampFromDate(value);
 
     const timestampAsBytes = Uint8ArrayHelper.leftJustify(
@@ -43,53 +47,60 @@ export default class KdbxXmlWriter extends XmlWriter {
       8,
     ).slice(0, 8);
 
-    this.writeString(name, Buffer.from(timestampAsBytes).toString('base64'));
+    return this.writeString(
+      tagName,
+      Buffer.from(timestampAsBytes).toString('base64'),
+    );
   }
 
-  writeNullableBoolean(name: string, value: NullableBoolean): void {
+  public writeNullableBoolean(name: string, value: NullableBoolean): Element {
     if (value === NullableBoolean.True) {
-      this.writeString(name, 'true');
+      return this.writeString(name, 'true');
     } else if (value === NullableBoolean.False) {
-      this.writeString(name, 'false');
+      return this.writeString(name, 'false');
     } else {
-      this.writeString(name, 'null');
+      return this.writeString(name, 'null');
     }
   }
 
-  writeNumber(name: string, value: number): void {
-    this.writeString(name, value.toString());
+  public writeNumber(tagName: string, value: number): Element {
+    return this.writeString(tagName, value.toString());
   }
 
-  async writeProtectedString(name: string, value: string): Promise<void> {
-    this.writeStartElement(name);
+  public async writeProtectedString(
+    name: string,
+    value: string,
+  ): Promise<Element> {
+    const element = this.createElement(name);
 
-    this.writeAttribute('Protected', 'True');
+    element.setAttribute('Protected', 'True');
 
     if (value.length > 0) {
-      const encryptedValue = await this.cipher.process(
+      const encryptedValue = await this.streamCipher.process(
         Uint8ArrayHelper.fromString(value),
       );
 
-      const encryptedValueAsBase64 =
-        Buffer.from(encryptedValue).toString('base64');
-
-      this.writeCharacters(encryptedValueAsBase64);
+      element.textContent = Buffer.from(encryptedValue).toString('base64');
     }
 
-    this.writeEndElement(false);
+    return element;
   }
 
-  writeString(name: string, value: string): void {
-    if (value.length === 0) {
-      this.writeEmptyElement(name);
-    } else {
-      this.writeTextElement(name, value);
-    }
+  public writeString(tagName: string, value: string): Element {
+    const element = this.createElement(tagName);
+
+    element.textContent = value;
+
+    return element;
   }
 
-  writeUuid(name: string, value: string, ensureCompliance: boolean): void {
+  public writeUuid(
+    name: string,
+    value: string,
+    ensureCompliance: boolean,
+  ): Element {
     const uuidBytes = Uint8ArrayHelper.fromUuid(value, ensureCompliance);
 
-    this.writeTextElement(name, Buffer.from(uuidBytes).toString('base64'));
+    return this.writeString(name, Buffer.from(uuidBytes).toString('base64'));
   }
 }

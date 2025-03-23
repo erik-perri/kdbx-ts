@@ -1,39 +1,43 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type MemoryProtection } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeMemoryProtectionTag(
   writer: KdbxXmlWriter,
   memoryProtection: MemoryProtection,
-): void {
-  if (isEmpty(memoryProtection)) {
-    return;
-  }
-
-  writer.writeStartElement('MemoryProtection');
+): Element {
+  const element = writer.createElement('MemoryProtection');
 
   if (memoryProtection.protectTitle !== undefined) {
-    writer.writeBoolean('ProtectTitle', memoryProtection.protectTitle);
+    element.appendChild(
+      writer.writeBoolean('ProtectTitle', memoryProtection.protectTitle),
+    );
   }
 
   if (memoryProtection.protectUserName !== undefined) {
-    writer.writeBoolean('ProtectUserName', memoryProtection.protectUserName);
+    element.appendChild(
+      writer.writeBoolean('ProtectUserName', memoryProtection.protectUserName),
+    );
   }
 
   if (memoryProtection.protectPassword !== undefined) {
-    writer.writeBoolean('ProtectPassword', memoryProtection.protectPassword);
+    element.appendChild(
+      writer.writeBoolean('ProtectPassword', memoryProtection.protectPassword),
+    );
   }
 
   if (memoryProtection.protectURL !== undefined) {
-    writer.writeBoolean('ProtectURL', memoryProtection.protectURL);
+    element.appendChild(
+      writer.writeBoolean('ProtectURL', memoryProtection.protectURL),
+    );
   }
 
   if (memoryProtection.protectNotes !== undefined) {
-    writer.writeBoolean('ProtectNotes', memoryProtection.protectNotes);
+    element.appendChild(
+      writer.writeBoolean('ProtectNotes', memoryProtection.protectNotes),
+    );
   }
 
-  writer.writeEndElement();
-}
-
-function isEmpty(memoryProtection: MemoryProtection): boolean {
-  return Object.keys(memoryProtection).length === 0;
+  return element;
 }

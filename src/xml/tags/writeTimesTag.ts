@@ -1,39 +1,49 @@
+import { type Element } from '@xmldom/xmldom';
+
 import { type TimeInfo } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 
 export default function writeTimesTag(
   writer: KdbxXmlWriter,
   times: TimeInfo,
-): void {
-  writer.writeStartElement('Times');
+): Element {
+  const element = writer.createElement('Times');
 
   if (times.lastModificationTime !== undefined) {
-    writer.writeDateTime('LastModificationTime', times.lastModificationTime);
+    element.appendChild(
+      writer.writeDateTime('LastModificationTime', times.lastModificationTime),
+    );
   }
 
   if (times.creationTime !== undefined) {
-    writer.writeDateTime('CreationTime', times.creationTime);
+    element.appendChild(
+      writer.writeDateTime('CreationTime', times.creationTime),
+    );
   }
 
   if (times.lastAccessTime !== undefined) {
-    writer.writeDateTime('LastAccessTime', times.lastAccessTime);
+    element.appendChild(
+      writer.writeDateTime('LastAccessTime', times.lastAccessTime),
+    );
   }
 
   if (times.expiryTime !== undefined) {
-    writer.writeDateTime('ExpiryTime', times.expiryTime);
+    element.appendChild(writer.writeDateTime('ExpiryTime', times.expiryTime));
   }
 
   if (times.expires !== undefined) {
-    writer.writeBoolean('Expires', times.expires);
+    element.appendChild(writer.writeBoolean('Expires', times.expires));
   }
 
   if (times.usageCount !== undefined) {
-    writer.writeNumber('UsageCount', times.usageCount);
+    element.appendChild(writer.writeNumber('UsageCount', times.usageCount));
   }
 
   if (times.locationChanged !== undefined) {
-    writer.writeDateTime('LocationChanged', times.locationChanged);
+    element.appendChild(
+      writer.writeDateTime('LocationChanged', times.locationChanged),
+    );
   }
 
-  writer.writeEndElement();
+  return element;
 }

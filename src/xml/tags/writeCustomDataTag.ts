@@ -1,3 +1,5 @@
+import type { Element } from '@xmldom/xmldom';
+
 import {
   type CustomData,
   type CustomDataWithTimes,
@@ -8,39 +10,39 @@ export default function writeCustomDataTag(
   writer: KdbxXmlWriter,
   data: Record<string, CustomData | CustomDataWithTimes | undefined>,
   withTimes: boolean,
-): void {
-  writer.writeStartElement('CustomData');
+): Element {
+  const element = writer.createElement('CustomData');
 
   for (const item of Object.values(data)) {
     if (!item) {
       continue;
     }
 
-    serializeCustomDataItemTag(writer, item, withTimes);
+    element.appendChild(writeCustomDataItemTag(writer, item, withTimes));
   }
 
-  writer.writeEndElement();
+  return element;
 }
 
-function serializeCustomDataItemTag(
+function writeCustomDataItemTag(
   writer: KdbxXmlWriter,
   data: CustomData | CustomDataWithTimes,
   withTimes: boolean,
-): void {
-  writer.writeStartElement('Item');
+): Element {
+  const element = writer.createElement('Item');
 
-  writer.writeString('Key', data.key);
-  writer.writeString('Value', data.value);
+  element.appendChild(writer.writeString('Key', data.key));
+  element.appendChild(writer.writeString('Value', data.value));
 
   if (
     withTimes &&
     isCustomDataWithTimes(data) &&
     data.lastModified !== undefined
   ) {
-    writer.writeDateTime('Times', data.lastModified);
+    element.appendChild(writer.writeDateTime('Times', data.lastModified));
   }
 
-  writer.writeEndElement();
+  return element;
 }
 
 function isCustomDataWithTimes(

@@ -1,3 +1,5 @@
+import type { Element } from '@xmldom/xmldom';
+
 import { type Entry } from '../../types/database';
 import type KdbxXmlWriter from '../../utilities/KdbxXmlWriter';
 import writeAutoTypeTag from './writeAutoTypeTag';
@@ -11,41 +13,49 @@ export default async function writeEntryTag(
   writer: KdbxXmlWriter,
   entry: Entry,
   fromHistory: boolean,
-): Promise<void> {
-  writer.writeStartElement('Entry');
+): Promise<Element> {
+  const element = writer.createElement('Entry');
 
-  writer.writeUuid('UUID', entry.uuid, true);
+  element.appendChild(writer.writeUuid('UUID', entry.uuid, true));
 
   if (entry.iconNumber !== undefined) {
-    writer.writeNumber('IconID', entry.iconNumber);
+    element.appendChild(writer.writeNumber('IconID', entry.iconNumber));
   }
 
   if (entry.foregroundColor !== undefined) {
-    writer.writeColor('ForegroundColor', entry.foregroundColor);
+    element.appendChild(
+      writer.writeColor('ForegroundColor', entry.foregroundColor),
+    );
   }
 
   if (entry.backgroundColor !== undefined) {
-    writer.writeColor('BackgroundColor', entry.backgroundColor);
+    element.appendChild(
+      writer.writeColor('BackgroundColor', entry.backgroundColor),
+    );
   }
 
   if (entry.overrideURL !== undefined) {
-    writer.writeString('OverrideURL', entry.overrideURL);
+    element.appendChild(writer.writeString('OverrideURL', entry.overrideURL));
   }
 
   if (entry.tags !== undefined) {
-    writer.writeString('Tags', entry.tags);
+    element.appendChild(writer.writeString('Tags', entry.tags));
   }
 
   if (entry.timeInfo !== undefined) {
-    writeTimesTag(writer, entry.timeInfo);
+    element.appendChild(writeTimesTag(writer, entry.timeInfo));
   }
 
   if (entry.qualityCheck !== undefined) {
-    writer.writeBoolean('QualityCheck', entry.qualityCheck);
+    element.appendChild(
+      writer.writeBoolean('QualityCheck', entry.qualityCheck),
+    );
   }
 
   if (entry.previousParentGroup !== undefined) {
-    writer.writeUuid('PreviousParentGroup', entry.previousParentGroup, true);
+    element.appendChild(
+      writer.writeUuid('PreviousParentGroup', entry.previousParentGroup, true),
+    );
   }
 
   if (entry.attributes !== undefined) {
@@ -54,7 +64,7 @@ export default async function writeEntryTag(
         continue;
       }
 
-      await writeEntryStringTag(writer, value);
+      element.appendChild(await writeEntryStringTag(writer, value));
     }
   }
 
@@ -64,20 +74,22 @@ export default async function writeEntryTag(
         continue;
       }
 
-      writeEntryBinaryTag(writer, attachment);
+      element.appendChild(writeEntryBinaryTag(writer, attachment));
     }
   }
 
   if (entry.autoType !== undefined) {
-    writeAutoTypeTag(writer, entry.autoType);
+    element.appendChild(writeAutoTypeTag(writer, entry.autoType));
   }
 
   if (entry.customData !== undefined) {
-    writeCustomDataTag(writer, entry.customData, false);
+    element.appendChild(writeCustomDataTag(writer, entry.customData, false));
   }
 
   if (entry.customIcon !== undefined) {
-    writer.writeUuid('CustomIconUUID', entry.customIcon, true);
+    element.appendChild(
+      writer.writeUuid('CustomIconUUID', entry.customIcon, true),
+    );
   }
 
   if (entry.history !== undefined) {
@@ -85,8 +97,8 @@ export default async function writeEntryTag(
       throw new Error('Recursive history element found');
     }
 
-    await writeEntryHistoryTag(writer, entry.history);
+    element.appendChild(await writeEntryHistoryTag(writer, entry.history));
   }
 
-  writer.writeEndElement();
+  return element;
 }
