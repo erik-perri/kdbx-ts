@@ -200,14 +200,17 @@ export default class KdbxXmlReader {
     return gregorianTimestampToDate(timestampAsNumber);
   }
 
-  private readDateTimeFromIsoString(input: string, strictMode: boolean): Date {
+  private readDateTimeFromIsoString(
+    input: string,
+    ensureCompliance: boolean,
+  ): Date {
     const date = new Date(input);
 
     if (!isNaN(date.getTime())) {
       return date;
     }
 
-    if (strictMode) {
+    if (ensureCompliance) {
       throw new Error(
         `Unexpected date format. Expected ISO 8601 date string, got "${input}"`,
       );

@@ -25,18 +25,18 @@ export default class KdbxXmlWriter {
     return this.writeString(tagName, valueAsBase64);
   }
 
-  public writeBoolean(name: string, value: boolean): Element {
+  public writeBoolean(tagName: string, value: boolean): Element {
     const valueAsString = value ? 'True' : 'False';
 
-    return this.writeString(name, valueAsString);
+    return this.writeString(tagName, valueAsString);
   }
 
-  public writeColor(name: string, value: string): Element {
+  public writeColor(tagName: string, value: string): Element {
     if (value.length && !value.match(/^#[0-f]{6}$/)) {
       throw new Error(`Invalid color value "${value}"`);
     }
 
-    return this.writeString(name, value);
+    return this.writeString(tagName, value);
   }
 
   public writeDateTime(tagName: string, value: Date): Element {
@@ -53,13 +53,16 @@ export default class KdbxXmlWriter {
     );
   }
 
-  public writeNullableBoolean(name: string, value: NullableBoolean): Element {
+  public writeNullableBoolean(
+    tagName: string,
+    value: NullableBoolean,
+  ): Element {
     if (value === NullableBoolean.True) {
-      return this.writeString(name, 'true');
+      return this.writeString(tagName, 'true');
     } else if (value === NullableBoolean.False) {
-      return this.writeString(name, 'false');
+      return this.writeString(tagName, 'false');
     } else {
-      return this.writeString(name, 'null');
+      return this.writeString(tagName, 'null');
     }
   }
 
@@ -68,10 +71,10 @@ export default class KdbxXmlWriter {
   }
 
   public async writeProtectedString(
-    name: string,
+    tagName: string,
     value: string,
   ): Promise<Element> {
-    const element = this.createElement(name);
+    const element = this.createElement(tagName);
 
     element.setAttribute('Protected', 'True');
 
@@ -95,12 +98,12 @@ export default class KdbxXmlWriter {
   }
 
   public writeUuid(
-    name: string,
+    tagName: string,
     value: string,
     ensureCompliance: boolean,
   ): Element {
     const uuidBytes = Uint8ArrayHelper.fromUuid(value, ensureCompliance);
 
-    return this.writeString(name, Buffer.from(uuidBytes).toString('base64'));
+    return this.writeString(tagName, Buffer.from(uuidBytes).toString('base64'));
   }
 }
