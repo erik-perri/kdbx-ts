@@ -2,6 +2,10 @@ import { KeePass2 } from './constants';
 import { getDependency } from './dependencies';
 import KdfUuid from './enums/KdfUuid';
 
+/**
+ * Returns an estimate of the number of rounds that can be performed
+ * in the target time.
+ */
 export default async function benchmarkAes256KdfKey(
   targetMilliseconds: number,
 ): Promise<number> {

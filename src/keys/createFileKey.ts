@@ -6,7 +6,7 @@ import { type KdbxFileKey } from '../types/keys';
 export default async function createFileKey(
   bytes: Uint8Array,
 ): Promise<KdbxFileKey> {
-  // TODO Determine type base on file structure, only falling back to processHash
+  // TODO Determine type based on file structure, only falling back to processHash
   //      if unknown structure.
 
   return createFileKeyHashed(bytes);

@@ -4,6 +4,10 @@ import Argon2Type from './enums/Argon2Type';
 import Argon2Version from './enums/Argon2Version';
 import KdfUuid from './enums/KdfUuid';
 
+/**
+ * Returns an estimate of how many iterations can be performed in the
+ * target time.
+ */
 export default async function benchmarkArgon2KdfKey(
   targetMilliseconds: number,
   memoryInBytes: bigint = BigInt(65536 * 1024),
