@@ -31,8 +31,8 @@ export default class BufferWriter {
     return this.writeBytes(Uint8ArrayHelper.fromUInt8(number));
   }
 
-  writeUInt16LE(data: number): number {
-    return this.writeBytes(Uint8ArrayHelper.fromUInt16LE(data));
+  writeUInt16LE(number: number): number {
+    return this.writeBytes(Uint8ArrayHelper.fromUInt16LE(number));
   }
 
   writeUInt32LE(number: number): number {
