@@ -1,6 +1,6 @@
 /* v8 ignore start */
-import benchmarkAes256KdfKey from './benchmarkAes256KdfKey';
-import benchmarkArgon2KdfKey from './benchmarkArgon2KdfKey';
+import benchmarkAes256KdfKey from './benchmark/benchmarkAes256KdfKey';
+import benchmarkArgon2KdfKey from './benchmark/benchmarkArgon2KdfKey';
 import { KeePass2 } from './constants';
 import {
   configureDependencies,
